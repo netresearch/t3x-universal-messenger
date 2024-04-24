@@ -1,0 +1,16 @@
+# Module configuration
+module.tx_nrcuniversalmessenger {
+    view {
+        templateRootPaths {
+            0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Templates/
+        }
+
+        partialRootPaths {
+            0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Partials/
+        }
+
+        layoutRootPaths {
+            0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
+        }
+    }
+}

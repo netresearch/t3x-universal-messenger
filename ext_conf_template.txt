@@ -1,0 +1,11 @@
+# cat=General; type=int+; label=PID used to store the Universal Messenger newsletter channel records
+universalMessengerStoragePid =
+
+# cat=Webservice; type=string; label=Base URL: The Universal Messenger API URL
+universalMessengerApiUrl =
+
+# cat=Webservice; type=string; label=API Key: The Universal Messenger API Key
+universalMessengerApiKey =
+
+# cat=Webservice; type=boolean; label=Enable logging: Log all Universal Messenger Api requests in a log file.
+enable_logging = 0

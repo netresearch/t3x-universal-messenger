@@ -1,0 +1,85 @@
+{
+    "name": "netresearch/nrc-universal-messenger",
+    "type": "typo3-cms-extension",
+    "description": "TYPO3 extension providing a backend module to send newsletters using Universal Messenger API",
+    "authors": [
+        {
+            "name": "Rico Sonntag",
+            "email": "rico.sonntag@netresearch.de",
+            "role": "Developer",
+            "homepage": "https://www.netresearch.de/"
+        }
+    ],
+    "repositories": {
+        "netresearch/sdk-api-universal-messenger": {
+            "type": "github",
+            "url": "git@github.com:netresearch/sdk-api-universal-messenger.git"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-extbase": "^12.4",
+        "nyholm/psr7": "^1.8",
+        "netresearch/sdk-api-universal-messenger": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.1",
+        "friendsoftypo3/phpstan-typo3": "^0.9",
+        "overtrue/phplint": "^9.0",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-strict-rules": "^1.5",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "ssch/typo3-rector": "^2.0"
+    },
+    "config": {
+        "bin-dir": ".build/bin",
+        "vendor-dir": ".build/vendor",
+        "discard-changes": true,
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform-check": false,
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true,
+            "php-http/discovery": true
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "nrc_universal_messenger",
+            "web-dir": ".build/public"
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Netresearch\\NrcUniversalMessenger\\": "Classes"
+        }
+    },
+    "scripts": {
+        "ci:test:php:lint": [
+            "phplint --configuration Build/.phplint.yml"
+        ],
+        "ci:test:php:phpstan": [
+            "phpstan analyze --configuration Build/phpstan.neon"
+        ],
+        "ci:test:php:phpstan:baseline": [
+            "phpstan analyze --configuration Build/phpstan.neon --generate-baseline Build/phpstan-baseline.neon --allow-empty-baseline"
+        ],
+        "ci:test:php:rector": [
+            "rector process --config Build/rector.php --dry-run"
+        ],
+        "ci:test": [
+            "@ci:test:php:lint",
+            "@ci:test:php:phpstan",
+            "@ci:test:php:rector"
+        ],
+        "ci:cgl": [
+            "php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
+        ]
+    }
+}
