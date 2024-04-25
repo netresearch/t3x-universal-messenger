@@ -7,3 +7,10 @@ services:
     Netresearch\NrcUniversalMessenger\:
         resource: '../Classes/*'
         exclude: '../Classes/Domain/Model/*'
+
+    Netresearch\NrcUniversalMessenger\Command\ImportCommand:
+        tags:
+            - name: 'console.command'
+              command: 'universal-messenger:newsletter-channels:import'
+              description: 'Imports all active Universal Messenger newsletter channels'
+              schedulable: true

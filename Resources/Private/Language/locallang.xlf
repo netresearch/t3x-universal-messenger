@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages">
+        <header/>
+        <body>
+            <!-- tx_nrcuniversalmessenger_domain_model_newsletterchannel -->
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel">
+                <source>Newsletter channel</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id">
+                <source>Newsletter channel ID</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id.description">
+                <source>The unique ID of the newsletter channel.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title.description">
+                <source>The title the newsletter channel.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.is_public">
+                <source>Is public?</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.is_virtual">
+                <source>Is virtual channel?</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.oid">
+                <source>OID</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.estimated_count">
+                <source>Estimated count</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.estimated_count.description">
+                <source>The estimated number of entries in a channel or segment.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender">
+                <source>Sender email address</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender.description">
+                <source>The sender's email address. If set, this overwrites the sender ID preset in the configuration file.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to">
+                <source>Reply-to email address</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to.description">
+                <source>The reply-to email address. If set, this overwrites the reply-to ID preset in the configuration file.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id">
+                <source>Skip used ID</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id.description">
+                <source>Enable if the sending should be canceled if there is already a newsletter with the same event ID in the archive.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images">
+                <source>Embed images</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.description">
+                <source>Behavior for embedding images.</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.all">
+                <source>Embed all images in the email</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.byPath">
+                <source>Embed all images with a relative link</source>
+            </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.none">
+                <source>Embed no images</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

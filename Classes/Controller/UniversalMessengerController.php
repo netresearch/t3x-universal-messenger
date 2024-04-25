@@ -97,7 +97,7 @@ class UniversalMessengerController extends ActionController
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $moduleTemplate->assign('content', $this->view->render());
 
-//        $this->registerDocHeaderButtons($moduleTemplate);
+        //        $this->registerDocHeaderButtons($moduleTemplate);
 
         return $moduleTemplate->renderResponse('Backend/BackendModule.html');
     }
