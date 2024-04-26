@@ -24,36 +24,6 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 class NewsletterChannel extends AbstractEntity
 {
     /**
-     * @var string
-     */
-    protected string $newsletterChannelId = '';
-
-    /**
-     * @var string
-     */
-    protected string $title = '';
-
-    /**
-     * @var bool
-     */
-    protected bool $isPublic = false;
-
-    /**
-     * @var bool
-     */
-    protected bool $isVirtual = false;
-
-    /**
-     * @var string
-     */
-    protected string $oid = '';
-
-    /**
-     * @var int
-     */
-    protected int $estimatedCount = 0;
-
-    /**
      * @var DateTime
      */
     protected DateTime $crdate;
@@ -67,6 +37,16 @@ class NewsletterChannel extends AbstractEntity
      * @var bool
      */
     protected bool $deleted = false;
+
+    /**
+     * @var string
+     */
+    protected string $newsletterChannelId = '';
+
+    /**
+     * @var string
+     */
+    protected string $title = '';
 
     /**
      * @var string
@@ -87,126 +67,6 @@ class NewsletterChannel extends AbstractEntity
      * @var string
      */
     protected string $embedImages = 'none';
-
-    /**
-     * @return string
-     */
-    public function getNewsletterChannelId(): string
-    {
-        return $this->newsletterChannelId;
-    }
-
-    /**
-     * @param string $newsletterChannelId
-     *
-     * @return NewsletterChannel
-     */
-    public function setNewsletterChannelId(string $newsletterChannelId): NewsletterChannel
-    {
-        $this->newsletterChannelId = $newsletterChannelId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return NewsletterChannel
-     */
-    public function setTitle(string $title): NewsletterChannel
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPublic(): bool
-    {
-        return $this->isPublic;
-    }
-
-    /**
-     * @param bool $isPublic
-     *
-     * @return NewsletterChannel
-     */
-    public function setIsPublic(bool $isPublic): NewsletterChannel
-    {
-        $this->isPublic = $isPublic;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVirtual(): bool
-    {
-        return $this->isVirtual;
-    }
-
-    /**
-     * @param bool $isVirtual
-     *
-     * @return NewsletterChannel
-     */
-    public function setIsVirtual(bool $isVirtual): NewsletterChannel
-    {
-        $this->isVirtual = $isVirtual;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOid(): string
-    {
-        return $this->oid;
-    }
-
-    /**
-     * @param string $oid
-     *
-     * @return NewsletterChannel
-     */
-    public function setOid(string $oid): NewsletterChannel
-    {
-        $this->oid = $oid;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEstimatedCount(): int
-    {
-        return $this->estimatedCount;
-    }
-
-    /**
-     * @param int $estimatedCount
-     *
-     * @return NewsletterChannel
-     */
-    public function setEstimatedCount(int $estimatedCount): NewsletterChannel
-    {
-        $this->estimatedCount = $estimatedCount;
-
-        return $this;
-    }
 
     /**
      * @return DateTime
@@ -264,6 +124,46 @@ class NewsletterChannel extends AbstractEntity
     public function setDeleted(bool $deleted): NewsletterChannel
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewsletterChannelId(): string
+    {
+        return $this->newsletterChannelId;
+    }
+
+    /**
+     * @param string $newsletterChannelId
+     *
+     * @return NewsletterChannel
+     */
+    public function setNewsletterChannelId(string $newsletterChannelId): NewsletterChannel
+    {
+        $this->newsletterChannelId = $newsletterChannelId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return NewsletterChannel
+     */
+    public function setTitle(string $title): NewsletterChannel
+    {
+        $this->title = $title;
 
         return $this;
     }

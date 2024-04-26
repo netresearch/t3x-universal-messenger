@@ -19,21 +19,6 @@
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title.description">
                 <source>The title the newsletter channel.</source>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.is_public">
-                <source>Is public?</source>
-            </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.is_virtual">
-                <source>Is virtual channel?</source>
-            </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.oid">
-                <source>OID</source>
-            </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.estimated_count">
-                <source>Estimated count</source>
-            </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.estimated_count.description">
-                <source>The estimated number of entries in a channel or segment.</source>
-            </trans-unit>
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender">
                 <source>Sender email address</source>
             </trans-unit>

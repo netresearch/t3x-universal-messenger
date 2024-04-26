@@ -27,7 +27,7 @@ return [
     ],
     'types' => [
         0 => [
-            'showitem' => 'newsletter_channel_id, title, is_public, is_virtual, oid, estimated_count, sender, reply_to, skip_used_id, embed_images',
+            'showitem' => 'newsletter_channel_id, title, sender, reply_to, skip_used_id, embed_images',
         ],
     ],
     'columns' => [
@@ -101,49 +101,6 @@ return [
             'config'      => [
                 'type'     => 'input',
                 'size'     => 255,
-                'eval'     => 'trim',
-                'readOnly' => true,
-                'required' => true,
-            ],
-        ],
-        'is_public' => [
-            'exclude' => true,
-            'label'   => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.is_public',
-            'config'  => [
-                'type'       => 'check',
-                'renderType' => 'checkboxToggle',
-                'default'    => 0,
-                'readOnly'   => true,
-            ],
-        ],
-        'is_virtual' => [
-            'exclude' => true,
-            'label'   => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.is_virtual',
-            'config'  => [
-                'type'       => 'check',
-                'renderType' => 'checkboxToggle',
-                'default'    => 0,
-                'readOnly'   => true,
-            ],
-        ],
-        'oid' => [
-            'exclude' => true,
-            'label'   => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.oid',
-            'config'  => [
-                'type'     => 'input',
-                'size'     => 255,
-                'eval'     => 'trim',
-                'readOnly' => true,
-                'required' => true,
-            ],
-        ],
-        'estimated_count' => [
-            'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.estimated_count',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.estimated_count.description',
-            'config'      => [
-                'type'     => 'input',
-                'size'     => 10,
                 'eval'     => 'trim',
                 'readOnly' => true,
                 'required' => true,

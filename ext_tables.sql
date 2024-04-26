@@ -15,11 +15,6 @@ CREATE TABLE tx_nrcuniversalmessenger_domain_model_newsletterchannel
 
     newsletter_channel_id varchar(255)         DEFAULT ''     NOT NULL,
     title                 varchar(255)         DEFAULT ''     NOT NULL,
-    is_public             smallint(5) unsigned DEFAULT '0'    NOT NULL,
-    is_virtual            smallint(5) unsigned DEFAULT '0'    NOT NULL,
-    oid                   varchar(255)         DEFAULT ''     NOT NULL,
-    estimated_count       int(11) unsigned     DEFAULT '0'    NOT NULL,
-
     sender                varchar(255)         DEFAULT ''     NOT NULL,
     reply_to              varchar(255)         DEFAULT ''     NOT NULL,
     skip_used_id          smallint(5) unsigned DEFAULT '0'    NOT NULL,
