@@ -3,6 +3,11 @@
     <file source-language="en" datatype="plaintext" original="messages">
         <header/>
         <body>
+            <!-- pages -->
+            <trans-unit id="pages.page_type_newsletter">
+                <source>Newsletter</source>
+            </trans-unit>
+
             <!-- tx_nrcuniversalmessenger_domain_model_newsletterchannel -->
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel">
                 <source>Newsletter channel</source>

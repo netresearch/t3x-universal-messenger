@@ -1,6 +1,9 @@
 # cat=General; type=int+; label=PID used to store the Universal Messenger newsletter channel records
 universalMessengerStoragePid =
 
+# cat=General; type=int+; label=Page type used for Universal Messenger newsletter pages: The value is used for the doctype field of the pages table in your instance. Set a different value here if the default value is already used for other things.
+universalMessengerNewsletterPageDokType = 20
+
 # cat=Webservice; type=string; label=Base URL: The Universal Messenger API URL
 universalMessengerApiUrl =
 

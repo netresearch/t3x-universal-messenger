@@ -21,4 +21,8 @@ return [
         'provider' => BitmapIconProvider::class,
         'source'   => 'EXT:nrc_universal_messenger/Resources/Public/Icons/Extension.png',
     ],
+    'universal-messenger-dok-type-newsletter' => [
+        'provider' => SvgIconProvider::class,
+        'source'   => 'EXT:nrc_universal_messenger/Resources/Public/Icons/DokTypeNewsletter.svg',
+    ],
 ];
