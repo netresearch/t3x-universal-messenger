@@ -51,6 +51,11 @@ class NewsletterChannel extends AbstractEntity
     /**
      * @var string
      */
+    protected string $description = '';
+
+    /**
+     * @var string
+     */
     protected string $sender = '';
 
     /**
@@ -165,6 +170,25 @@ class NewsletterChannel extends AbstractEntity
     {
         $this->title = $title;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return NewsletterChannel
+     */
+    public function setDescription(string $description): NewsletterChannel
+    {
+        $this->description = $description;
         return $this;
     }
 

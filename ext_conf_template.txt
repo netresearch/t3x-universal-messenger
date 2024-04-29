@@ -10,5 +10,5 @@ universalMessengerApiUrl =
 # cat=Webservice; type=string; label=API Key: The Universal Messenger API Key
 universalMessengerApiKey =
 
-# cat=Webservice; type=boolean; label=Enable logging: Log all Universal Messenger Api requests in a log file.
+# cat=Webservice; type=boolean; label=Enable logging: Log all Universal Messenger API requests in a log file.
 enable_logging = 0

@@ -24,6 +24,9 @@
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title.description">
                 <target>Der Titel des Newsletter-Kanals.</target>
             </trans-unit>
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.description">
+                <target>Beschreibung</target>
+            </trans-unit>
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender">
                 <target>E-Mail-Adresse des Absenders</target>
             </trans-unit>

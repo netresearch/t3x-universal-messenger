@@ -12,44 +12,44 @@ declare(strict_types=1);
 // Do not add "delete => 'deleted'" into the 'ctrl' section to achieve direct removal of records
 // upon removeAll call in persistence manager.
 return [
-    'ctrl' => [
+    'ctrl'      => [
         'title'        => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel',
         'label'        => 'title',
         'tstamp'       => 'tstamp',
         'crdate'       => 'crdate',
         'hideTable'    => false,
         'sortby'       => 'sorting',
-        'searchFields' => 'title,sender,reply_to',
+        'searchFields' => 'title,description,sender,reply_to',
         'iconfile'     => 'EXT:nrc_universal_messenger/Resources/Public/Icons/Extension.png',
     ],
     'interface' => [
         'maxSingleDBListItems' => 50,
     ],
-    'types' => [
+    'types'     => [
         0 => [
-            'showitem' => 'newsletter_channel_id, title, sender, reply_to, skip_used_id, embed_images',
+            'showitem' => 'newsletter_channel_id, title, description, sender, reply_to, skip_used_id, embed_images',
         ],
     ],
-    'columns' => [
-        'pid' => [
+    'columns'   => [
+        'pid'                   => [
             'label'  => 'pid',
             'config' => [
                 'type' => 'passthrough',
             ],
         ],
-        'crdate' => [
+        'crdate'                => [
             'label'  => 'crdate',
             'config' => [
                 'type' => 'datetime',
             ],
         ],
-        'tstamp' => [
+        'tstamp'                => [
             'label'  => 'tstamp',
             'config' => [
                 'type' => 'datetime',
             ],
         ],
-        'starttime' => [
+        'starttime'             => [
             'exclude' => true,
             'label'   => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
             'config'  => [
@@ -60,13 +60,13 @@ return [
                 ],
             ],
         ],
-        'endtime' => [
+        'endtime'               => [
             'exclude' => true,
             'label'   => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
             'config'  => [
-                'type'    => 'datetime',
-                'default' => 0,
-                'range'   => [
+                'type'      => 'datetime',
+                'default'   => 0,
+                'range'     => [
                     'upper' => mktime(
                         0,
                         0,
@@ -81,54 +81,61 @@ return [
                 ],
             ],
         ],
-
         'newsletter_channel_id' => [
             'exclude'     => true,
             'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id',
             'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id.description',
             'config'      => [
                 'type'     => 'input',
-                'size'     => 255,
+                'size'     => 40,
                 'eval'     => 'trim',
                 'readOnly' => true,
                 'required' => true,
             ],
         ],
-        'title' => [
+        'title'                 => [
+            'exclude'     => true,
             'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.title',
             'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.title.description',
-            'displayCond' => 'VERSION:IS:false',
             'config'      => [
                 'type'     => 'input',
-                'size'     => 255,
+                'size'     => 40,
                 'eval'     => 'trim',
                 'readOnly' => true,
                 'required' => true,
             ],
         ],
-        'sender' => [
+        'description'           => [
+            'exclude' => true,
+            'label'   => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.description',
+            'config'  => [
+                'type'     => 'text',
+                'cols'     => 40,
+                'rows'     => 3,
+                'readOnly' => true,
+            ],
+        ],
+        'sender'                => [
             'exclude'     => true,
             'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender',
             'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender.description',
             'config'      => [
-                'type'     => 'input',
-                'size'     => 255,
-                'eval'     => 'trim',
-                'required' => true,
+                'type' => 'input',
+                'size' => 40,
+                'eval' => 'trim',
             ],
         ],
-        'reply_to' => [
+        'reply_to'              => [
             'exclude'     => true,
             'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to',
             'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to.description',
             'config'      => [
-                'type'     => 'input',
-                'size'     => 255,
-                'eval'     => 'trim',
-                'required' => true,
+                'type' => 'input',
+                'size' => 40,
+                'eval' => 'trim',
             ],
         ],
-        'skip_used_id' => [
+        'skip_used_id'          => [
             'exclude'     => true,
             'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id',
             'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id.description',
@@ -138,7 +145,7 @@ return [
                 'default'    => 0,
             ],
         ],
-        'embed_images' => [
+        'embed_images'          => [
             'exclude'     => true,
             'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images',
             'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.description',

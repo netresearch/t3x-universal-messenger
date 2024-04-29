@@ -202,6 +202,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $newsletterChannelDomainModel
             ->setNewsletterChannelId($newsletterChannel->id)
             ->setTitle($newsletterChannel->title)
+            ->setDescription($newsletterChannel->description)
             ->setCrdate(new DateTime())
             ->setTstamp(new DateTime());
 
