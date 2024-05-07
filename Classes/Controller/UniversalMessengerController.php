@@ -11,14 +11,17 @@ declare(strict_types=1);
 
 namespace Netresearch\NrcUniversalMessenger\Controller;
 
+use Netresearch\NrcUniversalMessenger\Configuration;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * UniversalMessengerController.
@@ -55,6 +58,13 @@ class UniversalMessengerController extends ActionController
     protected readonly PersistenceManager $persistenceManager;
 
     /**
+     * The selected page ID.
+     *
+     * @var int
+     */
+    private int $pageId = 0;
+
+    /**
      * TranslationController constructor.
      *
      * @param ModuleTemplateFactory  $moduleTemplateFactory
@@ -87,6 +97,20 @@ class UniversalMessengerController extends ActionController
     protected function initializeAction(): void
     {
         parent::initializeAction();
+
+        $this->pageId = $this->getPageId($this->request);
+    }
+
+    /**
+     * Returns the page ID extracted from the given request object.
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return int
+     */
+    private function getPageId(ServerRequestInterface $request): int
+    {
+        return (int) ($request->getParsedBody()['id'] ?? $request->getQueryParams()['id'] ?? -1);
     }
 
     /**
@@ -99,6 +123,15 @@ class UniversalMessengerController extends ActionController
 
         //        $this->registerDocHeaderButtons($moduleTemplate);
 
+        $contentPage = BackendUtility::getRecord('pages', $this->pageId);
+
+        // Show button only at pages matching our page type.
+        if ($contentPage['doktype'] !== Configuration::getNewsletterPageDokType()) {
+            return $moduleTemplate->renderResponse('Backend/BackendModule.html');
+        }
+
+DebuggerUtility::var_dump($contentPage['title']);
+
         return $moduleTemplate->renderResponse('Backend/BackendModule.html');
     }
 
@@ -106,8 +139,6 @@ class UniversalMessengerController extends ActionController
      * Shows the textDB entires.
      *
      * @return ResponseInterface
-     *
-     * @throws InvalidQueryException
      */
     public function indexAction(): ResponseInterface
     {

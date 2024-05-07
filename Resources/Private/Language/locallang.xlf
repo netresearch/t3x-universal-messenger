@@ -12,10 +12,10 @@
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel">
                 <source>Newsletter channel</source>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id">
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id">
                 <source>Newsletter channel ID</source>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id.description">
+            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id.description">
                 <source>The unique ID of the newsletter channel.</source>
             </trans-unit>
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title">

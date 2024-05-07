@@ -27,7 +27,7 @@ return [
     ],
     'types'     => [
         0 => [
-            'showitem' => 'newsletter_channel_id, title, description, sender, reply_to, skip_used_id, embed_images',
+            'showitem' => 'channel_id, title, description, sender, reply_to, skip_used_id, embed_images',
         ],
     ],
     'columns'   => [
@@ -81,10 +81,10 @@ return [
                 ],
             ],
         ],
-        'newsletter_channel_id' => [
+        'channel_id' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.newsletter_channel_id.description',
+            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id',
+            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id.description',
             'config'      => [
                 'type'     => 'input',
                 'size'     => 40,

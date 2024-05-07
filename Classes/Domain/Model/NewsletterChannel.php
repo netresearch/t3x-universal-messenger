@@ -41,7 +41,7 @@ class NewsletterChannel extends AbstractEntity
     /**
      * @var string
      */
-    protected string $newsletterChannelId = '';
+    protected string $channelId = '';
 
     /**
      * @var string
@@ -136,20 +136,19 @@ class NewsletterChannel extends AbstractEntity
     /**
      * @return string
      */
-    public function getNewsletterChannelId(): string
+    public function getChannelId(): string
     {
-        return $this->newsletterChannelId;
+        return $this->channelId;
     }
 
     /**
-     * @param string $newsletterChannelId
+     * @param string $channelId
      *
      * @return NewsletterChannel
      */
-    public function setNewsletterChannelId(string $newsletterChannelId): NewsletterChannel
+    public function setChannelId(string $channelId): NewsletterChannel
     {
-        $this->newsletterChannelId = $newsletterChannelId;
-
+        $this->channelId = $channelId;
         return $this;
     }
 

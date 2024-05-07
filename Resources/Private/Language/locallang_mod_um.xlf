@@ -15,6 +15,9 @@
             </trans-unit>
 
             <!-- Labels -->
+            <trans-unit id="openInUniversalMessenger">
+                <source>Open in UM</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

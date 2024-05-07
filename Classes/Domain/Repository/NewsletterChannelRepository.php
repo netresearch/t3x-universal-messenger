@@ -47,20 +47,20 @@ class NewsletterChannelRepository extends Repository
     /**
      * Finds all newsletter channel records not matching the given list of newsletter channel IDs.
      *
-     * @param array $newsletterChannelIds
+     * @param string[] $channelIds
      *
      * @return QueryResultInterface
      *
      * @throws InvalidQueryException
      */
-    public function findAllNotByNewsletterChannelId(array $newsletterChannelIds): QueryResultInterface
+    public function findAllNotByChannelId(array $channelIds): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->matching(
             $query->logicalNot(
                 $query->in(
-                    'newsletter_channel_id',
-                    $newsletterChannelIds
+                    'channel_id',
+                    $channelIds
                 )
             )
         );

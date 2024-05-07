@@ -14,3 +14,8 @@ services:
               command: 'universal-messenger:newsletter-channels:import'
               description: 'Imports all active Universal Messenger newsletter channels'
               schedulable: true
+
+    Netresearch\NrcUniversalMessenger\EventListener\ModifyPageLayoutContentEventListener:
+        tags:
+            - name: event.listener
+              event: TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent

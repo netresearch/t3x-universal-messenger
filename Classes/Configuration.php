@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Netresearch\NrcUniversalMessenger;
 
-use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
-use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use Exception;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -41,14 +40,18 @@ class Configuration
 
     /**
      * @return int
-     *
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public static function getNewsletterPageDokType(): int
     {
-        $pageType = (int) self::getExtensionConfiguration()
-            ->get('nrc_universal_messenger', 'universalMessengerNewsletterPageDokType');
+        try {
+            $pageType = (int) self::getExtensionConfiguration()
+                ->get(
+                    'nrc_universal_messenger',
+                    'universalMessengerNewsletterPageDokType'
+                );
+        } catch (Exception) {
+            $pageType = 0;
+        }
 
         return ($pageType === 0) ? self::PAGE_TYPE_NEWSLETTER : $pageType;
     }

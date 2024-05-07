@@ -97,25 +97,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     protected function importNewsletterChannels(OutputInterface $output): int
     {
         // Query all active newsletter channels from UM webservice
-        try {
-            $output->writeln('Download updated list of newsletter channels from Universal Messenger');
-
-            $newsletterChannelCollection = $this->universalMessengerService
-                ->api()
-                ->newsletter()
-                ->channels();
-        } catch (Exception $exception) {
-            $this->logger->error(
-                $exception->getMessage(),
-                [
-                    'exception' => $exception,
-                ]
-            );
-
-            $output->writeln($exception->getMessage());
-
-            $newsletterChannelCollection = new NewsletterChannelCollection();
-        }
+        $newsletterChannelCollection = $this->queryNewsletterChannelCollection($output);
 
         // Abort further import if webservice response does not contain any data
         if ($newsletterChannelCollection->count() === 0) {
@@ -129,12 +111,10 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $count = 0;
 
         // List of newsletter channels imported
-        $newsletterChannelIds = [];
+        $channelIds = [];
 
         foreach ($newsletterChannelCollection as $newsletterChannel) {
-            $newsletterChannelIds[] = $newsletterChannel->id;
-
-            $output->write('.');
+            $channelIds[] = $this->stripChannelSuffix($newsletterChannel->id);
 
             try {
                 // Newsletter channel
@@ -150,6 +130,8 @@ class ImportCommand extends Command implements LoggerAwareInterface
                 $this->persistenceManager->persistAll();
 
                 ++$count;
+
+                $output->write('.');
 
                 if (($count % 10) === 0) {
                     $output->writeln(
@@ -169,12 +151,42 @@ class ImportCommand extends Command implements LoggerAwareInterface
         }
 
         // Remove all obsolete records
-        $this->removeObsoleteRecords($newsletterChannelIds, $output);
+        $this->removeObsoleteRecords($channelIds, $output);
 
         $output->writeln("\nImport done");
 
         // All fine
         return self::SUCCESS;
+    }
+
+    /**
+     * Query all active newsletter channels from UM webservice.
+     *
+     * @param OutputInterface $output
+     *
+     * @return NewsletterChannelCollection
+     */
+    private function queryNewsletterChannelCollection(OutputInterface $output): NewsletterChannelCollection
+    {
+        try {
+            $output->writeln('Download updated list of newsletter channels from Universal Messenger');
+
+            return $this->universalMessengerService
+                ->api()
+                ->newsletter()
+                ->channels();
+        } catch (Exception $exception) {
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    'exception' => $exception,
+                ]
+            );
+
+            $output->writeln($exception->getMessage());
+        }
+
+        return new NewsletterChannelCollection();
     }
 
     /**
@@ -189,8 +201,10 @@ class ImportCommand extends Command implements LoggerAwareInterface
         NewsletterChannel $newsletterChannel,
         int $storagePid
     ): NewsletterChannelDomainModel {
+        $channelId = $this->stripChannelSuffix($newsletterChannel->id);
+
         $newsletterChannelDomainModel = $this->newsletterChannelRepository
-            ->findOneBy(['newsletterChannelId' => $newsletterChannel->id]);
+            ->findOneBy(['channelId' => $channelId]);
 
         if ($newsletterChannelDomainModel instanceof NewsletterChannelDomainModel) {
             return $newsletterChannelDomainModel;
@@ -200,8 +214,8 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $newsletterChannelDomainModel->setPid($storagePid);
 
         $newsletterChannelDomainModel
-            ->setNewsletterChannelId($newsletterChannel->id)
-            ->setTitle($newsletterChannel->title)
+            ->setChannelId($channelId)
+            ->setTitle($this->cleanChannelTitle($newsletterChannel->title))
             ->setDescription($newsletterChannel->description)
             ->setCrdate(new DateTime())
             ->setTstamp(new DateTime());
@@ -210,18 +224,42 @@ class ImportCommand extends Command implements LoggerAwareInterface
     }
 
     /**
+     * Removes the channel suffix "_Test" and "_Live" from the given channel ID.
+     *
+     * @param string $channelId
+     *
+     * @return string
+     */
+    private function stripChannelSuffix(string $channelId): string
+    {
+        return trim(str_ireplace(['_Test', '_Live'], '', $channelId));
+    }
+
+    /**
+     * Removes some configured text parts from the newsletter channel title.
+     *
+     * @param string $channelTitle
+     *
+     * @return string
+     */
+    private function cleanChannelTitle(string $channelTitle): string
+    {
+        return trim(str_ireplace('(TESTVersand)', '', $channelTitle));
+    }
+
+    /**
      * Finds all records not in the list of imported records and remove them.
      *
-     * @param string[]        $newsletterChannelIds
+     * @param string[]        $channelIds
      * @param OutputInterface $output
      *
      * @return void
      */
-    private function removeObsoleteRecords(array $newsletterChannelIds, OutputInterface $output): void
+    private function removeObsoleteRecords(array $channelIds, OutputInterface $output): void
     {
         try {
             $queryResult = $this->newsletterChannelRepository
-                ->findAllNotByNewsletterChannelId($newsletterChannelIds);
+                ->findAllNotByChannelId($channelIds);
 
             // Remove each record
             foreach ($queryResult as $newsletterChannel) {
