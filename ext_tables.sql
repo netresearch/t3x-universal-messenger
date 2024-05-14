@@ -1,4 +1,12 @@
 #
+# Table structure for table 'pages'
+#
+CREATE TABLE pages
+(
+    universal_messenger_channel int(11) unsigned NOT NULL
+);
+
+#
 # Table structure for table 'tx_nrcuniversalmessenger_domain_model_newsletterchannel'
 #
 CREATE TABLE tx_nrcuniversalmessenger_domain_model_newsletterchannel

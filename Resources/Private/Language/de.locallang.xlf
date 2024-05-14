@@ -5,12 +5,18 @@
         <body>
             <!-- pages -->
             <trans-unit id="pages.page_type_newsletter">
-                <source>Newsletter</source>
+                <target>Newsletter</target>
+            </trans-unit>
+            <trans-unit id="pages.universal_messenger_channel">
+                <target>Newsletter-Kanal</target>
+            </trans-unit>
+            <trans-unit id="pages.universal_messenger_channel.description">
+                <target>Wählen Sie hier den Newsletter-Kanal für diesen Newsletter.</target>
             </trans-unit>
 
             <!-- tx_nrcuniversalmessenger_domain_model_newsletterchannel -->
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel">
-                <target>Newsletter-Kanel</target>
+                <target>Newsletter-Kanal</target>
             </trans-unit>
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id">
                 <target>Newsletter-Kanal-ID</target>

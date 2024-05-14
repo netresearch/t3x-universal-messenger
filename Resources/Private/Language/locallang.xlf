@@ -7,6 +7,12 @@
             <trans-unit id="pages.page_type_newsletter">
                 <source>Newsletter</source>
             </trans-unit>
+            <trans-unit id="pages.universal_messenger_channel">
+                <source>Newsletter channel</source>
+            </trans-unit>
+            <trans-unit id="pages.universal_messenger_channel.description">
+                <source>Select the newsletter channel for this newsletter here.</source>
+            </trans-unit>
 
             <!-- tx_nrcuniversalmessenger_domain_model_newsletterchannel -->
             <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel">

@@ -13,14 +13,12 @@ namespace Netresearch\NrcUniversalMessenger\Controller;
 
 use Netresearch\NrcUniversalMessenger\Configuration;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
@@ -35,27 +33,12 @@ class UniversalMessengerController extends ActionController
     /**
      * @var ModuleTemplateFactory
      */
-    protected readonly ModuleTemplateFactory $moduleTemplateFactory;
+    private readonly ModuleTemplateFactory $moduleTemplateFactory;
 
     /**
-     * @var ExtensionConfiguration
+     * @var ModuleTemplate
      */
-    protected ExtensionConfiguration $extensionConfiguration;
-
-    /**
-     * @var PageRenderer
-     */
-    protected readonly PageRenderer $pageRenderer;
-
-    /**
-     * @var IconFactory
-     */
-    protected readonly IconFactory $iconFactory;
-
-    /**
-     * @var PersistenceManager
-     */
-    protected readonly PersistenceManager $persistenceManager;
+    private ModuleTemplate $moduleTemplate;
 
     /**
      * The selected page ID.
@@ -65,32 +48,18 @@ class UniversalMessengerController extends ActionController
     private int $pageId = 0;
 
     /**
-     * TranslationController constructor.
+     * UniversalMessengerController constructor.
      *
      * @param ModuleTemplateFactory  $moduleTemplateFactory
-     * @param PageRenderer           $pageRenderer
-     * @param ExtensionConfiguration $extensionConfiguration
-     * @param IconFactory            $iconFactory
-     * @param PersistenceManager     $persistenceManager
      */
     public function __construct(
-        ModuleTemplateFactory $moduleTemplateFactory,
-        PageRenderer $pageRenderer,
-        ExtensionConfiguration $extensionConfiguration,
-        IconFactory $iconFactory,
-        PersistenceManager $persistenceManager,
+        ModuleTemplateFactory $moduleTemplateFactory
     ) {
-        $this->extensionConfiguration = $extensionConfiguration;
-        $this->persistenceManager     = $persistenceManager;
         $this->moduleTemplateFactory  = $moduleTemplateFactory;
-        $this->iconFactory            = $iconFactory;
-
-        $this->pageRenderer = $pageRenderer;
-        $this->pageRenderer->loadJavaScriptModule('@typo3/backend/modal.js');
     }
 
     /**
-     * Initialize Action.
+     * Initialize action.
      *
      * @return void
      */
@@ -98,19 +67,46 @@ class UniversalMessengerController extends ActionController
     {
         parent::initializeAction();
 
-        $this->pageId = $this->getPageId($this->request);
+        $this->pageId         = $this->getPageId();
+        $this->moduleTemplate = $this->getModuleTemplate();
     }
 
     /**
      * Returns the page ID extracted from the given request object.
      *
-     * @param ServerRequestInterface $request
-     *
      * @return int
      */
-    private function getPageId(ServerRequestInterface $request): int
+    private function getPageId(): int
     {
-        return (int) ($request->getParsedBody()['id'] ?? $request->getQueryParams()['id'] ?? -1);
+        return (int) ($this->request->getParsedBody()['id'] ?? $this->request->getQueryParams()['id'] ?? -1);
+    }
+
+    /**
+     * @return BackendUserAuthentication
+     */
+    private function getBackendUserAuthentication(): BackendUserAuthentication
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * Returns the module template instance.
+     *
+     * @return ModuleTemplate
+     */
+    private function getModuleTemplate(): ModuleTemplate
+    {
+        $moduleTemplate   = $this->moduleTemplateFactory->create($this->request);
+        $permissionClause = $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW);
+        $pageRecord       = BackendUtility::readPageAccess($this->pageId, $permissionClause);
+
+        if ($pageRecord !== false) {
+            $moduleTemplate
+                ->getDocHeaderComponent()
+                ->setMetaInformation($pageRecord);
+        }
+
+        return $moduleTemplate;
     }
 
     /**
@@ -118,21 +114,18 @@ class UniversalMessengerController extends ActionController
      */
     private function moduleResponse(): ResponseInterface
     {
-        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
-        $moduleTemplate->assign('content', $this->view->render());
-
         //        $this->registerDocHeaderButtons($moduleTemplate);
 
         $contentPage = BackendUtility::getRecord('pages', $this->pageId);
 
         // Show button only at pages matching our page type.
         if ($contentPage['doktype'] !== Configuration::getNewsletterPageDokType()) {
-            return $moduleTemplate->renderResponse('Backend/BackendModule.html');
+            return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger.html');
         }
 
 DebuggerUtility::var_dump($contentPage['title']);
 
-        return $moduleTemplate->renderResponse('Backend/BackendModule.html');
+        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger.html');
     }
 
     /**
@@ -142,6 +135,8 @@ DebuggerUtility::var_dump($contentPage['title']);
      */
     public function indexAction(): ResponseInterface
     {
+        $this->moduleTemplate->assign('content', $this->view->render());
+
         return $this->moduleResponse();
     }
 }
