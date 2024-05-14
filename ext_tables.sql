@@ -1,4 +1,12 @@
 #
+# Table structure for table 'be_users'
+#
+CREATE TABLE be_users
+(
+    universal_messenger_channels text
+);
+
+#
 # Table structure for table 'pages'
 #
 CREATE TABLE pages

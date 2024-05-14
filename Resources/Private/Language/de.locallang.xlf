@@ -3,6 +3,19 @@
     <file target-language="de" datatype="plaintext" original="messages">
         <header/>
         <body>
+            <!-- common -->
+            <trans-unit id="common.universal_messenger">
+                <target>Universal Messenger</target>
+            </trans-unit>
+
+            <!-- be_users -->
+            <trans-unit id="be_users.universal_messenger_channels">
+                <target>Newsletter-Kanäle</target>
+            </trans-unit>
+            <trans-unit id="be_users.universal_messenger_channels.description">
+                <target>Wählen Sie hier die Newsletter-Kanäle, für welche dieser Benutzer Newsletter versenden darf.</target>
+            </trans-unit>
+
             <!-- pages -->
             <trans-unit id="pages.page_type_newsletter">
                 <target>Newsletter</target>
