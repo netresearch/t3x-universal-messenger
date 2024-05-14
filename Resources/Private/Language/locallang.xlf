@@ -8,12 +8,20 @@
                 <source>Universal Messenger</source>
             </trans-unit>
 
+            <!-- errors -->
+            <trans-unit id="error.page_not_allowed">
+                <source>Please select a page with the page type "Newsletter".</source>
+            </trans-unit>
+            <trans-unit id="error.access_not_allowed">
+                <source>You do not have the necessary rights to send this newsletter.</source>
+            </trans-unit>
+
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">
-                <target>Newsletter channels</target>
+                <source>Newsletter channels</source>
             </trans-unit>
             <trans-unit id="be_users.universal_messenger_channels.description">
-                <target>Here select the newsletter channels for which this user is allowed to send newsletters.</target>
+                <source>Here select the newsletter channels for which this user is allowed to send newsletters.</source>
             </trans-unit>
 
             <!-- pages -->

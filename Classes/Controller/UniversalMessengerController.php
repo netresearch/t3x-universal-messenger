@@ -17,7 +17,11 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
@@ -90,6 +94,14 @@ class UniversalMessengerController extends ActionController
     }
 
     /**
+     * @return LanguageService
+     */
+    private function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
+    }
+
+    /**
      * Returns the module template instance.
      *
      * @return ModuleTemplate
@@ -120,7 +132,27 @@ class UniversalMessengerController extends ActionController
 
         // Show button only at pages matching our page type.
         if ($contentPage['doktype'] !== Configuration::getNewsletterPageDokType()) {
-            return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger.html');
+            $this->moduleTemplate->addFlashMessage(
+                $this->translate('error.page_not_allowed'),
+                'Universal Messenger',
+                ContextualFeedbackSeverity::INFO
+            );
+
+            return new ForwardResponse('error');
+        }
+
+        // Check if backend user is allowed to access this newsletter
+        if (!GeneralUtility::inList(
+            $this->getBackendUserAuthentication()->user['universal_messenger_channels'],
+            $contentPage['universal_messenger_channel']
+        )) {
+            $this->moduleTemplate->addFlashMessage(
+                $this->translate('error.access_not_allowed'),
+                'Universal Messenger',
+                ContextualFeedbackSeverity::ERROR
+            );
+
+            return new ForwardResponse('error');
         }
 
 DebuggerUtility::var_dump($contentPage['title']);
@@ -129,7 +161,21 @@ DebuggerUtility::var_dump($contentPage['title']);
     }
 
     /**
-     * Shows the textDB entires.
+     * Returns the translated language label for the given identifier.
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    private function translate(string $key): string
+    {
+        return $this->getLanguageService()->sL(
+            'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:' . $key
+        );
+    }
+
+    /**
+     * The main entry point.
      *
      * @return ResponseInterface
      */
@@ -138,5 +184,15 @@ DebuggerUtility::var_dump($contentPage['title']);
         $this->moduleTemplate->assign('content', $this->view->render());
 
         return $this->moduleResponse();
+    }
+
+    /**
+     * The error entry point.
+     *
+     * @return ResponseInterface
+     */
+    public function errorAction(): ResponseInterface
+    {
+        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger.html');
     }
 }

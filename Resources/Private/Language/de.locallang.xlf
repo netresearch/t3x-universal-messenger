@@ -8,6 +8,14 @@
                 <target>Universal Messenger</target>
             </trans-unit>
 
+            <!-- errors -->
+            <trans-unit id="error.page_not_allowed">
+                <target>Bitte wählen Sie eine Seite mit dem Seiten-Typ "Newsletter" aus.</target>
+            </trans-unit>
+            <trans-unit id="error.access_not_allowed">
+                <target>Sie verfügen nicht über die notwendigen Rechte, um diesen Newsletter zu versenden.</target>
+            </trans-unit>
+
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">
                 <target>Newsletter-Kanäle</target>
