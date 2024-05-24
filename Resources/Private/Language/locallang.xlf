@@ -3,17 +3,40 @@
     <file source-language="en" datatype="plaintext" original="messages">
         <header/>
         <body>
+            <!-- ext_conf_template.txt -->
+            <trans-unit id="config.default.storagePageId">
+                <source>Storage page ID: The page ID used to store the Universal Messenger newsletter channel records.</source>
+            </trans-unit>
+            <trans-unit id="config.default.pageType">
+                <source>Page type: This value defines the page type used for Universal Messenger newsletter pages. It is used for the doctype field of the page table in your instance. Set a different value here if the default value is already used for other things.</source>
+            </trans-unit>
+            <trans-unit id="config.webservice.apiUrl">
+                <source>Base URL: The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p</source>
+            </trans-unit>
+            <trans-unit id="config.webservice.apiKey">
+                <source>API Key: The Universal Messenger API Key</source>
+            </trans-unit>
+            <trans-unit id="config.webservice.logging">
+                <source>Enable logging: Log all Universal Messenger API requests in a log file.</source>
+            </trans-unit>
+
             <!-- common -->
             <trans-unit id="common.universal_messenger">
                 <source>Universal Messenger</source>
             </trans-unit>
+            <trans-unit id="common.newsletter_preview">
+                <source>Preview of the newsletter</source>
+            </trans-unit>
 
             <!-- errors -->
-            <trans-unit id="error.page_not_allowed">
+            <trans-unit id="error.pageNotAllowed">
                 <source>Please select a page with the page type "Newsletter".</source>
             </trans-unit>
-            <trans-unit id="error.access_not_allowed">
+            <trans-unit id="error.accessNotAllowed">
                 <source>You do not have the necessary rights to send this newsletter.</source>
+            </trans-unit>
+            <trans-unit id="error.noSiteConfiguration">
+                <source>The requested page is missing a valid site configuration.</source>
             </trans-unit>
 
             <!-- be_users -->

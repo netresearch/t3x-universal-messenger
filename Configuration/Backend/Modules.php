@@ -35,5 +35,8 @@ return [
                 'index',
             ],
         ],
+        'moduleData' => [
+            'language' => 0,
+        ],
     ],
 ];

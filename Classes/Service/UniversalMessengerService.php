@@ -76,9 +76,9 @@ class UniversalMessengerService implements SingletonInterface
             return false;
         }
 
-        /** @var array{enable_logging: bool, ...} $settings */
-        return isset($settings['enable_logging'])
-            && $settings['enable_logging'];
+        /** @var array{enableLogging: bool, ...} $settings */
+        return isset($settings['enableLogging'])
+            && $settings['enableLogging'];
     }
 
     /**

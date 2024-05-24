@@ -22,6 +22,7 @@
         "typo3/cms-core": "^12.4",
         "typo3/cms-extbase": "^12.4",
         "nyholm/psr7": "^1.8",
+        "tijsverkoyen/css-to-inline-styles": "^2.2",
         "netresearch/sdk-api-universal-messenger": "*"
     },
     "require-dev": {

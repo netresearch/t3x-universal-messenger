@@ -9,12 +9,14 @@
 
 declare(strict_types=1);
 
+use Netresearch\NrcUniversalMessenger\Controller\NewsletterPreviewController;
 use Netresearch\NrcUniversalMessenger\Service\UniversalMessengerService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 defined('TYPO3') || exit('Access denied.');
 
-call_user_func(static function () {
+call_user_func(static function (): void {
     // Add TypoScript automatically (to use it in backend modules)
     ExtensionManagementUtility::addTypoScript(
         'nrc_universal_messenger',
@@ -45,4 +47,23 @@ call_user_func(static function () {
             'className'   => UniversalMessengerService::class,
         ]
     );
+
+    ExtensionUtility::configurePlugin(
+        'NrcUniversalMessenger',
+        'NewsletterPreview',
+        [
+            NewsletterPreviewController::class => 'preview',
+        ],
+        [
+            NewsletterPreviewController::class => 'preview',
+        ],
+    );
+
+    // Ignore the following parameters in cHash calculation
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_nrcuniversalmessenger_newsletterpreview[pageId]';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'type';
+
+    // Add our custom style sheet
+    $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['nrc_universal_messenger']
+        = 'EXT:nrc_universal_messenger/Resources/Public/Css/Module.css';
 });

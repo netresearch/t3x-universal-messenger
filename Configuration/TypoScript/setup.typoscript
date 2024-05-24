@@ -1,16 +1,96 @@
 # Module configuration
-module.tx_nrcuniversalmessenger {
-    view {
-        templateRootPaths {
-            0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Templates/
-        }
+module {
+    tx_nrcuniversalmessenger {
+        view {
+            templateRootPaths {
+                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Templates/
+            }
 
-        partialRootPaths {
-            0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Partials/
-        }
+            partialRootPaths {
+                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Partials/
+            }
 
-        layoutRootPaths {
-            0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
+            layoutRootPaths {
+                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
+            }
         }
     }
+}
+
+plugin {
+    tx_nrcuniversalmessenger {
+        view {
+            templateRootPaths {
+                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Templates/
+            }
+
+            partialRootPaths {
+                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Partials/
+            }
+
+            layoutRootPaths {
+                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
+            }
+        }
+
+        settings {
+            inlineCssFiles {
+                0 = EXT:bootstrap_package/Resources/Public/Css/bootstrap5-theme.css
+                1 = EXT:bootstrap_package/Resources/Public/Fonts/bootstrappackageicon.css
+                10 = EXT:nrc_universal_messenger/Resources/Private/Css/ZurbFoundation.css
+                20 = EXT:nrc_universal_messenger/Resources/Private/Css/Newsletter.css
+            }
+        }
+    }
+}
+
+# Newsletter preview
+newsletterPreview = PAGE
+newsletterPreview {
+    typeNum = 1715682913
+    config {
+        disableAllHeaderCode = 1
+        disablePrefixComment = 1
+        xhtml_cleaning = 0
+        admPanel = 0
+        debug = 0
+    }
+
+    10 = USER_INT
+    10 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        vendorName = Netresearch
+        extensionName = NrcUniversalMessenger
+        pluginName = NewsletterPreview
+        controller = NewsletterPreview
+        action = preview
+    }
+}
+
+newsletterView = PAGE
+newsletterView {
+    typeNum = 1716283827
+
+    config {
+        disableAllHeaderCode = 1
+        disablePrefixComment = 1
+        xhtml_cleaning = 0
+        admPanel = 0
+        debug = 0
+        linkVars =
+    }
+
+    # Add some css for frontend view
+    cssInline {
+        10 = TEXT
+        10.value (
+        html {
+            width: 1024px;
+            margin: auto;
+        }
+        )
+    }
+
+    # Add content
+    10 < styles.content.get
 }

@@ -3,17 +3,40 @@
     <file target-language="de" datatype="plaintext" original="messages">
         <header/>
         <body>
+            <!-- ext_conf_template.txt -->
+            <trans-unit id="config.default.storagePageId">
+                <target>Speicherseiten-ID: Die Seiten-ID, die zum Speichern der Universal Messenger Newsletter-Kanaldatensätze verwendet wird.</target>
+            </trans-unit>
+            <trans-unit id="config.default.pageType">
+                <target>Seitentyp: Dieser Wert definiert den Seitentyp, der für Universal Messenger Newsletter-Seiten verwendet wird. Er wird für das doktype-Feld der Seitentabelle in Ihrer Instanz verwendet. Stellen Sie hier einen anderen Wert ein, wenn der Standardwert bereits für andere Dinge verwendet wird.</target>
+            </trans-unit>
+            <trans-unit id="config.webservice.apiUrl">
+                <target>Basis-URL: Die allgemeine Universal Messenger API-URL, die die Grundlage aller Requests ist, z.B. https://your-domain.td.universal-messenger.de/p.</target>
+            </trans-unit>
+            <trans-unit id="config.webservice.apiKey">
+                <target>API-Schlüssel: Der Universal Messenger-API-Schlüssel</target>
+            </trans-unit>
+            <trans-unit id="config.webservice.logging">
+                <target>Protokollierung aktivieren: Alle Universal Messenger API-Anfragen in einer Protokolldatei protokollieren.</target>
+            </trans-unit>
+
             <!-- common -->
             <trans-unit id="common.universal_messenger">
                 <target>Universal Messenger</target>
             </trans-unit>
+            <trans-unit id="common.newsletter_preview">
+                <target>Vorschau des Newsletters</target>
+            </trans-unit>
 
             <!-- errors -->
-            <trans-unit id="error.page_not_allowed">
-                <target>Bitte wählen Sie eine Seite mit dem Seiten-Typ "Newsletter" aus.</target>
+            <trans-unit id="error.pageNotAllowed">
+                <target>Bitte wählen Sie eine Seite vom Seiten-Typ "Newsletter" aus.</target>
             </trans-unit>
-            <trans-unit id="error.access_not_allowed">
+            <trans-unit id="error.accessNotAllowed">
                 <target>Sie verfügen nicht über die notwendigen Rechte, um diesen Newsletter zu versenden.</target>
+            </trans-unit>
+            <trans-unit id="error.noSiteConfiguration">
+                <target>Für die angeforderte Seite fehlt eine gültige Seitenkonfiguration.</target>
             </trans-unit>
 
             <!-- be_users -->

@@ -19,3 +19,6 @@ services:
         tags:
             - name: event.listener
               event: TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent
+
+    Netresearch\NrcUniversalMessenger\Controller\UniversalMessengerController:
+        tags: [ 'backend.controller' ]
