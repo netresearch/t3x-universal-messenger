@@ -6,11 +6,6 @@
 .typo3-module-universal-messenger .iframe-container {
     flex-direction: row;
     width: 100%;
-    padding: 10px;
-
-    h2 {
-        margin: 0 0 12px 0;
-    }
 
     iframe {
         width: 100%;

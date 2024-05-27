@@ -45,6 +45,16 @@ class NewsletterChannelRepository extends Repository
     }
 
     /**
+     * @param string $channelId
+     *
+     * @return NewsletterChannel|null
+     */
+    public function findByChannelId(string $channelId): ?NewsletterChannel
+    {
+        return $this->findOneBy(['channelId' => $channelId]);
+    }
+
+    /**
      * Finds all newsletter channel records not matching the given list of newsletter channel IDs.
      *
      * @param string[] $channelIds

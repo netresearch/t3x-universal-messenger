@@ -14,24 +14,6 @@ module {
                 0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
             }
         }
-    }
-}
-
-plugin {
-    tx_nrcuniversalmessenger {
-        view {
-            templateRootPaths {
-                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Templates/
-            }
-
-            partialRootPaths {
-                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Partials/
-            }
-
-            layoutRootPaths {
-                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
-            }
-        }
 
         settings {
             inlineCssFiles {
@@ -43,6 +25,10 @@ plugin {
         }
     }
 }
+
+# Copy module configuration
+plugin.tx_nrcuniversalmessenger < module.tx_nrcuniversalmessenger
+
 
 # Newsletter preview
 newsletterPreview = PAGE

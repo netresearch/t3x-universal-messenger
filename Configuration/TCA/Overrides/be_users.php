@@ -32,6 +32,6 @@ call_user_func(static function (): void {
 
     ExtensionManagementUtility::addToAllTCAtypes(
         'be_users',
-        '--div--;LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:common.universal_messenger,universal_messenger_channels'
+        '--div--;LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:common.universalMessenger,universal_messenger_channels'
     );
 });

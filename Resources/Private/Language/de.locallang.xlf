@@ -21,11 +21,23 @@
             </trans-unit>
 
             <!-- common -->
-            <trans-unit id="common.universal_messenger">
+            <trans-unit id="common.universalMessenger">
                 <target>Universal Messenger</target>
             </trans-unit>
-            <trans-unit id="common.newsletter_preview">
+            <trans-unit id="common.newsletterPreview">
                 <target>Vorschau des Newsletters</target>
+            </trans-unit>
+            <trans-unit id="common.newsletterChannel">
+                <target>Newsletter-Kanal</target>
+            </trans-unit>
+            <trans-unit id="common.newsletterSend">
+                <target>Newsletter-Versand</target>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterTest">
+                <target>Testversand</target>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterLive">
+                <target>Live-Versand</target>
             </trans-unit>
 
             <!-- errors -->
@@ -37,6 +49,9 @@
             </trans-unit>
             <trans-unit id="error.noSiteConfiguration">
                 <target>Für die angeforderte Seite fehlt eine gültige Seitenkonfiguration.</target>
+            </trans-unit>
+            <trans-unit id="error.invalidRequest">
+                <target>Die übermittelte Anfrage ist ungültig.</target>
             </trans-unit>
 
             <!-- be_users -->

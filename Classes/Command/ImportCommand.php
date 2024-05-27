@@ -204,7 +204,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $channelId = $this->stripChannelSuffix($newsletterChannel->id);
 
         $newsletterChannelDomainModel = $this->newsletterChannelRepository
-            ->findOneBy(['channelId' => $channelId]);
+            ->findByChannelId($channelId);
 
         if ($newsletterChannelDomainModel instanceof NewsletterChannelDomainModel) {
             return $newsletterChannelDomainModel;

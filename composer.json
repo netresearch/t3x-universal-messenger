@@ -19,6 +19,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "ext-fileinfo": "*",
+        "ext-libxml": "*",
         "typo3/cms-core": "^12.4",
         "typo3/cms-extbase": "^12.4",
         "nyholm/psr7": "^1.8",

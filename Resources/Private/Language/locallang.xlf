@@ -21,11 +21,23 @@
             </trans-unit>
 
             <!-- common -->
-            <trans-unit id="common.universal_messenger">
+            <trans-unit id="common.universalMessenger">
                 <source>Universal Messenger</source>
             </trans-unit>
-            <trans-unit id="common.newsletter_preview">
+            <trans-unit id="common.newsletterPreview">
                 <source>Preview of the newsletter</source>
+            </trans-unit>
+            <trans-unit id="common.newsletterChannel">
+                <source>Newsletter channel</source>
+            </trans-unit>
+            <trans-unit id="common.newsletterSend">
+                <source>Newsletter dispatch</source>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterTest">
+                <source>Test delivery</source>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterLive">
+                <source>Live delivery</source>
             </trans-unit>
 
             <!-- errors -->
@@ -37,6 +49,9 @@
             </trans-unit>
             <trans-unit id="error.noSiteConfiguration">
                 <source>The requested page is missing a valid site configuration.</source>
+            </trans-unit>
+            <trans-unit id="error.invalidRequest">
+                <source>The submitted request is invalid.</source>
             </trans-unit>
 
             <!-- be_users -->

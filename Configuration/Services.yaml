@@ -22,3 +22,6 @@ services:
 
     Netresearch\NrcUniversalMessenger\Controller\UniversalMessengerController:
         tags: [ 'backend.controller' ]
+
+    Netresearch\NrcUniversalMessenger\Controller\NewsletterPreviewController:
+        tags: [ 'backend.controller' ]

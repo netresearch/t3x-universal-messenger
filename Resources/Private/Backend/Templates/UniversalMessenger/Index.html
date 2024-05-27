@@ -5,21 +5,56 @@
     <f:layout name="Default"/>
 
     <f:section name="Content">
-        <h1><f:translate key="common.universal_messenger" /></h1>
+        <h1><f:translate key="common.universalMessenger" /></h1>
 
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><f:translate key="common.newsletter_preview" /></h3>
-                </div>
-                <div class="panel-body">
-                    <div class="preview-container">
-                        <div class="iframe-container">
-                            <h2>{pageTitle}</h2>
-                            <iframe src="{previewUrl}" width="100%" height="100%"></iframe>
-                        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><f:translate key="common.newsletterChannel" /></h3>
+            </div>
+            <div class="panel-body">
+                <h2>{newsletterChannel.title}</h2>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><f:translate key="common.newsletterPreview" /></h3>
+            </div>
+            <div class="panel-body">
+                <div class="preview-container">
+                    <div class="iframe-container">
+                        <h2>{pageTitle}</h2>
+                        <iframe src="{previewUrl}" width="100%" height="100%"></iframe>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><f:translate key="common.newsletterSend" /></h3>
+            </div>
+            <div class="panel-body">
+                <f:form controller="UniversalMessenger"
+                        action="create"
+                        name="newsletter"
+                >
+                    <f:form.hidden name="newsletterChannel" value="{newsletterChannel}" />
+
+                    <f:form.button class="btn btn-success btn-lg"
+                                   name="send"
+                                   type="submit"
+                                   value="test">
+                        <f:translate key="common.sendNewsletterTest" />
+                    </f:form.button>
+
+                    <f:form.button class="btn btn-danger btn-lg float-end"
+                                   name="send"
+                                   type="submit"
+                                   value="live">
+                        <f:translate key="common.sendNewsletterLive" />
+                    </f:form.button>
+                </f:form>
             </div>
         </div>
     </f:section>
