@@ -18,6 +18,7 @@ use Netresearch\NrcUniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\NrcUniversalMessenger\Service\UniversalMessengerService;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -38,7 +39,7 @@ class UniversalMessengerController extends AbstractBaseController
     /**
      * @var SiteFinder
      */
-    private SiteFinder $siteFinder;
+    private readonly SiteFinder $siteFinder;
 
     /**
      * UniversalMessengerController constructor.
@@ -97,7 +98,7 @@ class UniversalMessengerController extends AbstractBaseController
 
         $previewUri = PreviewUriBuilder::create($this->pageId)
             ->withAdditionalQueryParameters([
-                'type' => self::PREVIEW_TYPE_NUMBER,
+                'type'                                       => self::PREVIEW_TYPE_NUMBER,
                 'tx_nrcuniversalmessenger_newsletterpreview' => [
                     'pageId' => $this->pageId,
                 ],
@@ -107,7 +108,7 @@ class UniversalMessengerController extends AbstractBaseController
 
         $previewUrl = (string) $previewUri;
 
-        if (($previewUri === null) || ($previewUrl === '')) {
+        if ((!$previewUri instanceof UriInterface) || ($previewUrl === '')) {
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
 
@@ -131,8 +132,8 @@ class UniversalMessengerController extends AbstractBaseController
      */
     public function createAction(?NewsletterChannel $newsletterChannel): ResponseInterface
     {
-DebuggerUtility::var_dump(__METHOD__);
-//DebuggerUtility::var_dump($newsletterChannel);
+        DebuggerUtility::var_dump(__METHOD__);
+        // DebuggerUtility::var_dump($newsletterChannel);
 
         if (!($newsletterChannel instanceof NewsletterChannel)
             || !$this->request->hasArgument('send')
@@ -146,20 +147,20 @@ DebuggerUtility::var_dump(__METHOD__);
         $newsletterChannelId = $newsletterChannel->getChannelId();
         $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
 
-//        // Embed all images
-//        if ($newsletterChannel->getEmbedImages() === 'all') {
-//            $newsletterContent = $this->convertImagesToDataUri(
-//                $newsletterContent,
-//                (string) $site->getBase()
-//            );
-//        }
+        //        // Embed all images
+        //        if ($newsletterChannel->getEmbedImages() === 'all') {
+        //            $newsletterContent = $this->convertImagesToDataUri(
+        //                $newsletterContent,
+        //                (string) $site->getBase()
+        //            );
+        //        }
 
         if ($newsletterType === 'TEST') {
             $newsletterChannelId .= '_Test';
         } else {
             $newsletterChannelId .= '_Live';
-DebuggerUtility::var_dump('LIVE');
-exit;
+            DebuggerUtility::var_dump('LIVE');
+            exit;
         }
 
         /** @var CreateRequestBuilder $createRequestBuilder */
@@ -190,15 +191,15 @@ exit;
             ->addTag($newsletterType)
             ->create();
 
-DebuggerUtility::var_dump($eventRequest);
-//exit;
+        DebuggerUtility::var_dump($eventRequest);
+        // exit;
 
         $result = $this->universalMessengerService
             ->api()
             ->eventFile()
             ->event($eventRequest);
 
-DebuggerUtility::var_dump($result);
+        DebuggerUtility::var_dump($result);
 
         return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
     }

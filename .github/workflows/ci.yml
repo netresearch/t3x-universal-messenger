@@ -12,15 +12,11 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                typo3: [ '^12.0', '^13.0' ]
+                typo3: [ '^12', '^13' ]
                 php: [ '8.1', '8.2', '8.3' ]
                 exclude:
-                    - typo3: '^13.0'
+                    - typo3: '^13'
                       php: '8.1'
-                include:
-                    - rector: '^1.8'
-                    - rector: '^2.0'
-                      typo3: '^13.0'
 
         steps:
             -   id: checkout
@@ -60,8 +56,8 @@ jobs:
                     composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress --no-update
                     composer require typo3/cms-backend:${{ matrix.typo3 }} --no-progress --no-update
                     composer require typo3/cms-extbase:${{ matrix.typo3 }} --no-progress --no-update
-                    composer require typo3/cms-extensionmanager:${{ matrix.typo3 }} --no-progress --no-update
-                    composer require ssch/typo3-rector:${{ matrix.rector }} --no-progress
+                    composer require typo3/cms-fluid:${{ matrix.typo3 }} --no-progress --no-update
+                    composer install
                     git checkout composer.json
 
             -   id: lint
@@ -87,9 +83,3 @@ jobs:
                 if: ${{ always() && steps.install.conclusion == 'success' }}
                 run: |
                     composer ci:test:php:rector
-
-            -   id: tests_unit
-                name: Unit Tests
-                if: ${{ always() && steps.install.conclusion == 'success' }}
-                run: |
-                    composer ci:test:php:unit

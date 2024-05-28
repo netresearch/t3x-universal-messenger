@@ -29,14 +29,14 @@ class WebserviceConfiguration
      *
      * @var string
      */
-    private string $apiBaseUrl;
+    private readonly string $apiBaseUrl;
 
     /**
      * The API key.
      *
      * @var string
      */
-    private string $apiKey;
+    private readonly string $apiKey;
 
     /**
      * WebserviceConfiguration constructor.

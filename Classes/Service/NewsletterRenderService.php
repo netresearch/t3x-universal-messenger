@@ -37,22 +37,22 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * @var int
      */
-    private const VIEW_TYPE_NUMBER = 1716283827;
+    private const VIEW_TYPE_NUMBER = 1_716_283_827;
 
     /**
      * @var ConfigurationManagerInterface
      */
-    private ConfigurationManagerInterface $configurationManager;
+    private readonly ConfigurationManagerInterface $configurationManager;
 
     /**
      * @var RequestFactory
      */
-    private RequestFactory $requestFactory;
+    private readonly RequestFactory $requestFactory;
 
     /**
      * @var SiteFinder
      */
-    private SiteFinder $siteFinder;
+    private readonly SiteFinder $siteFinder;
 
     /**
      * Constructor.
@@ -67,8 +67,8 @@ class NewsletterRenderService implements SingletonInterface
         SiteFinder $siteFinder
     ) {
         $this->configurationManager = $configurationManager;
-        $this->requestFactory = $requestFactory;
-        $this->siteFinder = $siteFinder;
+        $this->requestFactory       = $requestFactory;
+        $this->siteFinder           = $siteFinder;
     }
 
     /**
@@ -122,7 +122,7 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * @param int  $pageId
+     * @param int $pageId
      *
      * @return string
      *

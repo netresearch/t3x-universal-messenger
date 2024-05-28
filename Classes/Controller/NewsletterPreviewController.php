@@ -29,7 +29,7 @@ class NewsletterPreviewController extends ActionController
     /**
      * @var NewsletterRenderService
      */
-    private NewsletterRenderService $newsletterRenderService;
+    private readonly NewsletterRenderService $newsletterRenderService;
 
     /**
      * NewsletterPreviewController constructor.
@@ -49,9 +49,9 @@ class NewsletterPreviewController extends ActionController
      */
     public function initializePreviewAction(): void
     {
-//        if ($this->getBackendUserAuthentication() === null) {
-//            throw new AccessDeniedException('Backend user authentication is missing.');
-//        }
+        //        if ($this->getBackendUserAuthentication() === null) {
+        //            throw new AccessDeniedException('Backend user authentication is missing.');
+        //        }
     }
 
     /**

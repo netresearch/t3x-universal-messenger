@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * This file is part of the package netresearch/nrc-universal-messenger.
  *
@@ -27,6 +26,8 @@ class Configuration
 {
     /**
      * The page type used for newsletter pages.
+     *
+     * @var int
      */
     private const PAGE_TYPE_NEWSLETTER = 20;
 

@@ -22,7 +22,6 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Event listener to add a link button to the Universal Messenger module to the default button bar.
@@ -42,7 +41,7 @@ final class ModifyPageLayoutContentEventListener
     {
         $view        = $event->getModuleTemplate();
         $buttonBar   = $view->getDocHeaderComponent()->getButtonBar();
-        $pageId     = $this->getPageId($event->getRequest());
+        $pageId      = $this->getPageId($event->getRequest());
         $contentPage = BackendUtility::getRecord('pages', $pageId);
 
         // Show button only at pages matching our page type.

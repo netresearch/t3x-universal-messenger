@@ -37,12 +37,12 @@ abstract class AbstractBaseController extends ActionController
     /**
      * @var int
      */
-    protected const PREVIEW_TYPE_NUMBER = 1715682913;
+    protected const PREVIEW_TYPE_NUMBER = 1_715_682_913;
 
     /**
      * @var ModuleTemplateFactory
      */
-    private ModuleTemplateFactory $moduleTemplateFactory;
+    private readonly ModuleTemplateFactory $moduleTemplateFactory;
 
     /**
      * @var ModuleTemplate
@@ -85,10 +85,10 @@ abstract class AbstractBaseController extends ActionController
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService
     ) {
-        $this->moduleTemplateFactory = $moduleTemplateFactory;
-        $this->universalMessengerService = $universalMessengerService;
+        $this->moduleTemplateFactory       = $moduleTemplateFactory;
+        $this->universalMessengerService   = $universalMessengerService;
         $this->newsletterChannelRepository = $newsletterChannelRepository;
-        $this->newsletterRenderService = $newsletterRenderService;
+        $this->newsletterRenderService     = $newsletterRenderService;
     }
 
     /**

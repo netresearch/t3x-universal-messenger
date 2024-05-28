@@ -149,6 +149,7 @@ class NewsletterChannel extends AbstractEntity
     public function setChannelId(string $channelId): NewsletterChannel
     {
         $this->channelId = $channelId;
+
         return $this;
     }
 
@@ -188,6 +189,7 @@ class NewsletterChannel extends AbstractEntity
     public function setDescription(string $description): NewsletterChannel
     {
         $this->description = $description;
+
         return $this;
     }
 

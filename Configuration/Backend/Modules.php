@@ -8,8 +8,6 @@
  */
 
 declare(strict_types=1);
-
-use Netresearch\NrcUniversalMessenger\Controller\NewsletterPreviewController;
 use Netresearch\NrcUniversalMessenger\Controller\UniversalMessengerController;
 
 // Caution, variable name must not exist within \TYPO3\CMS\Core\Package\AbstractServiceProvider::configureBackendModules

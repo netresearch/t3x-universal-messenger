@@ -33,7 +33,7 @@ call_user_func(static function (): void {
         $GLOBALS['TCA']['pages'],
         [
             // Add the icon to the icon class configuration
-            'ctrl'  => [
+            'ctrl' => [
                 'typeicon_classes' => [
                     $newsletterDokType => 'universal-messenger-dok-type-newsletter',
                 ],
