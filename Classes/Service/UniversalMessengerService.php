@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\Service;
+namespace Netresearch\UniversalMessenger\Service;
 
 use Exception;
-use Netresearch\NrcUniversalMessenger\WebserviceConfiguration;
+use Netresearch\UniversalMessenger\WebserviceConfiguration;
 use Netresearch\Sdk\UniversalMessenger\Api;
 use Netresearch\Sdk\UniversalMessenger\Exception\DetailedServiceException;
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
@@ -71,7 +71,7 @@ class UniversalMessengerService implements SingletonInterface
     {
         try {
             // Get extension configuration
-            $settings = $extensionConfiguration->get('nrc_universal_messenger');
+            $settings = $extensionConfiguration->get('universal_messenger');
         } catch (Exception) {
             return false;
         }

@@ -1,14 +1,14 @@
-# cat=General; type=int+; label=LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:config.default.storagePageId
+# cat=General; type=int+; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.default.storagePageId
 universalMessengerStoragePid =
 
-# cat=General; type=int+; label=LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:config.default.pageType
+# cat=General; type=int+; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.default.pageType
 universalMessengerNewsletterPageDokType = 20
 
-# cat=Webservice; type=string; label=LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.apiUrl
+# cat=Webservice; type=string; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.apiUrl
 universalMessengerApiUrl =
 
-# cat=Webservice; type=string; label=LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.apiKey
+# cat=Webservice; type=string; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.apiKey
 universalMessengerApiKey =
 
-# cat=Webservice; type=boolean; label=LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.logging
+# cat=Webservice; type=boolean; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.logging
 enableLogging = 0

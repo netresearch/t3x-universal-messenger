@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -15,12 +15,12 @@ call_user_func(static function (): void {
     $columns = [
         'universal_messenger_channels' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:be_users.universal_messenger_channels',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:be_users.universal_messenger_channels.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:be_users.universal_messenger_channels',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:be_users.universal_messenger_channels.description',
             'config'      => [
                 'type'          => 'select',
                 'renderType'    => 'selectMultipleSideBySide',
-                'foreign_table' => 'tx_nrcuniversalmessenger_domain_model_newsletterchannel',
+                'foreign_table' => 'tx_universalmessenger_domain_model_newsletterchannel',
             ],
         ],
     ];
@@ -32,6 +32,6 @@ call_user_func(static function (): void {
 
     ExtensionManagementUtility::addToAllTCAtypes(
         'be_users',
-        '--div--;LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:common.universalMessenger,universal_messenger_channels'
+        '--div--;LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:common.universalMessenger,universal_messenger_channels'
     );
 });

@@ -1,32 +1,32 @@
 # Module configuration
 module {
-    tx_nrcuniversalmessenger {
+    tx_universalmessenger {
         view {
             templateRootPaths {
-                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Templates/
+                0 = EXT:universal_messenger/Resources/Private/Backend/Templates/
             }
 
             partialRootPaths {
-                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Partials/
+                0 = EXT:universal_messenger/Resources/Private/Backend/Partials/
             }
 
             layoutRootPaths {
-                0 = EXT:nrc_universal_messenger/Resources/Private/Backend/Layouts/
+                0 = EXT:universal_messenger/Resources/Private/Backend/Layouts/
             }
         }
 
         settings {
             inlineCssFiles {
                 0 = EXT:bootstrap_package/Resources/Public/Css/bootstrap5-theme.css
-                10 = EXT:nrc_universal_messenger/Resources/Private/Css/ZurbFoundation.css
-                20 = EXT:nrc_universal_messenger/Resources/Private/Css/Newsletter.css
+                10 = EXT:universal_messenger/Resources/Private/Css/ZurbFoundation.css
+                20 = EXT:universal_messenger/Resources/Private/Css/Newsletter.css
             }
         }
     }
 }
 
 # Copy module configuration
-plugin.tx_nrcuniversalmessenger < module.tx_nrcuniversalmessenger
+plugin.tx_universalmessenger < module.tx_universalmessenger
 
 
 # Newsletter preview
@@ -45,7 +45,7 @@ newsletterPreview {
     10 {
         userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
         vendorName = Netresearch
-        extensionName = NrcUniversalMessenger
+        extensionName = UniversalMessenger
         pluginName = NewsletterPreview
         controller = NewsletterPreview
         action = preview

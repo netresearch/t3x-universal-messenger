@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\Controller;
+namespace Netresearch\UniversalMessenger\Controller;
 
-use Netresearch\NrcUniversalMessenger\Configuration;
-use Netresearch\NrcUniversalMessenger\Domain\Model\NewsletterChannel;
-use Netresearch\NrcUniversalMessenger\Domain\Repository\NewsletterChannelRepository;
-use Netresearch\NrcUniversalMessenger\Service\NewsletterRenderService;
-use Netresearch\NrcUniversalMessenger\Service\UniversalMessengerService;
+use Netresearch\UniversalMessenger\Configuration;
+use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
+use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
+use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
+use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -99,7 +99,7 @@ class UniversalMessengerController extends AbstractBaseController
         $previewUri = PreviewUriBuilder::create($this->pageId)
             ->withAdditionalQueryParameters([
                 'type'                                       => self::PREVIEW_TYPE_NUMBER,
-                'tx_nrcuniversalmessenger_newsletterpreview' => [
+                'tx_universalmessenger_newsletterpreview' => [
                     'pageId' => $this->pageId,
                 ],
             ])

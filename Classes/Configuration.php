@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger;
+namespace Netresearch\UniversalMessenger;
 
 use Exception;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -47,7 +47,7 @@ class Configuration
         try {
             $pageType = (int) self::getExtensionConfiguration()
                 ->get(
-                    'nrc_universal_messenger',
+                    'universal_messenger',
                     'universalMessengerNewsletterPageDokType'
                 );
         } catch (Exception) {

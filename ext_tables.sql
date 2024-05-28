@@ -15,9 +15,9 @@ CREATE TABLE pages
 );
 
 #
-# Table structure for table 'tx_nrcuniversalmessenger_domain_model_newsletterchannel'
+# Table structure for table 'tx_universalmessenger_domain_model_newsletterchannel'
 #
-CREATE TABLE tx_nrcuniversalmessenger_domain_model_newsletterchannel
+CREATE TABLE tx_universalmessenger_domain_model_newsletterchannel
 (
     uid          int(11) unsigned                    NOT NULL auto_increment,
     pid          int(11) unsigned     DEFAULT '0'    NOT NULL,

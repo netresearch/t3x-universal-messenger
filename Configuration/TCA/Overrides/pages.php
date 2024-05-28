@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Netresearch\NrcUniversalMessenger\Configuration;
+use Netresearch\UniversalMessenger\Configuration;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -22,7 +22,7 @@ call_user_func(static function (): void {
         'pages',
         'doktype',
         [
-            'label' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:pages.page_type_newsletter',
+            'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.page_type_newsletter',
             'value' => $newsletterDokType,
             'icon'  => 'universal-messenger-dok-type-newsletter',
             'group' => 'default',
@@ -51,13 +51,13 @@ call_user_func(static function (): void {
     $columns = [
         'universal_messenger_channel' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:pages.universal_messenger_channel',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:pages.universal_messenger_channel.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.universal_messenger_channel',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.universal_messenger_channel.description',
             'displayCond' => 'FIELD:doktype:=:' . $newsletterDokType,
             'config'      => [
                 'type'          => 'select',
                 'renderType'    => 'selectSingle',
-                'foreign_table' => 'tx_nrcuniversalmessenger_domain_model_newsletterchannel',
+                'foreign_table' => 'tx_universalmessenger_domain_model_newsletterchannel',
                 'items'         => [
                     [
                         'label' => '',

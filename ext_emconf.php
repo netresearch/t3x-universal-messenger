@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,8 +9,8 @@
 
 declare(strict_types=1);
 
-$EM_CONF['nrc_universal_messenger'] = [
-    'title'          => 'Netresearch - d.vinci REST API',
+$EM_CONF['universal_messenger'] = [
+    'title'          => 'Netresearch - Universal Messenger API',
     'description'    => 'TYPO3 extension providing a backend module to send newsletters using Universal Messenger API',
     'category'       => 'module',
     'author'         => 'Rico Sonntag',

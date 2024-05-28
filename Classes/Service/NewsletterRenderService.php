@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\Service;
+namespace Netresearch\UniversalMessenger\Service;
 
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
@@ -147,7 +147,7 @@ class NewsletterRenderService implements SingletonInterface
         $standaloneView = $this->getStandaloneView();
         $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
         $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
-        $standaloneView->setTemplatePathAndFilename('EXT:nrc_universal_messenger/Resources/Private/Templates/NewsletterContainer.html');
+        $standaloneView->setTemplatePathAndFilename('EXT:universal_messenger/Resources/Private/Templates/NewsletterContainer.html');
         $standaloneView->assign('content', $content);
 
         return $this->addInlineCss(

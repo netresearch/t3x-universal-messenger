@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -13,14 +13,14 @@ declare(strict_types=1);
 // upon removeAll call in persistence manager.
 return [
     'ctrl' => [
-        'title'        => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel',
+        'title'        => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
         'label'        => 'title',
         'tstamp'       => 'tstamp',
         'crdate'       => 'crdate',
         'hideTable'    => false,
         'sortby'       => 'sorting',
         'searchFields' => 'title,description,sender,reply_to',
-        'iconfile'     => 'EXT:nrc_universal_messenger/Resources/Public/Icons/Extension.png',
+        'iconfile'     => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
     ],
     'interface' => [
         'maxSingleDBListItems' => 50,
@@ -83,8 +83,8 @@ return [
         ],
         'channel_id' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.channel_id',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.channel_id.description',
             'config'      => [
                 'type'     => 'input',
                 'size'     => 40,
@@ -95,8 +95,8 @@ return [
         ],
         'title' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.title',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.title.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.title',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.title.description',
             'config'      => [
                 'type'     => 'input',
                 'size'     => 40,
@@ -107,7 +107,7 @@ return [
         ],
         'description' => [
             'exclude' => true,
-            'label'   => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.description',
+            'label'   => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.description',
             'config'  => [
                 'type'     => 'text',
                 'cols'     => 40,
@@ -117,8 +117,8 @@ return [
         ],
         'sender' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.sender',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.sender.description',
             'config'      => [
                 'type' => 'input',
                 'size' => 40,
@@ -127,8 +127,8 @@ return [
         ],
         'reply_to' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.reply_to',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.reply_to.description',
             'config'      => [
                 'type' => 'input',
                 'size' => 40,
@@ -137,8 +137,8 @@ return [
         ],
         'skip_used_id' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.skip_used_id',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.skip_used_id.description',
             'config'      => [
                 'type'       => 'check',
                 'renderType' => 'checkboxToggle',
@@ -147,8 +147,8 @@ return [
         ],
         'embed_images' => [
             'exclude'     => true,
-            'label'       => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images',
-            'description' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.description',
+            'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.embed_images',
+            'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.embed_images.description',
             'config'      => [
                 'type'       => 'select',
                 'renderType' => 'selectSingle',
@@ -157,15 +157,15 @@ return [
                 'default'    => 'none',
                 'items'      => [
                     [
-                        'label' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.all',
+                        'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.embed_images.all',
                         'value' => 'all',
                     ],
                     [
-                        'label' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.byPath',
+                        'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.embed_images.byPath',
                         'value' => 'byPath',
                     ],
                     [
-                        'label' => 'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang.xlf:tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.none',
+                        'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.embed_images.none',
                         'value' => 'none',
                     ],
                 ],

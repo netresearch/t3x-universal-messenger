@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z"
-          product-name="nr_sync">
+    <file source-language="en" datatype="plaintext" original="messages">
         <header/>
         <body>
             <trans-unit id="mlang_tabs_tab">

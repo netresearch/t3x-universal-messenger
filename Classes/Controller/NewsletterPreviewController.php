@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\Controller;
+namespace Netresearch\UniversalMessenger\Controller;
 
-use Netresearch\NrcUniversalMessenger\Service\NewsletterRenderService;
+use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Exception\AccessDeniedException;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;

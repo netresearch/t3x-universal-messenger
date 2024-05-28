@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger;
+namespace Netresearch\UniversalMessenger;
 
 use Exception;
 use RuntimeException;
@@ -47,7 +47,7 @@ class WebserviceConfiguration
         ExtensionConfiguration $extensionConfiguration
     ) {
         try {
-            $configuration = $extensionConfiguration->get('nrc_universal_messenger');
+            $configuration = $extensionConfiguration->get('universal_messenger');
         } catch (Exception) {
             $configuration = [];
         }

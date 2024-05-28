@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\Command;
+namespace Netresearch\UniversalMessenger\Command;
 
 use DateTime;
 use Exception;
-use Netresearch\NrcUniversalMessenger\Domain\Model\NewsletterChannel as NewsletterChannelDomainModel;
-use Netresearch\NrcUniversalMessenger\Domain\Repository\NewsletterChannelRepository;
-use Netresearch\NrcUniversalMessenger\Service\UniversalMessengerService;
+use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel as NewsletterChannelDomainModel;
+use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
+use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Netresearch\Sdk\UniversalMessenger\Model\Collection\NewsletterChannelCollection;
 use Netresearch\Sdk\UniversalMessenger\Model\NewsletterChannel;
 use Psr\Log\LoggerAwareInterface;
@@ -291,7 +291,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     {
         try {
             return GeneralUtility::makeInstance(ExtensionConfiguration::class)
-                ->get('nrc_universal_messenger', $path);
+                ->get('universal_messenger', $path);
         } catch (Exception) {
             return null;
         }

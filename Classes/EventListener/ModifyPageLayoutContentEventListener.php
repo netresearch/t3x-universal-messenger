@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\EventListener;
+namespace Netresearch\UniversalMessenger\EventListener;
 
-use Netresearch\NrcUniversalMessenger\Configuration;
+use Netresearch\UniversalMessenger\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
@@ -61,7 +61,7 @@ final class ModifyPageLayoutContentEventListener
             ->setHref($uri)
             ->setTitle(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:nrc_universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:openInUniversalMessenger'
+                    'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:openInUniversalMessenger'
                 )
             )
             ->setIcon(

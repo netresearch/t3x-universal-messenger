@@ -21,7 +21,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $header = <<<EOF
-This file is part of the package netresearch/nrc-universal-messenger.
+This file is part of the package netresearch/universal-messenger.
 
 For the full copyright and license information, please read the
 LICENSE file that was distributed with this source code.

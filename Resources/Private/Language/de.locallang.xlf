@@ -73,56 +73,56 @@
                 <target>Wählen Sie hier den Newsletter-Kanal für diesen Newsletter.</target>
             </trans-unit>
 
-            <!-- tx_nrcuniversalmessenger_domain_model_newsletterchannel -->
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel">
+            <!-- tx_universalmessenger_domain_model_newsletterchannel -->
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel">
                 <target>Newsletter-Kanal</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.channel_id">
                 <target>Newsletter-Kanal-ID</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.channel_id.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.channel_id.description">
                 <target>Die eindeutige ID des Newsletter-Kanals.</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.title">
                 <target>Titel</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.title.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.title.description">
                 <target>Der Titel des Newsletter-Kanals.</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.description">
                 <target>Beschreibung</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.sender">
                 <target>E-Mail-Adresse des Absenders</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.sender.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.sender.description">
                 <target>Die E-Mail-Adresse des Absenders. Wenn gesetzt, so überschreibt dies die in der Konfigurationsdatei voreingestellte Absender-ID.</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.reply_to">
                 <target>E-Mail-Adresse für Antwort</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.reply_to.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.reply_to.description">
                 <target>Die Antwort-E-Mail-Adresse. Wenn gesetzt, so überschreibt dies die in der Konfigurationsdatei voreingestellte Antwort-ID.</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.skip_used_id">
                 <target>Verwendete ID überspringen</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.skip_used_id.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.skip_used_id.description">
                 <target>Aktivieren Sie diese Option, wenn der Versand abgebrochen werden soll, wenn bereits ein Newsletter mit derselben Ereignis-ID im Archiv vorhanden ist.</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images">
                 <target>Bilder einbetten</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.description">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images.description">
                 <target>Verhalten beim Einbetten von Bildern.</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.all">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images.all">
                 <target>Alle Bilder in die E-Mail einbetten</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.byPath">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images.byPath">
                 <target>Alle Bilder mit einem relativen Link einbetten</target>
             </trans-unit>
-            <trans-unit id="tx_nrcuniversalmessenger_domain_model_newsletterchannel.embed_images.none">
+            <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images.none">
                 <target>Keine Bilder einbetten</target>
             </trans-unit>
         </body>

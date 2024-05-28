@@ -1,5 +1,5 @@
 {
-    "name": "netresearch/nrc-universal-messenger",
+    "name": "netresearch/universal-messenger",
     "type": "typo3-cms-extension",
     "description": "TYPO3 extension providing a backend module to send newsletters using Universal Messenger API",
     "license": "GPL-3.0-or-later",
@@ -52,7 +52,7 @@
     },
     "extra": {
         "typo3/cms": {
-            "extension-key": "nrc_universal_messenger",
+            "extension-key": "universal_messenger",
             "web-dir": ".build/public"
         },
         "branch-alias": {
@@ -61,7 +61,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Netresearch\\NrcUniversalMessenger\\": "Classes"
+            "Netresearch\\UniversalMessenger\\": "Classes"
         }
     },
     "scripts": {

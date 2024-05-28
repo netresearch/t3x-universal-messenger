@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the package netresearch/nrc-universal-messenger.
+ * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\NrcUniversalMessenger\Domain\Repository;
+namespace Netresearch\UniversalMessenger\Domain\Repository;
 
-use Netresearch\NrcUniversalMessenger\Domain\Model\NewsletterChannel;
+use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
