@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Netresearch\NrcUniversalMessenger\Controller;
 
-use DOMDocument;
-use DOMElement;
 use Netresearch\NrcUniversalMessenger\Configuration;
 use Netresearch\NrcUniversalMessenger\Domain\Model\NewsletterChannel;
 use Netresearch\NrcUniversalMessenger\Domain\Repository\NewsletterChannelRepository;
@@ -20,20 +18,12 @@ use Netresearch\NrcUniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\NrcUniversalMessenger\Service\UniversalMessengerService;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Site\SiteFinder;
-use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Http\ForwardResponse;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
@@ -211,92 +201,5 @@ DebuggerUtility::var_dump($eventRequest);
 DebuggerUtility::var_dump($result);
 
         return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
-    }
-
-    /**
-     * Converts all images to their base64 encoded expression.
-     *
-     * @param string  $html
-     * @param string $baseUrl
-     *
-     * @return string
-     */
-    private function convertImagesToDataUri(
-        string $html,
-        string $baseUrl
-    ): string {
-        $document = new DOMDocument();
-
-        libxml_use_internal_errors(true);
-        $document->loadHTML($html);
-        libxml_clear_errors();
-
-        /** @var DOMElement $image */
-        foreach ($document->getElementsByTagName('img') as $image) {
-            $imageSrc = $image->getAttribute('src');
-
-            if (!$this->isUrlValid($imageSrc)) {
-                // Add the base URL if the image path is relative
-                $imageSrc = ($baseUrl ?? '') . ltrim($imageSrc, '/');
-            }
-
-            $image->setAttribute(
-                'src',
-                $this->getDataUri($imageSrc)
-            );
-        }
-
-        return $document->saveHTML();
-    }
-
-    /**
-     * Checks if the URL is valid or not.
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isUrlValid(string $value): bool
-    {
-        return filter_var($value, FILTER_VALIDATE_URL) !== false;
-    }
-
-    /**
-     * Converts the given image path into a data URI (base64 encoded format).
-     *
-     * @param string $imagePath
-     *
-     * @return string
-     */
-    private function getDataUri(string $imagePath): string
-    {
-        $imageData = $this->getImageData($imagePath);
-
-        return 'data:' . $imageData['type'] . ';base64,' . base64_encode($imageData['content']);
-    }
-
-    /**
-     * @param string $imageUrl
-     *
-     * @return array{type: string, content: string}
-     *
-     * @throws RuntimeException
-     */
-    private function getImageData(string $imageUrl): array
-    {
-        $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
-        $response       = $requestFactory->request($imageUrl);
-
-        if ($response->getStatusCode() === 200) {
-            // Return image mime type and content
-            return [
-                'type'    => $response->getHeader('Content-Type')[0],
-                'content' => $response->getBody()->getContents(),
-            ];
-        }
-
-        throw new RuntimeException(
-            'Failed to load image: ' . $imageUrl
-        );
     }
 }
