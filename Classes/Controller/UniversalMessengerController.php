@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
+use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
-use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
@@ -78,7 +78,7 @@ class UniversalMessengerController extends AbstractBaseController
         $languageId  = (int) $moduleData->get('language');
         $contentPage = BackendUtility::getRecord('pages', $this->pageId);
 
-        // Show button only at pages matching our page type.
+        // Check if the selected page matches our newsletter page type
         if (($contentPage === null)
             || ($contentPage['doktype'] !== Configuration::getNewsletterPageDokType())
         ) {
@@ -98,7 +98,7 @@ class UniversalMessengerController extends AbstractBaseController
 
         $previewUri = PreviewUriBuilder::create($this->pageId)
             ->withAdditionalQueryParameters([
-                'type'                                       => self::PREVIEW_TYPE_NUMBER,
+                'type'                                    => self::PREVIEW_TYPE_NUMBER,
                 'tx_universalmessenger_newsletterpreview' => [
                     'pageId' => $this->pageId,
                 ],
@@ -108,7 +108,12 @@ class UniversalMessengerController extends AbstractBaseController
 
         $previewUrl = (string) $previewUri;
 
-        if ((!$previewUri instanceof UriInterface) || ($previewUrl === '')) {
+        // Check if the created preview URL is valid
+        if (
+            (!$previewUri instanceof UriInterface)
+            || ($previewUrl === '')
+            || !$this->isUrlValid($previewUrl)
+        ) {
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
 
@@ -126,15 +131,28 @@ class UniversalMessengerController extends AbstractBaseController
     }
 
     /**
+     * Checks if the URL is valid or not.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function isUrlValid(string $value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_URL) !== false;
+    }
+
+    /**
      * @param NewsletterChannel|null $newsletterChannel
      *
      * @return ResponseInterface
      */
     public function createAction(?NewsletterChannel $newsletterChannel): ResponseInterface
     {
-        DebuggerUtility::var_dump(__METHOD__);
-        // DebuggerUtility::var_dump($newsletterChannel);
+DebuggerUtility::var_dump(__METHOD__);
+// DebuggerUtility::var_dump($newsletterChannel);
 
+        // Check if the submitted request is valid
         if (!($newsletterChannel instanceof NewsletterChannel)
             || !$this->request->hasArgument('send')
         ) {
@@ -147,25 +165,17 @@ class UniversalMessengerController extends AbstractBaseController
         $newsletterChannelId = $newsletterChannel->getChannelId();
         $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
 
-        //        // Embed all images
-        //        if ($newsletterChannel->getEmbedImages() === 'all') {
-        //            $newsletterContent = $this->convertImagesToDataUri(
-        //                $newsletterContent,
-        //                (string) $site->getBase()
-        //            );
-        //        }
-
         if ($newsletterType === 'TEST') {
             $newsletterChannelId .= '_Test';
         } else {
             $newsletterChannelId .= '_Live';
-            DebuggerUtility::var_dump('LIVE');
-            exit;
+DebuggerUtility::var_dump('LIVE');
         }
 
         /** @var CreateRequestBuilder $createRequestBuilder */
         $createRequestBuilder = GeneralUtility::makeInstance(CreateRequestBuilder::class);
 
+        // Create the event file request
         $eventRequest = $createRequestBuilder
             ->addChannel($newsletterChannelId)
             ->setEmailBaseAndDownloadUrl(
@@ -191,8 +201,8 @@ class UniversalMessengerController extends AbstractBaseController
             ->addTag($newsletterType)
             ->create();
 
-        DebuggerUtility::var_dump($eventRequest);
-        // exit;
+DebuggerUtility::var_dump($eventRequest);
+// exit;
 
         $result = $this->universalMessengerService
             ->api()

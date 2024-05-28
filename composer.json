@@ -11,12 +11,6 @@
             "homepage": "https://www.netresearch.de/"
         }
     ],
-    "repositories": {
-        "netresearch/sdk-api-universal-messenger": {
-            "type": "github",
-            "url": "git@github.com:netresearch/sdk-api-universal-messenger.git"
-        }
-    },
     "require": {
         "ext-fileinfo": "*",
         "ext-libxml": "*",

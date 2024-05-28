@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Service;
 
 use Exception;
-use Netresearch\UniversalMessenger\WebserviceConfiguration;
 use Netresearch\Sdk\UniversalMessenger\Api;
 use Netresearch\Sdk\UniversalMessenger\Exception\DetailedServiceException;
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\UniversalMessenger;
+use Netresearch\UniversalMessenger\WebserviceConfiguration;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;

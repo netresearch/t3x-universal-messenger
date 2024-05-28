@@ -147,7 +147,9 @@ class NewsletterRenderService implements SingletonInterface
         $standaloneView = $this->getStandaloneView();
         $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
         $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
-        $standaloneView->setTemplatePathAndFilename('EXT:universal_messenger/Resources/Private/Templates/NewsletterContainer.html');
+        $standaloneView->setTemplatePathAndFilename(
+            'EXT:universal_messenger/Resources/Private/Templates/NewsletterContainer.html'
+        );
         $standaloneView->assign('content', $content);
 
         return $this->addInlineCss(

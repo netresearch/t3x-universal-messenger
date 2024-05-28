@@ -13,11 +13,11 @@ namespace Netresearch\UniversalMessenger\Command;
 
 use DateTime;
 use Exception;
+use Netresearch\Sdk\UniversalMessenger\Model\Collection\NewsletterChannelCollection;
+use Netresearch\Sdk\UniversalMessenger\Model\NewsletterChannel;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel as NewsletterChannelDomainModel;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
-use Netresearch\Sdk\UniversalMessenger\Model\Collection\NewsletterChannelCollection;
-use Netresearch\Sdk\UniversalMessenger\Model\NewsletterChannel;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Command\Command;

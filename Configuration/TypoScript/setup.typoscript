@@ -65,14 +65,14 @@ newsletterView {
         linkVars =
     }
 
-    # Add some css for frontend view
+    # Add some CSS for frontend view
     cssInline {
         10 = TEXT
         10.value (
-        html {
-            width: 1024px;
-            margin: auto;
-        }
+            html {
+                width: 1024px;
+                margin: auto;
+            }
         )
     }
 
