@@ -25,9 +25,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  *
- * @template T of NewsletterChannel
- *
- * @extends  Repository<T>
+ * @extends Repository<NewsletterChannel>
  */
 class NewsletterChannelRepository extends Repository
 {
@@ -59,11 +57,11 @@ class NewsletterChannelRepository extends Repository
      *
      * @param string[] $channelIds
      *
-     * @return QueryResultInterface
+     * @return QueryResultInterface<int, NewsletterChannel>
      *
      * @throws InvalidQueryException
      */
-    public function findAllNotByChannelId(array $channelIds): QueryResultInterface
+    public function findAllExceptWithChannelId(array $channelIds): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->matching(

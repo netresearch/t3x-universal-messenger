@@ -18,7 +18,6 @@ module {
         settings {
             inlineCssFiles {
                 0 = EXT:bootstrap_package/Resources/Public/Css/bootstrap5-theme.css
-                1 = EXT:bootstrap_package/Resources/Public/Fonts/bootstrappackageicon.css
                 10 = EXT:nrc_universal_messenger/Resources/Private/Css/ZurbFoundation.css
                 20 = EXT:nrc_universal_messenger/Resources/Private/Css/Newsletter.css
             }

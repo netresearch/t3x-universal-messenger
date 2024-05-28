@@ -22,19 +22,21 @@
         "ext-fileinfo": "*",
         "ext-libxml": "*",
         "typo3/cms-core": "^12.4",
+        "typo3/cms-backend": "^12.4",
         "typo3/cms-extbase": "^12.4",
+        "typo3/cms-fluid": "^12.4",
         "nyholm/psr7": "^1.8",
         "pelago/emogrifier": "^7.2.0",
         "netresearch/sdk-api-universal-messenger": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.1",
+        "friendsofphp/php-cs-fixer": "^3.50",
         "friendsoftypo3/phpstan-typo3": "^0.9",
-        "overtrue/phplint": "^9.0",
-        "phpstan/phpstan": "^1.10",
-        "phpstan/phpstan-strict-rules": "^1.5",
-        "phpstan/phpstan-deprecation-rules": "^1.1",
-        "ssch/typo3-rector": "^2.0"
+        "overtrue/phplint": "^9.3",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-strict-rules": "^1.6",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "ssch/typo3-rector": "^2.6"
     },
     "config": {
         "bin-dir": ".build/bin",
@@ -68,7 +70,7 @@
             "phplint --configuration Build/.phplint.yml"
         ],
         "ci:test:php:phpstan": [
-            "phpstan analyze --configuration Build/phpstan.neon"
+            "phpstan analyze --configuration Build/phpstan.neon --memory-limit=-1"
         ],
         "ci:test:php:phpstan:baseline": [
             "phpstan analyze --configuration Build/phpstan.neon --generate-baseline Build/phpstan-baseline.neon --allow-empty-baseline"

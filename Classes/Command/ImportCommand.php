@@ -259,7 +259,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     {
         try {
             $queryResult = $this->newsletterChannelRepository
-                ->findAllNotByChannelId($channelIds);
+                ->findAllExceptWithChannelId($channelIds);
 
             // Remove each record
             foreach ($queryResult as $newsletterChannel) {

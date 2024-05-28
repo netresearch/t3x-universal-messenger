@@ -11,8 +11,11 @@ declare(strict_types=1);
 
 namespace Netresearch\NrcUniversalMessenger\Service;
 
+use Pelago\Emogrifier\CssInliner;
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
+use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 use RuntimeException;
-use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -71,7 +74,7 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Returns the extensions typoscript configuration.
      *
-     * @return array
+     * @return array<string, array<string, string[]>>
      */
     private function getExtensionSettings(): array
     {
@@ -89,8 +92,8 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * @param int   $pageId
-     * @param array $arguments
+     * @param int                $pageId
+     * @param array<string, int> $arguments
      *
      * @return string
      *
@@ -230,29 +233,43 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
+     * Converts external CSS styles into inline style attributes to ensure proper display on email
+     * and mobile device readers that lack stylesheet support.
+     *
      * @param string $content
      *
      * @return string
+     *
+     * @throws ParseException
      */
     private function addInlineCss(string $content): string
     {
         $configuration = $this->getExtensionSettings();
 
         if ($configuration['settings']['inlineCssFiles'] !== []) {
-            /** @var CssToInlineStyles $cssToInline */
-            $cssToInline = GeneralUtility::makeInstance(CssToInlineStyles::class);
-
-            $files = $configuration['settings']['inlineCssFiles'];
-            $files = array_reverse($files);
+            $files      = array_reverse($configuration['settings']['inlineCssFiles']);
+            $cssContent = '';
 
             foreach ($files as $path) {
                 $file = GeneralUtility::getFileAbsFileName($path);
 
                 if (file_exists($file)) {
-                    $content = $cssToInline->convert($content, file_get_contents($file));
+                    $cssContent .= file_get_contents($file);
                 }
             }
+
+            $cssInliner  = CssInliner::fromHtml($content)->inlineCss($cssContent);
+            $domDocument = $cssInliner->getDomDocument();
+
+            HtmlPruner::fromDomDocument($domDocument)
+                ->removeElementsWithDisplayNone()
+                ->removeRedundantClassesAfterCssInlined($cssInliner);
+
+            $content = CssToAttributeConverter::fromDomDocument($domDocument)
+                ->convertCssToVisualAttributes()
+                ->render();
         }
 
         return $content;
-    }}
+    }
+}
