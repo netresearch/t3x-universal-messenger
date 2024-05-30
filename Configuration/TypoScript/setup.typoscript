@@ -1,5 +1,5 @@
-# Module configuration
-module {
+# Plugin configuration
+plugin {
     tx_universalmessenger {
         view {
             templateRootPaths {
@@ -17,16 +17,19 @@ module {
 
         settings {
             inlineCssFiles {
-                0 = EXT:bootstrap_package/Resources/Public/Css/bootstrap5-theme.css
-                10 = EXT:universal_messenger/Resources/Private/Css/ZurbFoundation.css
-                20 = EXT:universal_messenger/Resources/Private/Css/Newsletter.css
+                10 = EXT:universal_messenger/Resources/Private/Css/Newsletter.css
+            }
+
+            newsletter {
+                testChannelSuffix = _Test
+                liveChannelSuffix = _Live
             }
         }
     }
 }
 
-# Copy module configuration
-plugin.tx_universalmessenger < module.tx_universalmessenger
+# Copy plugin configuration
+module.tx_universalmessenger < plugin.tx_universalmessenger
 
 
 # Newsletter preview

@@ -40,6 +40,11 @@
                 <target>Live-Versand</target>
             </trans-unit>
 
+            <!-- success -->
+            <trans-unit id="success.newsletterSend">
+                <target>Newsletter erfolgreich an Universal Messenger übertragen.</target>
+            </trans-unit>
+
             <!-- errors -->
             <trans-unit id="error.pageNotAllowed">
                 <target>Bitte wählen Sie eine Seite vom Seiten-Typ "Newsletter" aus.</target>

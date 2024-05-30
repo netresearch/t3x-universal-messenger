@@ -14,7 +14,7 @@
                 <source>Base URL: The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p</source>
             </trans-unit>
             <trans-unit id="config.webservice.apiKey">
-                <source>API Key: The Universal Messenger API Key</source>
+                <source>API key: The Universal Messenger API Key</source>
             </trans-unit>
             <trans-unit id="config.webservice.logging">
                 <source>Enable logging: Log all Universal Messenger API requests in a log file.</source>
@@ -38,6 +38,11 @@
             </trans-unit>
             <trans-unit id="common.sendNewsletterLive">
                 <source>Live delivery</source>
+            </trans-unit>
+
+            <!-- success -->
+            <trans-unit id="success.newsletterSend">
+                <source>Newsletter successfully transferred to Universal Messenger.</source>
             </trans-unit>
 
             <!-- errors -->

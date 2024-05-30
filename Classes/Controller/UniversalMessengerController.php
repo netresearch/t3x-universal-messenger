@@ -18,14 +18,12 @@ use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * UniversalMessengerController.
@@ -36,6 +34,11 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  */
 class UniversalMessengerController extends AbstractBaseController
 {
+    /**
+     * @var string
+     */
+    private const NEWSLETTER_SEND_TYPE_TEST = 'TEST';
+
     /**
      * @var SiteFinder
      */
@@ -74,8 +77,6 @@ class UniversalMessengerController extends AbstractBaseController
      */
     public function indexAction(): ResponseInterface
     {
-        $moduleData  = $this->request->getAttribute('moduleData');
-        $languageId  = (int) $moduleData->get('language');
         $contentPage = BackendUtility::getRecord('pages', $this->pageId);
 
         // Check if the selected page matches our newsletter page type
@@ -96,24 +97,12 @@ class UniversalMessengerController extends AbstractBaseController
             return $this->forwardFlashMessage('error.accessNotAllowed');
         }
 
-        $previewUri = PreviewUriBuilder::create($this->pageId)
-            ->withAdditionalQueryParameters([
-                'type'                                    => self::PREVIEW_TYPE_NUMBER,
-                'tx_universalmessenger_newsletterpreview' => [
-                    'pageId' => $this->pageId,
-                ],
-            ])
-            ->withLanguage($languageId)
-            ->buildUri();
-
-        $previewUrl = (string) $previewUri;
+        $moduleData = $this->request->getAttribute('moduleData');
+        $languageId = (int) $moduleData->get('language');
+        $previewUrl = $this->getPreviewUrl($this->pageId, $languageId);
 
         // Check if the created preview URL is valid
-        if (
-            (!$previewUri instanceof UriInterface)
-            || ($previewUrl === '')
-            || !$this->isUrlValid($previewUrl)
-        ) {
+        if (!$this->isUrlValid($previewUrl)) {
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
 
@@ -131,27 +120,12 @@ class UniversalMessengerController extends AbstractBaseController
     }
 
     /**
-     * Checks if the URL is valid or not.
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isUrlValid(string $value): bool
-    {
-        return filter_var($value, FILTER_VALIDATE_URL) !== false;
-    }
-
-    /**
      * @param NewsletterChannel|null $newsletterChannel
      *
      * @return ResponseInterface
      */
     public function createAction(?NewsletterChannel $newsletterChannel): ResponseInterface
     {
-DebuggerUtility::var_dump(__METHOD__);
-// DebuggerUtility::var_dump($newsletterChannel);
-
         // Check if the submitted request is valid
         if (!($newsletterChannel instanceof NewsletterChannel)
             || !$this->request->hasArgument('send')
@@ -159,17 +133,19 @@ DebuggerUtility::var_dump(__METHOD__);
             return $this->forwardFlashMessage('error.invalidRequest');
         }
 
+        $testChannelSuffix = $this->settings['newsletter']['testChannelSuffix'];
+        $liveChannelSuffix = $this->settings['newsletter']['liveChannelSuffix'];
+
         $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
         $site                = $this->siteFinder->getSiteByPageId($this->pageId);
         $newsletterType      = strtoupper($this->request->getArgument('send'));
         $newsletterChannelId = $newsletterChannel->getChannelId();
         $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
 
-        if ($newsletterType === 'TEST') {
-            $newsletterChannelId .= '_Test';
+        if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
+            $newsletterChannelId .= $testChannelSuffix;
         } else {
-            $newsletterChannelId .= '_Live';
-DebuggerUtility::var_dump('LIVE');
+            $newsletterChannelId .= $liveChannelSuffix;
         }
 
         /** @var CreateRequestBuilder $createRequestBuilder */
@@ -194,23 +170,56 @@ DebuggerUtility::var_dump('LIVE');
             )
             ->setEmailSubject($contentPage['title'])
             ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
-            ->setHtmlBodyEncoding('utf-8')
+            ->setHtmlBodyEncoding('UTF-8')
             ->setHtmlBodyTracking(false, false)
             ->setHtmlBodyContent(true, $newsletterContent)
             ->addTag($newsletterChannel->getTitle())
             ->addTag($newsletterType)
             ->create();
 
-DebuggerUtility::var_dump($eventRequest);
-// exit;
-
-        $result = $this->universalMessengerService
+        $this->universalMessengerService
             ->api()
             ->eventFile()
             ->event($eventRequest);
 
-        DebuggerUtility::var_dump($result);
+        return $this->forwardFlashMessage(
+            'success.newsletterSend',
+            ContextualFeedbackSeverity::OK
+        );
+    }
 
-        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+    /**
+     * Returns the newsletter preview URL.
+     *
+     * @param int $pageId
+     * @param int $languageId
+     *
+     * @return string
+     */
+    private function getPreviewUrl(int $pageId, int $languageId): string
+    {
+        $previewUri = PreviewUriBuilder::create($pageId)
+            ->withAdditionalQueryParameters([
+                'type'                                    => self::PREVIEW_TYPE_NUMBER,
+                'tx_universalmessenger_newsletterpreview' => [
+                    'pageId' => $pageId,
+                ],
+            ])
+            ->withLanguage($languageId)
+            ->buildUri();
+
+        return (string) $previewUri;
+    }
+
+    /**
+     * Checks if the URL is valid or not.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function isUrlValid(string $value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
 }

@@ -10,7 +10,7 @@
 declare(strict_types=1);
 
 $EM_CONF['universal_messenger'] = [
-    'title'          => 'Netresearch - Universal Messenger API',
+    'title'          => 'Netresearch: Universal Messenger',
     'description'    => 'TYPO3 extension providing a backend module to send newsletters using Universal Messenger API',
     'category'       => 'module',
     'author'         => 'Rico Sonntag',

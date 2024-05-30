@@ -25,6 +25,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 /**
@@ -69,7 +70,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     /**
      * Bootstrap.
      */
-    protected function bootstrap(): void
+    private function bootstrap(): void
     {
         $this->persistenceManager          = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
         $this->universalMessengerService   = GeneralUtility::makeInstance(UniversalMessengerService::class);
@@ -94,7 +95,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      *
      * @return int
      */
-    protected function importNewsletterChannels(OutputInterface $output): int
+    private function importNewsletterChannels(OutputInterface $output): int
     {
         // Query all active newsletter channels from UM webservice
         $newsletterChannelCollection = $this->queryNewsletterChannelCollection($output);
@@ -224,7 +225,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     }
 
     /**
-     * Removes the channel suffix "_Test" and "_Live" from the given channel ID.
+     * Removes the configured channel suffixes from the given channel ID.
      *
      * @param string $channelId
      *
@@ -232,7 +233,18 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function stripChannelSuffix(string $channelId): string
     {
-        return trim(str_ireplace(['_Test', '_Live'], '', $channelId));
+        $settings = $this->getTypoScriptSettings();
+
+        return trim(
+            str_ireplace(
+                [
+                    $settings['newsletter']['testChannelSuffix'],
+                    $settings['newsletter']['liveChannelSuffix'],
+                ],
+                '',
+                $channelId
+            )
+        );
     }
 
     /**
@@ -287,7 +299,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      *
      * @return mixed
      */
-    protected function getExtensionConfiguration(string $path): mixed
+    private function getExtensionConfiguration(string $path): mixed
     {
         try {
             return GeneralUtility::makeInstance(ExtensionConfiguration::class)
@@ -298,11 +310,28 @@ class ImportCommand extends Command implements LoggerAwareInterface
     }
 
     /**
+     * Returns the typoscript settings.
+     *
+     * @return array<string, array<string, string[]>>
+     */
+    private function getTypoScriptSettings(): array
+    {
+        $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManagerInterface::class)
+            ->getConfiguration(
+                ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
+            );
+
+        return GeneralUtility::removeDotsFromTS(
+            $pluginConfiguration['plugin.']['tx_universalmessenger.']['settings.']
+        );
+    }
+
+    /**
      * Returns the page ID used to store the records.
      *
      * @return int
      */
-    protected function getStoragePageId(): int
+    private function getStoragePageId(): int
     {
         return (int) ($this->getExtensionConfiguration('universalMessengerStoragePid') ?? 0);
     }

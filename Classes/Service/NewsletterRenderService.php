@@ -248,7 +248,9 @@ class NewsletterRenderService implements SingletonInterface
     {
         $configuration = $this->getExtensionSettings();
 
-        if ($configuration['settings']['inlineCssFiles'] !== []) {
+        if (isset($configuration['settings']['inlineCssFiles'])
+            && ($configuration['settings']['inlineCssFiles'] !== [])
+        ) {
             $files      = array_reverse($configuration['settings']['inlineCssFiles']);
             $cssContent = '';
 

@@ -1,5 +1,5 @@
 # cat=General; type=int+; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.default.storagePageId
-universalMessengerStoragePid =
+universalMessengerStoragePid = 0
 
 # cat=General; type=int+; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.default.pageType
 universalMessengerNewsletterPageDokType = 20
