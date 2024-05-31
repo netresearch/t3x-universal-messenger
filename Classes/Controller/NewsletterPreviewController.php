@@ -13,8 +13,8 @@ namespace Netresearch\UniversalMessenger\Controller;
 
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Backend\Exception\AccessDeniedException;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use RuntimeException;
+use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
@@ -43,23 +43,12 @@ class NewsletterPreviewController extends ActionController
     }
 
     /**
-     * @return void
-     *
-     * @throws AccessDeniedException
-     */
-    public function initializePreviewAction(): void
-    {
-        //        if ($this->getBackendUserAuthentication() === null) {
-        //            throw new AccessDeniedException('Backend user authentication is missing.');
-        //        }
-    }
-
-    /**
      * @param int $pageId
      *
      * @return ResponseInterface
      *
-     * @throws SiteNotFoundException
+     * @throws ParseException
+     * @throws RuntimeException
      */
     public function previewAction(int $pageId): ResponseInterface
     {

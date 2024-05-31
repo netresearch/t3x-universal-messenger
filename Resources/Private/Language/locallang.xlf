@@ -64,6 +64,12 @@
             <trans-unit id="error.invalidRequest">
                 <source>The submitted request is invalid.</source>
             </trans-unit>
+            <trans-unit id="error.exceptionDuringCreate">
+                <source>An error occurred while generating the Universal Messenger newsletter event request.</source>
+            </trans-unit>
+            <trans-unit id="error.exceptionStatus">
+                <source>An error occurred while querying newsletter status.</source>
+            </trans-unit>
 
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">

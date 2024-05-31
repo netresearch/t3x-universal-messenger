@@ -64,6 +64,12 @@
             <trans-unit id="error.invalidRequest">
                 <target>Die übermittelte Anfrage ist ungültig.</target>
             </trans-unit>
+            <trans-unit id="error.exceptionDuringCreate">
+                <target>Bei der Generierung des Universal Messenger Newsletter-Event-Requests ist ein Fehler aufgetreten.</target>
+            </trans-unit>
+            <trans-unit id="error.exceptionStatus">
+                <target>Bei der Abfrage des Newsletter-Status ist ein Fehler aufgetreten.</target>
+            </trans-unit>
 
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">

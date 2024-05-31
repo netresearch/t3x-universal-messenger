@@ -14,6 +14,7 @@ namespace Netresearch\UniversalMessenger\Service;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
@@ -92,19 +93,26 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
+     * Returns the URI to the newsletter page to render.
+     *
      * @param int                $pageId
      * @param array<string, int> $arguments
      *
-     * @return string
-     *
-     * @throws SiteNotFoundException
+     * @return UriInterface|null
      */
-    private function generatePageUri(int $pageId, array $arguments = []): string
+    private function generatePageUri(int $pageId, array $arguments = []): ?UriInterface
     {
-        return (string) $this
-            ->getSiteByPageId($pageId)
-            ->getRouter()
-            ->generateUri($pageId, $arguments);
+        try {
+            return $this
+                ->getSiteByPageId($pageId)
+                ->getRouter()
+                ->generateUri(
+                    $pageId,
+                    $arguments
+                );
+        } catch (SiteNotFoundException) {
+            return null;
+        }
     }
 
     /**
@@ -126,7 +134,8 @@ class NewsletterRenderService implements SingletonInterface
      *
      * @return string
      *
-     * @throws SiteNotFoundException
+     * @throws ParseException
+     * @throws RuntimeException
      */
     public function renderNewsletterPage(int $pageId): string
     {
@@ -139,6 +148,8 @@ class NewsletterRenderService implements SingletonInterface
      * @param string $content
      *
      * @return string
+     *
+     * @throws ParseException
      */
     private function renderNewsletterContainer(string $content): string
     {
@@ -164,20 +175,36 @@ class NewsletterRenderService implements SingletonInterface
      *
      * @return string
      *
-     * @throws SiteNotFoundException
+     * @throws RuntimeException
      */
     private function renderByPageId(int $pageId): string
     {
-        $uri = $this->generatePageUri(
+        $url = (string) $this->generatePageUri(
             $pageId,
             [
                 'type' => self::VIEW_TYPE_NUMBER,
             ]
         );
 
-        $content = $this->getContentFromUri($uri);
+        if (!$this->isUrlValid($url)) {
+            throw new RuntimeException('Preview URL is invalid: ' . $url);
+        }
+
+        $content = $this->getContentFromUrl($url);
 
         return $this->renderFluidView($content);
+    }
+
+    /**
+     * Checks if the URL is valid or not.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function isUrlValid(string $value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
 
     /**
@@ -205,16 +232,16 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Performs a GET-request and returns the content from the called URL.
      *
-     * @param string $uri
+     * @param string $url
      *
      * @return string
      *
      * @throws RuntimeException
      */
-    private function getContentFromUri(string $uri): string
+    private function getContentFromUrl(string $url): string
     {
         $response = $this->requestFactory->request(
-            $uri,
+            $url,
             'GET',
             [
                 'allow_redirects' => true,
@@ -226,7 +253,7 @@ class NewsletterRenderService implements SingletonInterface
         );
 
         if ($response->getStatusCode() !== 200) {
-            throw new RuntimeException('Failed to load: ' . $uri);
+            throw new RuntimeException('Failed to load: ' . $url);
         }
 
         return $response

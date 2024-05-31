@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
+use Exception;
+use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
@@ -18,6 +20,8 @@ use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -25,6 +29,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * UniversalMessengerController.
@@ -33,8 +38,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-class UniversalMessengerController extends AbstractBaseController
+class UniversalMessengerController extends AbstractBaseController implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var string
      */
@@ -137,51 +144,95 @@ class UniversalMessengerController extends AbstractBaseController
             return $this->forwardFlashMessage('error.invalidRequest');
         }
 
-        $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
-        $site                = $this->siteFinder->getSiteByPageId($this->pageId);
-        $newsletterType      = strtoupper($this->request->getArgument('send'));
-        $newsletterChannelId = $newsletterChannel->getChannelId();
-        $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
+        try {
+            $site                = $this->siteFinder->getSiteByPageId($this->pageId);
+            $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
+            $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
+            $newsletterType      = strtoupper($this->request->getArgument('send'));
+            $newsletterChannelId = $newsletterChannel->getChannelId();
 
-        if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
-            $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/testChannelSuffix') ?? '';
-        } else {
-            $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
+            if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
+                $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/testChannelSuffix') ?? '';
+            } else {
+                $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
+            }
+
+            $newsletterEventId = $newsletterType . strtoupper(bin2hex(random_bytes(16)));
+        } catch (Exception) {
+            return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
 
-        /** @var CreateRequestBuilder $createRequestBuilder */
-        $createRequestBuilder = GeneralUtility::makeInstance(CreateRequestBuilder::class);
+        try {
+            /** @var CreateRequestBuilder $createRequestBuilder */
+            $createRequestBuilder = GeneralUtility::makeInstance(CreateRequestBuilder::class);
 
-        // Create the event file request
-        $eventRequest = $createRequestBuilder
-            ->addChannel($newsletterChannelId)
-            ->setEmailBaseAndDownloadUrl(
-                (string) $site->getBase(),
-                (string) $site->getBase()
-            )
-            ->setEmailBodyType(false, true)
-            ->setEventDetails(
-                $newsletterType . strtoupper(bin2hex(random_bytes(16))),
-                null,
-                $newsletterChannel->isSkipUsedId()
-            )
-            ->setEmailAdresses(
-                $newsletterChannel->getSender(),
-                $newsletterChannel->getReplyTo()
-            )
-            ->setEmailSubject($contentPage['title'])
-            ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
-            ->setHtmlBodyEncoding('UTF-8')
-            ->setHtmlBodyTracking(false, false)
-            ->setHtmlBodyContent(true, $newsletterContent)
-            ->addTag($newsletterChannel->getTitle())
-            ->addTag($newsletterType)
-            ->create();
+            // Create the event file request
+            $eventRequest = $createRequestBuilder
+                ->addChannel($newsletterChannelId)
+                ->setEmailBaseAndDownloadUrl(
+                    (string) $site->getBase(),
+                    (string) $site->getBase()
+                )
+                ->setEmailBodyType(
+                    false,
+                    true
+                )
+                ->setEventDetails(
+                    $newsletterEventId,
+                    null,
+                    $newsletterChannel->isSkipUsedId()
+                )
+                ->setEmailAdresses(
+                    $newsletterChannel->getSender(),
+                    $newsletterChannel->getReplyTo()
+                )
+                ->setEmailSubject($contentPage['title'])
+                ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
+                ->setHtmlBodyEncoding('UTF-8')
+                ->setHtmlBodyTracking(
+                    false,
+                    false
+                )
+                ->setHtmlBodyContent(
+                    true,
+                    $newsletterContent
+                )
+                ->addTag($newsletterChannel->getTitle())
+                ->addTag($newsletterType)
+                ->create();
 
-        $this->universalMessengerService
-            ->api()
-            ->eventFile()
-            ->event($eventRequest);
+            $this->universalMessengerService
+                ->api()
+                ->eventFile()
+                ->event($eventRequest);
+        } catch (Exception $exception) {
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    'exception' => $exception,
+                ]
+            );
+
+            return $this->forwardFlashMessage('error.exceptionDuringCreate');
+        }
+
+        try {
+            $status = $this->universalMessengerService
+                ->api()
+                ->newsletter()
+                ->status($newsletterEventId);
+        } catch (ServiceException $exception) {
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    'exception' => $exception,
+                ]
+            );
+
+            return $this->forwardFlashMessage('error.exceptionStatus');
+        }
+
+        DebuggerUtility::var_dump($status);
 
         return $this->forwardFlashMessage(
             'success.newsletterSend',
