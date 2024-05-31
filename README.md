@@ -16,24 +16,29 @@ The extension should be installed via composer:
 ## Setup
 ### Extension configuration
 
-| Field           | Tab        | Default value | Description                                                                                                                                                                                                                             |
-|:----------------|:-----------|:--------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Storage page ID | General    | 0             | The page ID used to store the Universal Messenger newsletter channel records.                                                                                                                                                           |
-| Page type       | General    | 20            | This value defines the page type used for Universal Messenger newsletter pages. It is used for the doctype field of the page table in your instance. Set a different value here if the default value is already used for other things.  |
-| Base URL        | Webservice |               | The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p                                                                                                       |
-| API key         | Webservice |               | The Universal Messenger API Key                                                                                                                                                                                                         |
-| Enable logging  | Webservice | 0             | Log all Universal Messenger API requests in a log file.                                                                                                                                                                                 |
+| Field                          | Tab        | Default value | Description                                                                                                                                                                                                                            |
+|:-------------------------------|:-----------|:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Storage page ID                | General    | 0             | The page ID used to store the Universal Messenger newsletter channel records.                                                                                                                                                          |
+| Page type                      | General    | 20            | This value defines the page type used for Universal Messenger newsletter pages. It is used for the doctype field of the page table in your instance. Set a different value here if the default value is already used for other things. |
+| Base URL                       | Webservice |               | The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p                                                                                                      |
+| API key                        | Webservice |               | The Universal Messenger API Key                                                                                                                                                                                                        |
+| Enable logging                 | Webservice | 0             | Log all Universal Messenger API requests in a log file.                                                                                                                                                                                |
+| Test newsletter channel suffix | Expert     | _Test         | Enter the suffix for the TEST newsletter channels here.                                                                                                                                                                                |
+| Live newsletter channel suffix | Expert     | _Live         | Enter the suffix for the LIVE newsletter channels here.                                                                                                                                                                                |
 
+#### General
 ![Extension Configuration Tab "General"](Documentation/ExtensionConfiguration1.png) 
 *Fig. 1: Extension Configuration Tab "General"*
 
 
+#### Webservice
 ![Extension Configuration Tab "Webservice"](Documentation/ExtensionConfiguration2.png)
 *Fig. 2: Extension Configuration Tab "Webservice"*
 
 
+##### API-Logging
 To enable the request/response logging of the Universal Messenger, enable the extension configuration "Enable logging"
-and add a logger to your `ext_localconf.php`:
+and add a log writer configuration to your `ext_localconf.php`:
 
 ```php
 // Add logger for universal messenger
@@ -45,6 +50,25 @@ $GLOBALS['TYPO3_CONF_VARS']['LOG']['Netresearch']['UniversalMessenger']['writerC
     ],
 ];
 ```
+
+#### Expert
+![Extension Configuration Tab "Expert"](Documentation/ExtensionConfiguration3.png)
+*Fig. 3: Extension Configuration Tab "Expert"*
+
+##### Test-/Live channels
+To enable test operation, a separate channel can be set up as a test channel for a newsletter in
+Universal Messenger and, for example, given a suffix.
+
+Test operation
+- Channel: Newsletter_TEST
+- Recipient: Defined recipient list for validating the newsletter before it is actually sent to customers.
+
+Live operation
+- Channel: Newsletter_LIVE
+- Recipient: Recipient list with customer addresses
+
+Using the setting "newsletter" => "testChannelSuffix" and "liveChannelSuffix", this suffix can be
+adapted to the setting in Universal Messenger.
 
 
 ### TypoScript
@@ -63,31 +87,6 @@ plugin.tx_universalmessenger {
 module.tx_universalmessenger < plugin.tx_universalmessenger
 ```
 
-To enable test operation, a separate channel can be set up as a test channel for a newsletter in
-Universal Messenger and, for example, given a suffix.
-
-Test operation
-- Channel: Newsletter_TEST
-- Recipient: Defined recipient list for validating the newsletter before it is actually sent to customers.
-
-Live operation
-- Channel: Newsletter_LIVE
-- Recipient: Recipient list with customer addresses
-
-Using the setting "newsletter" => "testChannelSuffix" and "liveChannelSuffix", this suffix can be 
-adapted to the setting in Universal Messenger:
-
-```typo3_typoscript
-plugin.tx_universalmessenger {
-    settings {
-        newsletter {
-            testChannelSuffix = _Test
-            liveChannelSuffix = _Live
-        }
-    }
-}
-```
-
 
 ### Scheduler-Task
 The extension provides a console command `universal-messenger:newsletter-channels:import` for importing the
@@ -97,7 +96,10 @@ newsletter channels into TYPO3 once a day, for example.
 
 ## Usage
 The newsletter channels are imported into TYPO3 as generic channels, i.e. the configured suffixes for the
-test or live channels are removed (the spelling is irrelevant, i.e. an upper and lower case is ignored).
+test or live channels are cut off (regardless of the spelling, i.e. an upper and lower case is ignored).
+
+A newsletter page is always assigned only the generic channel name, and the separation after a TEST or LIVE 
+dispatch only takes place in the dispatch module.
 
 Each newsletter channel can also be configured with additional settings (a new import does not overwrite these settings):
 

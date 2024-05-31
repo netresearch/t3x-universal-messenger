@@ -17,7 +17,13 @@
                 <source>API key: The Universal Messenger API Key</source>
             </trans-unit>
             <trans-unit id="config.webservice.logging">
-                <source>Enable logging: Log all Universal Messenger API requests in a log file.</source>
+                <source>Enable logging: Log all Universal Messenger API requests in a log file. To do this, please configure an appropriate log writer.</source>
+            </trans-unit>
+            <trans-unit id="config.expert.testChannelSuffix">
+                <source>Test newsletter channel suffix: Enter the suffix for the TEST newsletter channels here.</source>
+            </trans-unit>
+            <trans-unit id="config.expert.liveChannelSuffix">
+                <source>Live newsletter channel suffix: Enter the suffix for the LIVE newsletter channels here.</source>
             </trans-unit>
 
             <!-- common -->

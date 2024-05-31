@@ -17,7 +17,13 @@
                 <target>API-Schlüssel: Der Universal Messenger-API-Schlüssel</target>
             </trans-unit>
             <trans-unit id="config.webservice.logging">
-                <target>Protokollierung aktivieren: Alle Universal Messenger API-Anfragen in einer Protokolldatei protokollieren.</target>
+                <target>Protokollierung aktivieren: Protokollieren Sie alle Universal Messenger API-Anfragen in einer Protokolldatei. Dazu konfigurieren Sie bitte einen entsprechenden Log-Schreiber.</target>
+            </trans-unit>
+            <trans-unit id="config.expert.testChannelSuffix">
+                <target>Test-Newsletter-Kanal Suffix: Tragen Sie hier den Suffix für die TEST-Newsletter-Kanäle ein.</target>
+            </trans-unit>
+            <trans-unit id="config.expert.liveChannelSuffix">
+                <target>Live-Newsletter-Kanal Suffix: Tragen Sie hier den Suffix für die LIVE-Newsletter-Kanäle ein.</target>
             </trans-unit>
 
             <!-- common -->

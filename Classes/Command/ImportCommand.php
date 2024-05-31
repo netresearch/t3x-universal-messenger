@@ -25,7 +25,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 /**
@@ -233,13 +232,11 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function stripChannelSuffix(string $channelId): string
     {
-        $settings = $this->getTypoScriptSettings();
-
         return trim(
             str_ireplace(
                 [
-                    $settings['newsletter']['testChannelSuffix'],
-                    $settings['newsletter']['liveChannelSuffix'],
+                    $this->getTestChannelSuffix(),
+                    $this->getLiveChannelSuffix(),
                 ],
                 '',
                 $channelId
@@ -310,23 +307,6 @@ class ImportCommand extends Command implements LoggerAwareInterface
     }
 
     /**
-     * Returns the typoscript settings.
-     *
-     * @return array<string, array<string, string[]>>
-     */
-    private function getTypoScriptSettings(): array
-    {
-        $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManagerInterface::class)
-            ->getConfiguration(
-                ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
-            );
-
-        return GeneralUtility::removeDotsFromTS(
-            $pluginConfiguration['plugin.']['tx_universalmessenger.']['settings.']
-        );
-    }
-
-    /**
      * Returns the page ID used to store the records.
      *
      * @return int
@@ -334,5 +314,25 @@ class ImportCommand extends Command implements LoggerAwareInterface
     private function getStoragePageId(): int
     {
         return (int) ($this->getExtensionConfiguration('universalMessengerStoragePid') ?? 0);
+    }
+
+    /**
+     * Returns the TEST newsletter channel suffix.
+     *
+     * @return string
+     */
+    private function getTestChannelSuffix(): string
+    {
+        return $this->getExtensionConfiguration('newsletter/testChannelSuffix') ?? '';
+    }
+
+    /**
+     * Returns the LIVE newsletter channel suffix.
+     *
+     * @return string
+     */
+    private function getLiveChannelSuffix(): string
+    {
+        return $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
     }
 }

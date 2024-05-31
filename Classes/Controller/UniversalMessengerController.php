@@ -21,6 +21,7 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -48,6 +49,7 @@ class UniversalMessengerController extends AbstractBaseController
      * UniversalMessengerController constructor.
      *
      * @param ModuleTemplateFactory       $moduleTemplateFactory
+     * @param ExtensionConfiguration      $extensionConfiguration
      * @param UniversalMessengerService   $universalMessengerService
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
@@ -55,6 +57,7 @@ class UniversalMessengerController extends AbstractBaseController
      */
     public function __construct(
         ModuleTemplateFactory $moduleTemplateFactory,
+        ExtensionConfiguration $extensionConfiguration,
         UniversalMessengerService $universalMessengerService,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
@@ -62,6 +65,7 @@ class UniversalMessengerController extends AbstractBaseController
     ) {
         parent::__construct(
             $moduleTemplateFactory,
+            $extensionConfiguration,
             $universalMessengerService,
             $newsletterChannelRepository,
             $newsletterRenderService
@@ -133,9 +137,6 @@ class UniversalMessengerController extends AbstractBaseController
             return $this->forwardFlashMessage('error.invalidRequest');
         }
 
-        $testChannelSuffix = $this->settings['newsletter']['testChannelSuffix'];
-        $liveChannelSuffix = $this->settings['newsletter']['liveChannelSuffix'];
-
         $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
         $site                = $this->siteFinder->getSiteByPageId($this->pageId);
         $newsletterType      = strtoupper($this->request->getArgument('send'));
@@ -143,9 +144,9 @@ class UniversalMessengerController extends AbstractBaseController
         $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
 
         if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
-            $newsletterChannelId .= $testChannelSuffix;
+            $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/testChannelSuffix') ?? '';
         } else {
-            $newsletterChannelId .= $liveChannelSuffix;
+            $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
         }
 
         /** @var CreateRequestBuilder $createRequestBuilder */

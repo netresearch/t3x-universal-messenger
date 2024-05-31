@@ -12,3 +12,9 @@ universalMessengerApiKey =
 
 # cat=Webservice; type=boolean; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.webservice.logging
 enableLogging = 0
+
+# cat=Expert; type=string; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.expert.testChannelSuffix
+newsletter.testChannelSuffix = _Test
+
+# cat=Expert; type=string; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.expert.liveChannelSuffix
+newsletter.liveChannelSuffix = _Live

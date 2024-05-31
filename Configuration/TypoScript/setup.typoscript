@@ -19,11 +19,6 @@ plugin {
             inlineCssFiles {
                 10 = EXT:universal_messenger/Resources/Private/Css/Newsletter.css
             }
-
-            newsletter {
-                testChannelSuffix = _Test
-                liveChannelSuffix = _Live
-            }
         }
     }
 }

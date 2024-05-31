@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
+use Exception;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
@@ -19,6 +20,7 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
@@ -43,6 +45,11 @@ abstract class AbstractBaseController extends ActionController
      * @var ModuleTemplateFactory
      */
     private readonly ModuleTemplateFactory $moduleTemplateFactory;
+
+    /**
+     * @var ExtensionConfiguration
+     */
+    protected ExtensionConfiguration $extensionConfiguration;
 
     /**
      * @var ModuleTemplate
@@ -75,17 +82,20 @@ abstract class AbstractBaseController extends ActionController
      * AbstractBaseController constructor.
      *
      * @param ModuleTemplateFactory       $moduleTemplateFactory
+     * @param ExtensionConfiguration      $extensionConfiguration
      * @param UniversalMessengerService   $universalMessengerService
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
      */
     public function __construct(
         ModuleTemplateFactory $moduleTemplateFactory,
+        ExtensionConfiguration $extensionConfiguration,
         UniversalMessengerService $universalMessengerService,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
+        $this->extensionConfiguration      = $extensionConfiguration;
         $this->universalMessengerService   = $universalMessengerService;
         $this->newsletterChannelRepository = $newsletterChannelRepository;
         $this->newsletterRenderService     = $newsletterRenderService;
@@ -187,7 +197,7 @@ abstract class AbstractBaseController extends ActionController
     /**
      * @return LanguageService
      */
-    private function getLanguageService(): LanguageService
+    protected function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
     }
@@ -199,10 +209,26 @@ abstract class AbstractBaseController extends ActionController
      *
      * @return string
      */
-    private function translate(string $key): string
+    protected function translate(string $key): string
     {
         return $this->getLanguageService()->sL(
             'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:' . $key
         );
+    }
+
+    /**
+     * Get the extension configuration.
+     *
+     * @param string $path Path to get the config for
+     *
+     * @return mixed
+     */
+    protected function getExtensionConfiguration(string $path): mixed
+    {
+        try {
+            return $this->extensionConfiguration->get('universal_messenger', $path);
+        } catch (Exception) {
+            return null;
+        }
     }
 }
