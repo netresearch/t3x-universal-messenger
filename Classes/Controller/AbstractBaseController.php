@@ -21,11 +21,11 @@ use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * AbstractBaseController.
@@ -150,8 +150,10 @@ abstract class AbstractBaseController extends ActionController
         $moduleTemplate->setBodyTag('<body class="typo3-module-universal-messenger">');
         $moduleTemplate->setModuleId('typo3-module-universal-messenger');
         $moduleTemplate->setTitle(
-            $this->getLanguageService()->sL(
-                'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:mlang_tabs_tab'
+            $this->translate(
+                'mlang_tabs_tab',
+                null,
+                'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf'
             ),
             $pageRecord['title'] ?? ''
         );
@@ -195,25 +197,20 @@ abstract class AbstractBaseController extends ActionController
     }
 
     /**
-     * @return LanguageService
-     */
-    protected function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
-    }
-
-    /**
      * Returns the translated language label for the given identifier.
      *
-     * @param string $key
+     * @param string                       $key
+     * @param array<int|float|string>|null $arguments
+     * @param string                       $languageFile
      *
      * @return string
      */
-    protected function translate(string $key): string
-    {
-        return $this->getLanguageService()->sL(
-            'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:' . $key
-        );
+    protected function translate(
+        string $key,
+        ?array $arguments = null,
+        string $languageFile = 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf'
+    ): string {
+        return LocalizationUtility::translate($languageFile . ':' . $key, null, $arguments);
     }
 
     /**

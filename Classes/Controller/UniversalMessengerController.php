@@ -13,6 +13,7 @@ namespace Netresearch\UniversalMessenger\Controller;
 
 use Exception;
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
+use Netresearch\Sdk\UniversalMessenger\Model\NewsletterStatus;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
@@ -29,7 +30,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 
 /**
  * UniversalMessengerController.
@@ -232,12 +233,49 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.exceptionStatus');
         }
 
-        DebuggerUtility::var_dump($status);
+        return $this->renderStatusMessage($status);
+    }
 
-        return $this->forwardFlashMessage(
-            'success.newsletterSend',
-            ContextualFeedbackSeverity::OK
+    /**
+     * Renders the newsletter status message.
+     *
+     * @param NewsletterStatus $status
+     *
+     * @return ResponseInterface
+     */
+    private function renderStatusMessage(NewsletterStatus $status): ResponseInterface
+    {
+        // Failed status
+        $severity = ContextualFeedbackSeverity::WARNING;
+        $message  = $this->translate('newsletter.status.failed');
+
+        if ($status->isStopped) {
+            $message = $this->translate('newsletter.status.stopped');
+        }
+
+        if ($status->inQueue) {
+            $message  = $this->translate('newsletter.status.queue');
+            $severity = ContextualFeedbackSeverity::OK;
+        }
+
+        if ($status->isFinished) {
+            $message = $this->translate(
+                'newsletter.status.finished',
+                [
+                    $status->contacted,
+                ]
+            );
+
+            $severity = ContextualFeedbackSeverity::OK;
+        }
+
+        $this->moduleTemplate->addFlashMessage(
+            $message,
+            'Universal Messenger',
+            $severity
         );
+
+        return new ForwardResponse('error');
     }
 
     /**

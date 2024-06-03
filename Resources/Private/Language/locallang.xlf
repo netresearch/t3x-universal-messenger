@@ -46,11 +46,6 @@
                 <source>Live delivery</source>
             </trans-unit>
 
-            <!-- success -->
-            <trans-unit id="success.newsletterSend">
-                <source>Newsletter successfully transferred to Universal Messenger.</source>
-            </trans-unit>
-
             <!-- errors -->
             <trans-unit id="error.pageNotAllowed">
                 <source>Please select a page with the page type "Newsletter".</source>
@@ -69,6 +64,20 @@
             </trans-unit>
             <trans-unit id="error.exceptionStatus">
                 <source>An error occurred while querying newsletter status.</source>
+            </trans-unit>
+
+            <!-- status -->
+            <trans-unit id="newsletter.status.failed">
+                <source>Newsletter sending has failed.</source>
+            </trans-unit>
+            <trans-unit id="newsletter.status.stopped">
+                <source>Newsletter sending has been stopped.</source>
+            </trans-unit>
+            <trans-unit id="newsletter.status.queue">
+                <source>Newsletter is currently in the queue and sending has not started yet.</source>
+            </trans-unit>
+            <trans-unit id="newsletter.status.finished">
+                <source>Newsletter sending has finished: %d user entries have been contacted.</source>
             </trans-unit>
 
             <!-- be_users -->

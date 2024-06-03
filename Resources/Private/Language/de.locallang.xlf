@@ -46,11 +46,6 @@
                 <target>Live-Versand</target>
             </trans-unit>
 
-            <!-- success -->
-            <trans-unit id="success.newsletterSend">
-                <target>Newsletter erfolgreich an Universal Messenger übertragen.</target>
-            </trans-unit>
-
             <!-- errors -->
             <trans-unit id="error.pageNotAllowed">
                 <target>Bitte wählen Sie eine Seite vom Seiten-Typ "Newsletter" aus.</target>
@@ -69,6 +64,20 @@
             </trans-unit>
             <trans-unit id="error.exceptionStatus">
                 <target>Bei der Abfrage des Newsletter-Status ist ein Fehler aufgetreten.</target>
+            </trans-unit>
+
+            <!-- status -->
+            <trans-unit id="newsletter.status.failed">
+                <target>Der Newsletterversand ist fehlgeschlagen.</target>
+            </trans-unit>
+            <trans-unit id="newsletter.status.stopped">
+                <target>Der Newsletterversand wurde gestoppt.</target>
+            </trans-unit>
+            <trans-unit id="newsletter.status.queue">
+                <target>Der Newsletter befindet sich derzeit in der Warteschlange und der Versand hat noch nicht begonnen.</target>
+            </trans-unit>
+            <trans-unit id="newsletter.status.finished">
+                <target>Der Newsletterversand ist abgeschlossen: Es wurden %d Benutzereinträge kontaktiert.</target>
             </trans-unit>
 
             <!-- be_users -->
