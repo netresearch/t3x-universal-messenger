@@ -59,6 +59,13 @@ call_user_func(static function (): void {
         ],
     );
 
+    // Hide the "new" button on the record detail view in backend
+    ExtensionManagementUtility::addUserTSConfig(
+        <<<TYPOSCRIPT
+        options.saveDocNew.tx_universalmessenger_domain_model_newsletterchannel = 0
+TYPOSCRIPT
+    );
+
     // Ignore the following parameters in cHash calculation
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_universalmessenger_newsletterpreview[pageId]';
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'type';

@@ -7,15 +7,17 @@ Extension providing a TYPO3 backend module to send TYPO3 pages as newsletters vi
 
 
 ## Installation
-
 The extension should be installed via composer:
 
 ``composer require netresearch/universal-messenger``
 
 
 ## Setup
-### Extension configuration
+### Update database structure
+Use the "Analyze Database Structure" in the "Maintenance" Admin Tools section to update the database structure.
 
+
+### Extension configuration
 | Field                          | Tab        | Default value | Description                                                                                                                                                                                                                            |
 |:-------------------------------|:-----------|:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Storage page ID                | General    | 0             | The page ID used to store the Universal Messenger newsletter channel records.                                                                                                                                                          |
@@ -69,6 +71,14 @@ Live operation
 
 Using the setting "newsletter" => "testChannelSuffix" and "liveChannelSuffix", this suffix can be
 adapted to the setting in Universal Messenger.
+
+
+### Backend user configuration
+Use the backend user setting in the "Universal Messenger" tab to allow individual backend users specific rights 
+for sending via individual newsletter channels.
+
+![Backend user configuration](Documentation/BackendUserConfiguration.png)
+*Fig. 4: Backend user configuration*
 
 
 ### TypoScript
