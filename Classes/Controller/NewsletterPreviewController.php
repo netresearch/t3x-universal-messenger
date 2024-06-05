@@ -53,7 +53,10 @@ class NewsletterPreviewController extends ActionController
     public function previewAction(int $pageId): ResponseInterface
     {
         return $this->htmlResponse(
-            $this->newsletterRenderService->renderNewsletterPage($pageId)
+            $this->newsletterRenderService->renderNewsletterPreviewPage(
+                $this->request,
+                $pageId
+            )
         );
     }
 }

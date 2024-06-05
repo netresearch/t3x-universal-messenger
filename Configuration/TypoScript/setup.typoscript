@@ -3,21 +3,15 @@ plugin {
     tx_universalmessenger {
         view {
             templateRootPaths {
-                0 = EXT:universal_messenger/Resources/Private/Backend/Templates/
+                10 = EXT:universal_messenger/Resources/Private/Backend/Templates/
             }
 
             partialRootPaths {
-                0 = EXT:universal_messenger/Resources/Private/Backend/Partials/
+                10 = EXT:universal_messenger/Resources/Private/Backend/Partials/
             }
 
             layoutRootPaths {
-                0 = EXT:universal_messenger/Resources/Private/Backend/Layouts/
-            }
-        }
-
-        settings {
-            inlineCssFiles {
-                10 = EXT:universal_messenger/Resources/Private/Css/Newsletter.css
+                10 = EXT:universal_messenger/Resources/Private/Backend/Layouts/
             }
         }
     }
@@ -61,17 +55,6 @@ newsletterView {
         admPanel = 0
         debug = 0
         linkVars =
-    }
-
-    # Add some CSS for frontend view
-    cssInline {
-        10 = TEXT
-        10.value (
-            html {
-                width: 1024px;
-                margin: auto;
-            }
-        )
     }
 
     # Add content

@@ -146,8 +146,18 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         try {
+            $moduleData = $this->request->getAttribute('moduleData');
+            $languageId = (int) $moduleData->get('language');
+            $previewUrl = $this->getPreviewUrl($this->pageId, $languageId);
+
+            // Check if the created preview URL is valid
+            if (!$this->isUrlValid($previewUrl)) {
+                return $this->forwardFlashMessage('error.noSiteConfiguration');
+            }
+
+
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
-            $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($this->pageId);
+            $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($previewUrl);
             $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
             $newsletterType      = strtoupper($this->request->getArgument('send'));
             $newsletterChannelId = $newsletterChannel->getChannelId();
@@ -290,6 +300,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     {
         $previewUri = PreviewUriBuilder::create($pageId)
             ->withAdditionalQueryParameters([
+                'preview'                                 => true,
                 'type'                                    => self::PREVIEW_TYPE_NUMBER,
                 'tx_universalmessenger_newsletterpreview' => [
                     'pageId' => $pageId,

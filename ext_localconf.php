@@ -69,6 +69,7 @@ TYPOSCRIPT
     // Ignore the following parameters in cHash calculation
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_universalmessenger_newsletterpreview[pageId]';
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'type';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'preview';
 
     // Add our custom style sheet
     $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['universal_messenger']

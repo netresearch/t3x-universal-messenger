@@ -15,7 +15,7 @@
 
             <!-- Labels -->
             <trans-unit id="openInUniversalMessenger">
-                <source>Open in UM</source>
+                <source>Open in Universal Messenger</source>
             </trans-unit>
         </body>
     </file>

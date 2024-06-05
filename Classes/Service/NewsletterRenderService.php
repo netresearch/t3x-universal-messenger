@@ -14,6 +14,7 @@ namespace Netresearch\UniversalMessenger\Service;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Symfony\Component\CssSelector\Exception\ParseException;
@@ -130,42 +131,66 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * @param int $pageId
+     * Renders the newsletter in the preview page.
+     *
+     * @param ServerRequestInterface $request
+     * @param int                    $pageId
      *
      * @return string
      *
      * @throws ParseException
      * @throws RuntimeException
      */
-    public function renderNewsletterPage(int $pageId): string
+    public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
     {
-        return $this->renderNewsletterContainer(
-            $this->renderByPageId($pageId)
+        return $this->addInlineCss(
+            $this->renderNewsletterContainer(
+                $request,
+                $this->renderByPageId($pageId)
+            )
         );
     }
 
     /**
-     * @param string $content
+     * Renders the newsletter, ready to send using UM.
+     *
+     * @param string $url
      *
      * @return string
      *
      * @throws ParseException
+     * @throws RuntimeException
      */
-    private function renderNewsletterContainer(string $content): string
+    public function renderNewsletterPage(string $url): string
+    {
+        return $this->addInlineCss(
+            $this->getContentFromUrl($url)
+        );
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param string                 $content
+     *
+     * @return string
+     */
+    private function renderNewsletterContainer(ServerRequestInterface $request, string $content): string
     {
         $configuration = $this->getExtensionSettings();
 
         $standaloneView = $this->getStandaloneView();
+        $standaloneView->setRequest($request);
         $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
         $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
-        $standaloneView->setTemplatePathAndFilename(
-            'EXT:universal_messenger/Resources/Private/Templates/NewsletterContainer.html'
-        );
+        $standaloneView->setTemplateRootPaths($configuration['view']['templateRootPaths']);
+
+        if (isset($configuration['view']['templatePathAndFilename'])) {
+            $standaloneView->setTemplatePathAndFilename($configuration['view']['templatePathAndFilename']);
+        }
+
         $standaloneView->assign('content', $content);
 
-        return $this->addInlineCss(
-            $standaloneView->render()
-        );
+        return $standaloneView->render();
     }
 
     /**
@@ -190,9 +215,9 @@ class NewsletterRenderService implements SingletonInterface
             throw new RuntimeException('Preview URL is invalid: ' . $url);
         }
 
-        $content = $this->getContentFromUrl($url);
-
-        return $this->renderFluidView($content);
+        return $this->renderFluidView(
+            $this->getContentFromUrl($url)
+        );
     }
 
     /**
