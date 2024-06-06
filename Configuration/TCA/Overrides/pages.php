@@ -61,7 +61,7 @@ call_user_func(static function (): void {
                 'items'         => [
                     [
                         'label' => '',
-                        'value' => '',
+                        'value' => '0',
                     ],
                 ],
             ],

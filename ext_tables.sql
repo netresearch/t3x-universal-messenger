@@ -11,7 +11,7 @@ CREATE TABLE be_users
 #
 CREATE TABLE pages
 (
-    universal_messenger_channel int(11) unsigned NOT NULL
+    universal_messenger_channel int(11) unsigned DEFAULT '0' NOT NULL
 );
 
 #
