@@ -9,6 +9,7 @@
 
 declare(strict_types=1);
 
+use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\NewsletterPreviewController;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -28,6 +29,12 @@ call_user_func(static function (): void {
         'universal_messenger',
         'setup',
         '@import "EXT:universal_messenger/Configuration/TypoScript/setup.typoscript"'
+    );
+
+    // We need to add the following user typoscript config to all users, so that the new
+    // page type is displayed in the wizard
+    ExtensionManagementUtility::addUserTSConfig(
+        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . Configuration::getNewsletterPageDokType() . ')'
     );
 
     // Service

@@ -35,7 +35,8 @@ call_user_func(static function (): void {
             // Add the icon to the icon class configuration
             'ctrl' => [
                 'typeicon_classes' => [
-                    $newsletterDokType => 'universal-messenger-dok-type-newsletter',
+                    $newsletterDokType                 => 'universal-messenger-dok-type-newsletter',
+                    $newsletterDokType . '-hideinmenu' => 'universal-messenger-dok-type-newsletter',
                 ],
             ],
 
