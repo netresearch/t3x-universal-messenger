@@ -143,12 +143,14 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
     {
-        return $this->addInlineCss(
+        $content = $this->addInlineCss(
             $this->renderNewsletterContainer(
                 $request,
                 $this->renderByPageId($pageId)
             )
         );
+
+        return $this->clearUpContent($content);
     }
 
     /**
@@ -163,9 +165,25 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function renderNewsletterPage(string $url): string
     {
-        return $this->addInlineCss(
-            $this->getContentFromUrl($url)
-        );
+        $content = $this->addInlineCss($this->getContentFromUrl($url));
+
+        return $this->clearUpContent($content);
+    }
+
+    /**
+     * Cleans up to content. Removes redundant whitespaces and tabs.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    private function clearUpContent(string $content): string
+    {
+        // Replace tab with space
+        $content = preg_replace('/\t/', ' ', trim($content));
+
+        // Removes redundant spaces between HTML tags
+        return trim(preg_replace('/>\s+</', '><', $content));
     }
 
     /**
