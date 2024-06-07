@@ -26,8 +26,9 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -50,6 +51,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * @var string
      */
     private const NEWSLETTER_SEND_TYPE_TEST = 'TEST';
+
+    /**
+     * @var string
+     */
+    private const NEWSLETTER_SEND_TYPE_LIVE = 'LIVE';
 
     /**
      * @var SiteFinder
@@ -206,7 +212,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
             }
 
-            $newsletterEventId = $newsletterType . strtoupper(bin2hex(random_bytes(16)));
+            $newsletterEventId = $this->generateEventId($newsletterType);
         } catch (Exception) {
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
@@ -229,7 +235,8 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 ->setEventDetails(
                     $newsletterEventId,
                     null,
-                    $newsletterChannel->isSkipUsedId()
+                    ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE)
+                        && $newsletterChannel->isSkipUsedId()
                 )
                 ->setEmailAdresses(
                     $newsletterChannel->getSender(),
@@ -360,5 +367,33 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     private function isUrlValid(string $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
+    }
+
+    /**
+     * Returns the event ID based on the current site, page and language.
+     *
+     * @param string $newsletterType
+     *
+     * @return string
+     *
+     * @throws SiteNotFoundException
+     */
+    private function generateEventId(string $newsletterType): string
+    {
+        /** @var SiteLanguage $language */
+        $language = $this->request->getAttribute('language')
+            ?? $this->request->getAttribute('site')->getDefaultLanguage();
+
+        $site = $this->siteFinder->getSiteByPageId($this->pageId);
+
+        return strtoupper(
+                sprintf(
+                '%s-%s-%s-%d',
+                $newsletterType,
+                $site->getIdentifier(),
+                $language->getLocale()->getLanguageCode(),
+                $this->pageId
+            )
+        );
     }
 }
