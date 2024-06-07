@@ -51,7 +51,7 @@
                 <source>Please select a page with the page type "Newsletter".</source>
             </trans-unit>
             <trans-unit id="error.accessNotAllowed">
-                <source>You do not have the necessary rights to send this newsletter.</source>
+                <source>You or your user group do not have the necessary rights to send this newsletter.</source>
             </trans-unit>
             <trans-unit id="error.noSiteConfiguration">
                 <source>The requested page is missing a valid site configuration.</source>
@@ -80,12 +80,20 @@
                 <source>Newsletter sending has finished: %d user entries have been contacted.</source>
             </trans-unit>
 
+            <!-- be_groups -->
+            <trans-unit id="be_groups.universal_messenger_channels">
+                <source>Newsletter channels</source>
+            </trans-unit>
+            <trans-unit id="be_groups.universal_messenger_channels.description">
+                <source>Select the newsletter channels for which this user group is allowed to send newsletters.</source>
+            </trans-unit>
+
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">
                 <source>Newsletter channels</source>
             </trans-unit>
             <trans-unit id="be_users.universal_messenger_channels.description">
-                <source>Here select the newsletter channels for which this user is allowed to send newsletters.</source>
+                <source>Select the newsletter channels for which this user is allowed to send newsletters.</source>
             </trans-unit>
 
             <!-- pages -->

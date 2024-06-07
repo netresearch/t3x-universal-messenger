@@ -26,11 +26,14 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
+
+use function in_array;
 
 /**
  * UniversalMessengerController.
@@ -102,9 +105,10 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         // Check if backend user is allowed to access this newsletter
-        if (!GeneralUtility::inList(
-            $this->getBackendUserAuthentication()->user['universal_messenger_channels'],
-            $contentPage['universal_messenger_channel']
+        if (!in_array(
+            $contentPage['universal_messenger_channel'],
+            $this->getNewsletterChannelPermissions(),
+            true
         )) {
             return $this->forwardFlashMessage('error.accessNotAllowed');
         }
@@ -129,6 +133,41 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $this->moduleTemplate->assign('content', $this->view->render());
 
         return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+    }
+
+    /**
+     * Returns an array of newsletter channel permissions. The newsletter channel permissions from BE Groups
+     * are also taken into consideration and are merged into User permissions.
+     *
+     * @return int[]
+     */
+    private function getNewsletterChannelPermissions(): array
+    {
+        $backendUserAuthentication = $this->getBackendUserAuthentication();
+        $newsletterChannelIds      = '';
+
+        // Newsletter channel permissions of the groups
+        foreach ($backendUserAuthentication->userGroups as $group) {
+            if (isset($group['universal_messenger_channels'])) {
+                $newsletterChannelIds .= ',' . $group['universal_messenger_channels'];
+            }
+        }
+
+        // Newsletter channel permissions of the user record
+        if ($backendUserAuthentication->user['universal_messenger_channels']) {
+            $newsletterChannelIds .= ',' . $backendUserAuthentication->user['universal_messenger_channels'];
+        }
+
+        // Make the IDs unique
+        $newsletterChannelIds = GeneralUtility::intExplode(',', $newsletterChannelIds);
+
+        // Remove empty values
+        $newsletterChannelIds = array_filter($newsletterChannelIds);
+
+        // Remove duplicate values
+        $newsletterChannelIds = array_unique($newsletterChannelIds);
+
+        return array_values($newsletterChannelIds);
     }
 
     /**

@@ -51,7 +51,7 @@
                 <target>Bitte wählen Sie eine Seite vom Seiten-Typ "Newsletter" aus.</target>
             </trans-unit>
             <trans-unit id="error.accessNotAllowed">
-                <target>Sie verfügen nicht über die notwendigen Rechte, um diesen Newsletter zu versenden.</target>
+                <target>Sie oder ihre Benutzergruppe verfügen nicht über die notwendigen Rechte, um diesen Newsletter zu versenden.</target>
             </trans-unit>
             <trans-unit id="error.noSiteConfiguration">
                 <target>Für die angeforderte Seite fehlt eine gültige Seitenkonfiguration.</target>
@@ -78,6 +78,14 @@
             </trans-unit>
             <trans-unit id="newsletter.status.finished">
                 <target>Der Newsletterversand ist abgeschlossen: Es wurden %d Benutzereinträge kontaktiert.</target>
+            </trans-unit>
+
+            <!-- be_groups -->
+            <trans-unit id="be_groups.universal_messenger_channels">
+                <target>Newsletter-Kanäle</target>
+            </trans-unit>
+            <trans-unit id="be_groups.universal_messenger_channels.description">
+                <target>Wählen Sie hier die Newsletter-Kanäle, für welche diese Benutzergruppe Newsletter versenden darf.</target>
             </trans-unit>
 
             <!-- be_users -->
