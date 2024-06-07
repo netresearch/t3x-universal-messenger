@@ -253,7 +253,16 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function cleanChannelTitle(string $channelTitle): string
     {
-        return trim(str_ireplace('(TESTVersand)', '', $channelTitle));
+        return trim(
+            str_ireplace(
+                [
+                    '(TESTVersand)',
+                    '(LIVEVersand)',
+                ],
+                '',
+                $channelTitle
+            )
+        );
     }
 
     /**
