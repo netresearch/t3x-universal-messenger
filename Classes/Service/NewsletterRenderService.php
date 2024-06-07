@@ -76,7 +76,7 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Returns the extensions typoscript configuration.
      *
-     * @return array<string, array<string, string[]>>
+     * @return array<string, array<string, string|string[]>>
      */
     private function getExtensionSettings(): array
     {

@@ -155,7 +155,6 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 return $this->forwardFlashMessage('error.noSiteConfiguration');
             }
 
-
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
             $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($previewUrl);
             $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
