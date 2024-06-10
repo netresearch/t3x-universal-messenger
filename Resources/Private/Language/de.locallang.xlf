@@ -142,13 +142,13 @@
                 <target>Verwendete ID überspringen</target>
             </trans-unit>
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.skip_used_id.description">
-                <target>Aktivieren Sie diese Option, wenn der Versand abgebrochen werden soll, wenn bereits ein Newsletter mit derselben Ereignis-ID im Archiv vorhanden ist.</target>
+                <target>Aktivieren Sie diese Option, wenn der LIVE-Versand abgebrochen werden soll, wenn bereits ein Newsletter mit derselben Ereignis-ID im Archiv vorhanden ist. Die Ereignis-ID wird automatisch aus der Kennung der Seitenkonfiguration, der ID der gewählten Sprache sowie der Seiten-ID generiert. Der Testversand ist unabhängig von der Auswahl immer möglich.</target>
             </trans-unit>
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images">
                 <target>Bilder einbetten</target>
             </trans-unit>
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images.description">
-                <target>Verhalten beim Einbetten von Bildern.</target>
+                <target>Verhalten für das Einbetten von Bildern.</target>
             </trans-unit>
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images.all">
                 <target>Alle Bilder in die E-Mail einbetten</target>

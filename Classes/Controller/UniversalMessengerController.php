@@ -387,7 +387,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $site = $this->siteFinder->getSiteByPageId($this->pageId);
 
         return strtoupper(
-                sprintf(
+            sprintf(
                 '%s-%s-%s-%d',
                 $newsletterType,
                 $site->getIdentifier(),

@@ -142,7 +142,7 @@
                 <source>Skip used ID</source>
             </trans-unit>
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.skip_used_id.description">
-                <source>Enable if the sending should be canceled if there is already a newsletter with the same event ID in the archive.</source>
+                <source>Activate this option if you want the LIVE mailing to be canceled if a newsletter with the same event ID already exists in the archive. The event ID is automatically generated from the site identifier, the ID of the selected language and the page ID. Test mailing is always possible regardless of the selection.</source>
             </trans-unit>
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel.embed_images">
                 <source>Embed images</source>
