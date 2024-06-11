@@ -62,9 +62,6 @@
             <trans-unit id="error.exceptionDuringCreate">
                 <target>Bei der Generierung des Universal Messenger Newsletter-Event-Requests ist ein Fehler aufgetreten.</target>
             </trans-unit>
-            <trans-unit id="error.exceptionStatus">
-                <target>Bei der Abfrage des Newsletter-Status ist ein Fehler aufgetreten.</target>
-            </trans-unit>
 
             <!-- status -->
             <trans-unit id="newsletter.status.failed">
@@ -77,7 +74,10 @@
                 <target>Der Newsletter befindet sich derzeit in der Warteschlange und der Versand hat noch nicht begonnen.</target>
             </trans-unit>
             <trans-unit id="newsletter.status.finished">
-                <target>Der Newsletterversand ist abgeschlossen: Es wurden %d Benutzereinträge kontaktiert.</target>
+                <target>Der Newsletterversand ist abgeschlossen: Es wurde ein Benutzer kontaktiert.</target>
+            </trans-unit>
+            <trans-unit id="newsletter.status.finished.plural">
+                <target>Der Newsletterversand ist abgeschlossen: Es wurden %d Benutzer kontaktiert.</target>
             </trans-unit>
 
             <!-- be_groups -->

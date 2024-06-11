@@ -128,6 +128,20 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
 
+        // Check if a newsletter status is available
+        $newsletterEventId = $this->generateEventId('LIVE');
+
+        $status = $this->getNewsletterStatus($newsletterEventId);
+
+        // Show the status if available
+        if (($status instanceof NewsletterStatus)
+            && ($status->error === null)
+        ) {
+            $this->view->assign('disableLiveButton', true);
+
+            $this->renderStatusMessage($status);
+        }
+
         $newsletterChannel = $this->newsletterChannelRepository
             ->findByUid($contentPage['universal_messenger_channel']);
 
@@ -239,8 +253,8 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                         && $newsletterChannel->isSkipUsedId()
                 )
                 ->setEmailAdresses(
-                    $newsletterChannel->getSender(),
-                    $newsletterChannel->getReplyTo()
+                    $newsletterChannel->getSender() !== '' ? $newsletterChannel->getSender() : null,
+                    $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null
                 )
                 ->setEmailSubject($contentPage['title'])
                 ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
@@ -272,23 +286,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.exceptionDuringCreate');
         }
 
-        try {
-            $status = $this->universalMessengerService
-                ->api()
-                ->newsletter()
-                ->status($newsletterEventId);
-        } catch (ServiceException $exception) {
-            $this->logger->error(
-                $exception->getMessage(),
-                [
-                    'exception' => $exception,
-                ]
-            );
-
-            return $this->forwardFlashMessage('error.exceptionStatus');
-        }
-
-        return $this->renderStatusMessage($status);
+        return new ForwardResponse('index');
     }
 
     /**
@@ -296,9 +294,9 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      *
      * @param NewsletterStatus $status
      *
-     * @return ResponseInterface
+     * @return void
      */
-    private function renderStatusMessage(NewsletterStatus $status): ResponseInterface
+    private function renderStatusMessage(NewsletterStatus $status): void
     {
         // Failed status
         $severity = ContextualFeedbackSeverity::WARNING;
@@ -314,12 +312,16 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         if ($status->isFinished) {
-            $message = $this->translate(
-                'newsletter.status.finished',
-                [
-                    $status->contacted,
-                ]
-            );
+            if ($status->contacted === 1) {
+                $message = $this->translate('newsletter.status.finished');
+            } else {
+                $message = $this->translate(
+                    'newsletter.status.finished.plural',
+                    [
+                        $status->contacted,
+                    ]
+                );
+            }
 
             $severity = ContextualFeedbackSeverity::OK;
         }
@@ -329,8 +331,32 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             'Universal Messenger',
             $severity
         );
+    }
 
-        return new ForwardResponse('error');
+    /**
+     * Returns the status of a newsletter sending for the given newsletter event ID.
+     *
+     * @param string $newsletterEventId
+     *
+     * @return NewsletterStatus|null
+     */
+    private function getNewsletterStatus(string $newsletterEventId): ?NewsletterStatus
+    {
+        try {
+            return $this->universalMessengerService
+                ->api()
+                ->newsletter()
+                ->status($newsletterEventId);
+        } catch (ServiceException $exception) {
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    'exception' => $exception,
+                ]
+            );
+        }
+
+        return null;
     }
 
     /**

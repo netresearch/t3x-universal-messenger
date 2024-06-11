@@ -62,9 +62,6 @@
             <trans-unit id="error.exceptionDuringCreate">
                 <source>An error occurred while generating the Universal Messenger newsletter event request.</source>
             </trans-unit>
-            <trans-unit id="error.exceptionStatus">
-                <source>An error occurred while querying newsletter status.</source>
-            </trans-unit>
 
             <!-- status -->
             <trans-unit id="newsletter.status.failed">
@@ -77,7 +74,10 @@
                 <source>Newsletter is currently in the queue and sending has not started yet.</source>
             </trans-unit>
             <trans-unit id="newsletter.status.finished">
-                <source>Newsletter sending has finished: %d user entries have been contacted.</source>
+                <source>The newsletter has been sent out: One user has been contacted.</source>
+            </trans-unit>
+            <trans-unit id="newsletter.status.finished.plural">
+                <source>The newsletter has been sent out: %d users have been contacted.</source>
             </trans-unit>
 
             <!-- be_groups -->
