@@ -129,7 +129,9 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         // Check if a newsletter status is available
-        $newsletterEventId = $this->generateEventId('LIVE');
+        $newsletterEventId = $this->generateEventId();
+        $newsletterChannel = $this->newsletterChannelRepository
+            ->findByUid($contentPage['universal_messenger_channel']);
 
         $status = $this->getNewsletterStatus($newsletterEventId);
 
@@ -137,13 +139,14 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         if (($status instanceof NewsletterStatus)
             && ($status->error === null)
         ) {
-            $this->view->assign('disableLiveButton', true);
+            if (($newsletterChannel instanceof NewsletterChannel)
+                && $newsletterChannel->isSkipUsedId()
+            ) {
+                $this->view->assign('disableLiveButton', true);
+            }
 
             $this->renderStatusMessage($status);
         }
-
-        $newsletterChannel = $this->newsletterChannelRepository
-            ->findByUid($contentPage['universal_messenger_channel']);
 
         $this->view->assign('pageId', $this->pageId);
         $this->view->assign('pageTitle', $contentPage['title']);
@@ -225,8 +228,6 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             } else {
                 $newsletterChannelId .= $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
             }
-
-            $newsletterEventId = $this->generateEventId($newsletterType);
         } catch (Exception) {
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
@@ -247,7 +248,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     true
                 )
                 ->setEventDetails(
-                    $newsletterEventId,
+                    ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE) ? $this->generateEventId() : null,
                     null,
                     ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE)
                         && $newsletterChannel->isSkipUsedId()
@@ -298,20 +299,20 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      */
     private function renderStatusMessage(NewsletterStatus $status): void
     {
-        // Failed status
-        $severity = ContextualFeedbackSeverity::WARNING;
-        $message  = $this->translate('newsletter.status.failed');
+        // Default on hold status is displayed if the API is not yet returning a valid status response
+        $severity = ContextualFeedbackSeverity::INFO;
+        $message  = $this->translate('newsletter.status.hold');
 
-        if ($status->isStopped) {
-            $message = $this->translate('newsletter.status.stopped');
-        }
-
-        if ($status->inQueue) {
+        if ($status->isFailed) {
+            $message  = $this->translate('newsletter.status.failed');
+            $severity = ContextualFeedbackSeverity::WARNING;
+        } elseif ($status->isStopped) {
+            $message  = $this->translate('newsletter.status.stopped');
+            $severity = ContextualFeedbackSeverity::WARNING;
+        } elseif ($status->inQueue) {
             $message  = $this->translate('newsletter.status.queue');
             $severity = ContextualFeedbackSeverity::OK;
-        }
-
-        if ($status->isFinished) {
+        } elseif ($status->isFinished) {
             if ($status->contacted === 1) {
                 $message = $this->translate('newsletter.status.finished');
             } else {
@@ -396,15 +397,13 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     }
 
     /**
-     * Returns the event ID based on the current site, page and language.
-     *
-     * @param string $newsletterType
+     * Returns the LIVE event ID based on the current site, page and language.
      *
      * @return string
      *
      * @throws SiteNotFoundException
      */
-    private function generateEventId(string $newsletterType): string
+    private function generateEventId(): string
     {
         /** @var SiteLanguage $language */
         $language = $this->request->getAttribute('language')
@@ -415,7 +414,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         return strtoupper(
             sprintf(
                 '%s-%s-%s-%d',
-                $newsletterType,
+                self::NEWSLETTER_SEND_TYPE_LIVE,
                 $site->getIdentifier(),
                 $language->getLocale()->getLanguageCode(),
                 $this->pageId

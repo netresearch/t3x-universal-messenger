@@ -64,6 +64,9 @@
             </trans-unit>
 
             <!-- status -->
+            <trans-unit id="newsletter.status.hold">
+                <source>The newsletter has been sent to Universal Messenger and is being processed.</source>
+            </trans-unit>
             <trans-unit id="newsletter.status.failed">
                 <source>Newsletter sending has failed.</source>
             </trans-unit>

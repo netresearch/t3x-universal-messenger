@@ -64,6 +64,9 @@
             </trans-unit>
 
             <!-- status -->
+            <trans-unit id="newsletter.status.hold">
+                <target>Der Newsletter wurde an den Universal Messenger übergeben und wird verarbeitet.</target>
+            </trans-unit>
             <trans-unit id="newsletter.status.failed">
                 <target>Der Newsletterversand ist fehlgeschlagen.</target>
             </trans-unit>
