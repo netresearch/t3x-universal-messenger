@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Domain\Repository;
 
+use Exception;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
@@ -37,9 +39,38 @@ class NewsletterChannelRepository extends Repository
     public function initializeObject(): void
     {
         $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
-        $querySettings->setRespectStoragePage(false);
+        $querySettings
+            ->setRespectStoragePage(true)
+            ->setStoragePageIds([ $this->getStoragePageId() ]);
 
         $this->setDefaultQuerySettings($querySettings);
+    }
+
+    /**
+     * Get the extension configuration.
+     *
+     * @param string $path Path to get the config for
+     *
+     * @return mixed
+     */
+    private function getExtensionConfiguration(string $path): mixed
+    {
+        try {
+            return GeneralUtility::makeInstance(ExtensionConfiguration::class)
+                ->get('universal_messenger', $path);
+        } catch (Exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the page ID used to store the records.
+     *
+     * @return int
+     */
+    private function getStoragePageId(): int
+    {
+        return (int) ($this->getExtensionConfiguration('storagePageId') ?? 0);
     }
 
     /**
