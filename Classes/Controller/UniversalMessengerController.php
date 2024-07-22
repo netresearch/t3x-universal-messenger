@@ -110,6 +110,13 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             );
         }
 
+        // Check if page has required newsletter channel configuration or just the default value
+        if (!isset($contentPage['universal_messenger_channel'])
+            || ($contentPage['universal_messenger_channel'] <= 0)
+        ) {
+            return $this->forwardFlashMessage('error.missingChannelConfiguration');
+        }
+
         // Check if backend user is allowed to access this newsletter
         if (!in_array(
             $contentPage['universal_messenger_channel'],

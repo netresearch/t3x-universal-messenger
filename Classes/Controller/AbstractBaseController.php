@@ -210,7 +210,15 @@ abstract class AbstractBaseController extends ActionController
         ?array $arguments = null,
         string $languageFile = 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf'
     ): string {
-        return LocalizationUtility::translate($languageFile . ':' . $key, null, $arguments);
+        return LocalizationUtility::translate(
+            $languageFile . ':' . $key,
+            null,
+            $arguments
+        ) ?? LocalizationUtility::translate(
+            $languageFile . ':error.missingTranslation',
+            null,
+            $arguments
+        ) . ' ' . $key;
     }
 
     /**

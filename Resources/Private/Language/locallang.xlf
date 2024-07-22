@@ -47,6 +47,9 @@
             </trans-unit>
 
             <!-- errors -->
+            <trans-unit id="error.missingTranslation">
+                <source>Missing translation for:</source>
+            </trans-unit>
             <trans-unit id="error.pageNotAllowed">
                 <source>Please select a page with the page type "Newsletter".</source>
             </trans-unit>
@@ -61,6 +64,9 @@
             </trans-unit>
             <trans-unit id="error.exceptionDuringCreate">
                 <source>An error occurred while generating the Universal Messenger newsletter event request.</source>
+            </trans-unit>
+            <trans-unit id="error.missingChannelConfiguration">
+                <source>Please select a valid newsletter channel in the page properties.</source>
             </trans-unit>
 
             <!-- status -->

@@ -47,6 +47,9 @@
             </trans-unit>
 
             <!-- errors -->
+            <trans-unit id="error.missingTranslation">
+                <target>Fehlende Übersetzung für:</target>
+            </trans-unit>
             <trans-unit id="error.pageNotAllowed">
                 <target>Bitte wählen Sie eine Seite vom Seiten-Typ "Newsletter" aus.</target>
             </trans-unit>
@@ -61,6 +64,9 @@
             </trans-unit>
             <trans-unit id="error.exceptionDuringCreate">
                 <target>Bei der Generierung des Universal Messenger Newsletter-Event-Requests ist ein Fehler aufgetreten.</target>
+            </trans-unit>
+            <trans-unit id="error.missingChannelConfiguration">
+                <target>Bitte wählen Sie einen gültigen Newsletter-Kanal in den Seiteneigenschaften aus.</target>
             </trans-unit>
 
             <!-- status -->
