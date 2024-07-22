@@ -322,7 +322,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function getStoragePageId(): int
     {
-        return (int) ($this->getExtensionConfiguration('universalMessengerStoragePid') ?? 0);
+        return (int) ($this->getExtensionConfiguration('storagePageId') ?? 0);
     }
 
     /**

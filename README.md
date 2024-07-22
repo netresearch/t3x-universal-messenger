@@ -22,8 +22,6 @@ Use the "Analyze Database Structure" in the "Maintenance" Admin Tools section to
 |:-------------------------------|:-----------|:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Storage page ID                | General    | 0             | The page ID used to store the Universal Messenger newsletter channel records.                                                                                                                                                          |
 | Page type                      | General    | 20            | This value defines the page type used for Universal Messenger newsletter pages. It is used for the doctype field of the page table in your instance. Set a different value here if the default value is already used for other things. |
-| Base URL                       | Webservice |               | The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p                                                                                                      |
-| API key                        | Webservice |               | The Universal Messenger API Key                                                                                                                                                                                                        |
 | Enable logging                 | Webservice | 0             | Log all Universal Messenger API requests in a log file.                                                                                                                                                                                |
 | Test newsletter channel suffix | Expert     | _Test         | Enter the suffix for the TEST newsletter channels here.                                                                                                                                                                                |
 | Live newsletter channel suffix | Expert     | _Live         | Enter the suffix for the LIVE newsletter channels here.                                                                                                                                                                                |
@@ -37,8 +35,28 @@ Use the "Analyze Database Structure" in the "Maintenance" Admin Tools section to
 ![Extension Configuration Tab "Webservice"](Documentation/ExtensionConfiguration2.png)
 *Fig. 2: Extension Configuration Tab "Webservice"*
 
+##### API endpoint
+To access the Universal Messenger API, store the corresponding configuration in the file `additional.php` within the global structure "TYPO3_CONF_VARS" under "EXTENSIONS" and "universal_messenger" (note the spelling) of your TYPO3 installation.
 
-##### API-Logging
+```php
+
+// The universal messenger API endpoint
+$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] = array_merge(
+    $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'],
+    [
+        'apiUrl' => 'YOUR-API-URL',
+        'apiKey' => 'YOUR-API-KEY',
+    ]
+);
+```
+
+| Field  | Description                                                                                                                       |
+|:-------|:----------------------------------------------------------------------------------------------------------------------------------|
+| apiUrl | The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p |
+| apiKey | The Universal Messenger API Key                                                                                                   |
+
+
+##### API logging
 To enable the request/response logging of the Universal Messenger, enable the extension configuration "Enable logging"
 and add a log writer configuration to your `ext_localconf.php`:
 

@@ -15,10 +15,15 @@ services:
               description: 'Imports all active Universal Messenger newsletter channels'
               schedulable: true
 
-    Netresearch\UniversalMessenger\EventListener\ModifyPageLayoutContentEventListener:
+    Netresearch\UniversalMessenger\Backend\EventListener\ModifyPageLayoutContentEventListener:
         tags:
             - name: event.listener
               event: TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent
+
+    Netresearch\UniversalMessenger\Backend\EventListener\ModifyBlindedConfigurationOptionsEventListener:
+        tags:
+            - name: event.listener
+              event: TYPO3\CMS\Lowlevel\Event\ModifyBlindedConfigurationOptionsEvent
 
     Netresearch\UniversalMessenger\Controller\UniversalMessengerController:
         tags: [ 'backend.controller' ]

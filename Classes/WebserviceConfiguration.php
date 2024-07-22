@@ -52,8 +52,8 @@ class WebserviceConfiguration
             $configuration = [];
         }
 
-        $this->apiBaseUrl = $configuration['universalMessengerApiUrl'] ?? '';
-        $this->apiKey     = $configuration['universalMessengerApiKey'] ?? '';
+        $this->apiBaseUrl = $configuration['apiUrl'] ?? '';
+        $this->apiKey     = $configuration['apiKey'] ?? '';
     }
 
     /**

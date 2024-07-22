@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Netresearch\UniversalMessenger\EventListener;
+namespace Netresearch\UniversalMessenger\Backend\EventListener;
 
 use Netresearch\UniversalMessenger\Configuration;
 use Psr\Http\Message\ServerRequestInterface;

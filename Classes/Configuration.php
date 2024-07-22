@@ -48,7 +48,7 @@ class Configuration
             $pageType = (int) self::getExtensionConfiguration()
                 ->get(
                     'universal_messenger',
-                    'universalMessengerNewsletterPageDokType'
+                    'newsletterPageDokType'
                 );
         } catch (Exception) {
             $pageType = 0;
