@@ -61,7 +61,7 @@ call_user_func(static function (): void {
                 'foreign_table' => 'tx_universalmessenger_domain_model_newsletterchannel',
                 'items'         => [
                     [
-                        'label' => '',
+                        'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.tx_universalmessenger_domain_model_newsletterchannel.0',
                         'value' => '0',
                     ],
                 ],

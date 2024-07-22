@@ -109,6 +109,9 @@
             <trans-unit id="pages.universal_messenger_channel.description">
                 <target>Wählen Sie hier den Newsletter-Kanal für diesen Newsletter.</target>
             </trans-unit>
+            <trans-unit id="pages.tx_universalmessenger_domain_model_newsletterchannel.0">
+                <target>Bitte wählen Sie einen Kanal</target>
+            </trans-unit>
 
             <!-- tx_universalmessenger_domain_model_newsletterchannel -->
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel">
