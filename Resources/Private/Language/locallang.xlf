@@ -45,6 +45,15 @@
             <trans-unit id="common.sendNewsletterLive">
                 <source>Live delivery</source>
             </trans-unit>
+            <trans-unit id="common.sendNewsletterLiveDialogContent">
+                <source>A live delivery will be sent to channel "%s". Are you sure you want to do this?</source>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterLiveButtonCancel">
+                <source>Cancel</source>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterLiveButtonConfirm">
+                <source>Confirm</source>
+            </trans-unit>
 
             <!-- errors -->
             <trans-unit id="error.missingTranslation">

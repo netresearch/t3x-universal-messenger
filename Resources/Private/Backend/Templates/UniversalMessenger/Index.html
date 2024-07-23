@@ -35,27 +35,22 @@
                 <h3 class="panel-title"><f:translate key="common.newsletterSend" /></h3>
             </div>
             <div class="panel-body">
-                <f:form controller="UniversalMessenger"
+                <f:link.action
+                        class="btn btn-success btn-lg"
                         action="create"
-                        name="newsletter"
+                        additionalParams="{newsletterChannel: newsletterChannel, send: 'test'}"
                 >
-                    <f:form.hidden name="newsletterChannel" value="{newsletterChannel}" />
+                    <f:translate key="common.sendNewsletterTest" />
+                </f:link.action>
 
-                    <f:form.button class="btn btn-success btn-lg"
-                                   name="send"
-                                   type="submit"
-                                   value="test">
-                        <f:translate key="common.sendNewsletterTest" />
-                    </f:form.button>
-
-                    <f:form.button class="btn btn-danger btn-lg float-end"
-                                   name="send"
-                                   type="submit"
-                                   value="live"
-                                   disabled="{disableLiveButton}">
-                        <f:translate key="common.sendNewsletterLive" />
-                    </f:form.button>
-                </f:form>
+                <f:link.action
+                        class="btn btn-danger btn-lg float-end t3js-modal-trigger{f:if(condition: disableLiveButton, then: ' disabled')}"
+                        action="create"
+                        additionalParams="{newsletterChannel: newsletterChannel, send: 'live'}"
+                        data="{severity: 'error', title: '{f:translate(key: \'common.sendNewsletterLive\')}', bs-content: '{f:translate(key: \'common.sendNewsletterLiveDialogContent\', arguments: {0: newsletterChannel.title})}', button-close-text: '{f:translate(key: \'common.sendNewsletterLiveButtonCancel\')}', button-ok-text: '{f:translate(key: \'common.sendNewsletterLiveButtonConfirm\')}'}"
+                >
+                    <f:translate key="common.sendNewsletterLive" />
+                </f:link.action>
             </div>
         </div>
     </f:section>

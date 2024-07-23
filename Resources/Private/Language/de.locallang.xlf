@@ -45,6 +45,15 @@
             <trans-unit id="common.sendNewsletterLive">
                 <target>Live-Versand</target>
             </trans-unit>
+            <trans-unit id="common.sendNewsletterLiveDialogContent">
+                <target>Es erfolgt ein Live-Versand an den Kanal "%s". Möchten Sie dies wirklich?</target>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterLiveButtonCancel">
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="common.sendNewsletterLiveButtonConfirm">
+                <target>Bestätigen</target>
+            </trans-unit>
 
             <!-- errors -->
             <trans-unit id="error.missingTranslation">
