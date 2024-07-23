@@ -136,7 +136,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         // Check if a newsletter status is available
-        $newsletterEventId = $this->generateEventId();
+        $newsletterEventId = $this->generateLiveEventId();
         $newsletterChannel = $this->newsletterChannelRepository
             ->findByUid($contentPage['universal_messenger_channel']);
 
@@ -255,7 +255,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     true
                 )
                 ->setEventDetails(
-                    ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE) ? $this->generateEventId() : null,
+                    ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE) ? $this->generateLiveEventId() : null,
                     null,
                     ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE)
                         && $newsletterChannel->isSkipUsedId()
@@ -283,6 +283,15 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 ->api()
                 ->eventFile()
                 ->event($eventRequest);
+
+            // Print some status for TEST
+            if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
+                $this->moduleTemplate->addFlashMessage(
+                    $this->translate('newsletter.status.hold'),
+                    $this->translate('common.universalMessenger'),
+                    ContextualFeedbackSeverity::INFO
+                );
+            }
         } catch (Exception $exception) {
             $this->logger->error(
                 $exception->getMessage(),
@@ -336,7 +345,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
         $this->moduleTemplate->addFlashMessage(
             $message,
-            'Universal Messenger',
+            $this->translate('common.universalMessenger'),
             $severity
         );
     }
@@ -410,7 +419,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      *
      * @throws SiteNotFoundException
      */
-    private function generateEventId(): string
+    private function generateLiveEventId(): string
     {
         /** @var SiteLanguage $language */
         $language = $this->request->getAttribute('language')

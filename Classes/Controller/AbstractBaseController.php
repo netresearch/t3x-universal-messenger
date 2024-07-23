@@ -181,7 +181,7 @@ abstract class AbstractBaseController extends ActionController
     ): ResponseInterface {
         $this->moduleTemplate->addFlashMessage(
             $this->translate($key),
-            'Universal Messenger',
+            $this->translate('common.universalMessenger'),
             $severity
         );
 

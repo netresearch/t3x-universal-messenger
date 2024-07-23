@@ -41,7 +41,7 @@ class NewsletterChannelRepository extends Repository
         $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
         $querySettings
             ->setRespectStoragePage(true)
-            ->setStoragePageIds([ $this->getStoragePageId() ]);
+            ->setStoragePageIds([$this->getStoragePageId()]);
 
         $this->setDefaultQuerySettings($querySettings);
     }
