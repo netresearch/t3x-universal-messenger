@@ -131,7 +131,7 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * Renders the newsletter in the preview page.
+     * Renders the newsletter and returns the generated HTML.
      *
      * @param ServerRequestInterface $request
      * @param int                    $pageId

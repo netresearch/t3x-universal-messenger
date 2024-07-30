@@ -126,12 +126,12 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.accessNotAllowed');
         }
 
-        $moduleData = $this->request->getAttribute('moduleData');
-        $languageId = (int) $moduleData->get('language');
-        $previewUrl = $this->getPreviewUrl($this->pageId, $languageId);
+        $moduleData    = $this->request->getAttribute('moduleData');
+        $languageId    = (int) $moduleData->get('language');
+        $newsletterUrl = $this->getNewsletterUrl($this->pageId, $languageId);
 
         // Check if the created preview URL is valid
-        if (!$this->isUrlValid($previewUrl)) {
+        if (!$this->isUrlValid($newsletterUrl)) {
             return $this->forwardFlashMessage('error.noSiteConfiguration');
         }
 
@@ -157,7 +157,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
         $this->view->assign('pageId', $this->pageId);
         $this->view->assign('pageTitle', $contentPage['title']);
-        $this->view->assign('previewUrl', $previewUrl);
+        $this->view->assign('previewUrl', $newsletterUrl);
         $this->view->assign('newsletterChannel', $newsletterChannel);
 
         $this->moduleTemplate->assign('content', $this->view->render());
@@ -215,17 +215,17 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         try {
-            $moduleData = $this->request->getAttribute('moduleData');
-            $languageId = (int) $moduleData->get('language');
-            $previewUrl = $this->getPreviewUrl($this->pageId, $languageId);
+            $moduleData    = $this->request->getAttribute('moduleData');
+            $languageId    = (int) $moduleData->get('language');
+            $newsletterUrl = $this->getNewsletterUrl($this->pageId, $languageId, false);
 
-            // Check if the created preview URL is valid
-            if (!$this->isUrlValid($previewUrl)) {
+            // Check if the created newsletter URL is valid
+            if (!$this->isUrlValid($newsletterUrl)) {
                 return $this->forwardFlashMessage('error.noSiteConfiguration');
             }
 
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
-            $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($previewUrl);
+            $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($newsletterUrl);
             $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
             $newsletterType      = strtoupper($this->request->getArgument('send'));
             $newsletterChannelId = $newsletterChannel->getChannelId();
@@ -379,16 +379,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     /**
      * Returns the newsletter preview URL.
      *
-     * @param int $pageId
-     * @param int $languageId
+     * @param int  $pageId
+     * @param int  $languageId
+     * @param bool $preview
      *
      * @return string
      */
-    private function getPreviewUrl(int $pageId, int $languageId): string
+    private function getNewsletterUrl(int $pageId, int $languageId, bool $preview = true): string
     {
+        // Call the newsletter preview frontend controller to render the selected page
+        // in the mail template style inside the backend iframe.
         $previewUri = PreviewUriBuilder::create($pageId)
             ->withAdditionalQueryParameters([
-                'preview'                                 => true,
+                'preview'                                 => $preview,
                 'type'                                    => self::PREVIEW_TYPE_NUMBER,
                 'tx_universalmessenger_newsletterpreview' => [
                     'pageId' => $pageId,
