@@ -15,7 +15,7 @@ use DateTime;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- * Job publication.
+ * Newsletter channel.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de

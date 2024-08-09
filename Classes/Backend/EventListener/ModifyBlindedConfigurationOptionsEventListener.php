@@ -24,6 +24,10 @@ final class ModifyBlindedConfigurationOptionsEventListener
 {
     /**
      * Invokes the event listener.
+     *
+     * @param ModifyBlindedConfigurationOptionsEvent $event
+     *
+     * @return void
      */
     public function __invoke(ModifyBlindedConfigurationOptionsEvent $event): void
     {

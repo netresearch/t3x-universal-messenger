@@ -35,6 +35,10 @@ final class ModifyPageLayoutContentEventListener
     /**
      * Invokes the event listener.
      *
+     * @param ModifyPageLayoutContentEvent $event
+     *
+     * @return void
+     *
      * @throws RouteNotFoundException
      */
     public function __invoke(ModifyPageLayoutContentEvent $event): void

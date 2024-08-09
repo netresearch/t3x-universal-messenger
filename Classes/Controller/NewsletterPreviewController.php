@@ -18,7 +18,7 @@ use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
- * UniversalMessengerController.
+ * NewsletterPreviewController.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
@@ -43,6 +43,8 @@ class NewsletterPreviewController extends ActionController
     }
 
     /**
+     * This action is used to display a preview of a newsletter as it would look in the email.
+     *
      * @param int $pageId
      *
      * @return ResponseInterface
