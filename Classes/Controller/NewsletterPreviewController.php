@@ -13,8 +13,6 @@ namespace Netresearch\UniversalMessenger\Controller;
 
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
-use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
@@ -48,9 +46,6 @@ class NewsletterPreviewController extends ActionController
      * @param int $pageId
      *
      * @return ResponseInterface
-     *
-     * @throws ParseException
-     * @throws RuntimeException
      */
     public function previewAction(int $pageId): ResponseInterface
     {

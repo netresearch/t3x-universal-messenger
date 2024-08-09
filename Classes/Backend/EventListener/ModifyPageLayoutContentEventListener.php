@@ -57,7 +57,8 @@ final class ModifyPageLayoutContentEventListener
             ->buildUriFromRoute(
                 'netresearch_universal_messenger',
                 [
-                    'id' => $pageId,
+                    'id'       => $pageId,
+                    'language' => $event->getRequest()->getAttribute('moduleData')->get('language'),
                 ]
             );
 

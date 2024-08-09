@@ -136,9 +136,11 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
     {
+        $languageId = $request->getAttribute('language')->getLanguageId();
+
         $content = $this->renderNewsletterContainer(
             $request,
-            $this->renderByPageId($pageId)
+            $this->renderByPageId($pageId, $languageId)
         );
 
         return $this->clearUpContent($content);
@@ -205,18 +207,19 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Renders the page with the given page ID.
      *
-     * @param int $pageId
+     * @param int $pageId     The page UID
+     * @param int $languageId The language UID of the page
      *
      * @return string
      *
-     * @throws RuntimeException
      */
-    private function renderByPageId(int $pageId): string
+    private function renderByPageId(int $pageId, int $languageId): string
     {
         $url = (string) $this->generatePageUri(
             $pageId,
             [
-                'type' => self::VIEW_TYPE_NUMBER,
+                'type'      => self::VIEW_TYPE_NUMBER,
+                '_language' => $languageId,
             ]
         );
 

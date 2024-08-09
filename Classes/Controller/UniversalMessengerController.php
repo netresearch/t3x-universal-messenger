@@ -23,6 +23,7 @@ use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -98,11 +99,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      */
     public function indexAction(): ResponseInterface
     {
-        $contentPage = BackendUtility::getRecord('pages', $this->pageId);
+        $contentRecord = BackendUtility::getRecord('pages', $this->pageId);
 
         // Check if the selected page matches our newsletter page type
-        if (($contentPage === null)
-            || ($contentPage['doktype'] !== Configuration::getNewsletterPageDokType())
+        if (($contentRecord === null)
+            || ($contentRecord['doktype'] !== Configuration::getNewsletterPageDokType())
         ) {
             return $this->forwardFlashMessage(
                 'error.pageNotAllowed',
@@ -111,21 +112,22 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         // Check if page has required newsletter channel configuration or just the default value
-        if (!isset($contentPage['universal_messenger_channel'])
-            || ($contentPage['universal_messenger_channel'] <= 0)
+        if (!isset($contentRecord['universal_messenger_channel'])
+            || ($contentRecord['universal_messenger_channel'] <= 0)
         ) {
             return $this->forwardFlashMessage('error.missingChannelConfiguration');
         }
 
         // Check if backend user is allowed to access this newsletter
         if (!in_array(
-            $contentPage['universal_messenger_channel'],
+            $contentRecord['universal_messenger_channel'],
             $this->getNewsletterChannelPermissions(),
             true
         )) {
             return $this->forwardFlashMessage('error.accessNotAllowed');
         }
 
+        /** @var ModuleData $moduleData */
         $moduleData    = $this->request->getAttribute('moduleData');
         $languageId    = (int) $moduleData->get('language');
         $newsletterUrl = $this->getNewsletterUrl($this->pageId, $languageId);
@@ -138,7 +140,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         // Check if a newsletter status is available
         $newsletterEventId = $this->generateLiveEventId();
         $newsletterChannel = $this->newsletterChannelRepository
-            ->findByUid($contentPage['universal_messenger_channel']);
+            ->findByUid($contentRecord['universal_messenger_channel']);
 
         $status = $this->getNewsletterStatus($newsletterEventId);
 
@@ -155,8 +157,15 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $this->renderStatusMessage($status);
         }
 
+        $pageTitle       = $contentRecord['title'];
+        $localizedRecord = BackendUtility::getRecordLocalization('pages', $this->pageId, $languageId);
+
+        if ($localizedRecord !== []) {
+            $pageTitle = $localizedRecord[0]['title'];
+        }
+
         $this->view->assign('pageId', $this->pageId);
-        $this->view->assign('pageTitle', $contentPage['title']);
+        $this->view->assign('pageTitle', $pageTitle);
         $this->view->assign('previewUrl', $newsletterUrl);
         $this->view->assign('newsletterChannel', $newsletterChannel);
 
@@ -226,7 +235,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
             $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($newsletterUrl);
-            $contentPage         = BackendUtility::getRecord('pages', $this->pageId);
+            $contentRecord       = BackendUtility::getRecord('pages', $this->pageId);
             $newsletterType      = strtoupper($this->request->getArgument('send'));
             $newsletterChannelId = $newsletterChannel->getChannelId();
 
@@ -264,7 +273,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     $newsletterChannel->getSender() !== '' ? $newsletterChannel->getSender() : null,
                     $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null
                 )
-                ->setEmailSubject($contentPage['title'])
+                ->setEmailSubject($contentRecord['title'])
                 ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
                 ->setHtmlBodyEncoding('UTF-8')
                 ->setHtmlBodyTracking(
