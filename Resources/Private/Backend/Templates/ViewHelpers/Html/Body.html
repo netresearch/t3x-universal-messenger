@@ -1,0 +1,16 @@
+<html data-namespace-typo3-fluid="true"
+      xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+>
+    <f:comment><!-- Wrapper for the body of the email --></f:comment>
+    <table class="body">
+        <tr>
+            <f:comment><!-- The class, align, and <center> tag centers the container --></f:comment>
+            <td class="float-center" align="center" valign="top">
+                <center>
+                    <f:format.raw>{content}</f:format.raw>
+                </center>
+            </td>
+        </tr>
+    </table>
+</html>
