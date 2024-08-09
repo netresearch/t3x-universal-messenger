@@ -17,7 +17,7 @@ defined('TYPO3') || exit('Access denied.');
 call_user_func(static function (): void {
     ExtensionManagementUtility::addStaticFile(
         'universal_messenger',
-        'Configuration/TypoScript/',
-        'Netresearch: Universal Messenger'
+        'Configuration/TypoScript/FluidContentElements/',
+        'Universal Messenger: Fluid Content Elements'
     );
 });

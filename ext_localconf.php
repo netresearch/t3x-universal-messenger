@@ -21,12 +21,6 @@ call_user_func(static function (): void {
     // Add TypoScript automatically (to use it in backend modules)
     ExtensionManagementUtility::addTypoScript(
         'universal_messenger',
-        'constants',
-        '@import "EXT:universal_messenger/Configuration/TypoScript/Default/constants.typoscript"'
-    );
-
-    ExtensionManagementUtility::addTypoScript(
-        'universal_messenger',
         'setup',
         '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"'
     );
