@@ -1,10 +1,29 @@
 <html data-namespace-typo3-fluid="true"
       xmlns="http://www.w3.org/1999/xhtml" lang="en"
       xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:um="http://typo3.org/ns/Netresearch/UniversalMessenger/ViewHelpers"
 >
-    <f:layout name="Default"/>
+    <f:layout name="Preview"/>
 
     <f:section name="Content">
-        <f:format.raw>{content}</f:format.raw>
+        <um:html.spacer size="16" />
+
+        <um:html.container>
+            <um:html.spacer size="16" />
+
+            <um:html.row>
+                <um:html.column>
+                    <f:if condition="{content}">
+                        <f:then>
+                            <f:format.raw>{content}</f:format.raw>
+                        </f:then>
+                        <f:else>
+                            <f:cObject typoscriptObjectPath="lib.dynamicContent"
+                                       data="{pageUid: '{data.uid}', colPos: '0', slide: '{theme.pagelayout.{pagelayout}.colPos.0.slide}'}"/>
+                        </f:else>
+                    </f:if>
+                    </um:html.column>
+            </um:html.row>
+        </um:html.container>
     </f:section>
 </html>
