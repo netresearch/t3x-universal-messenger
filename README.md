@@ -141,6 +141,21 @@ Each newsletter channel can also be configured with additional settings (a new i
 These settings are sent to the Universal Messenger API when the newsletter page is submitted.
 
 
+## Creating newsletters
+To create a new newsletter, simply create a new page in the TYPO3 backend. To do this, use the new shortcut 
+"Newsletter" in the page tree or create a new standard page.
+
+![Create new newsletter page](Documentation/Newsletter-Step-1.png)
+
+Then open the page properties. For a standard page, select the new page type "Newsletter".
+
+![Select page type](Documentation/Newsletter-Step-2.png)
+
+The page will then reload and the selection for the Universal Messenger newsletter channel will appear below the 
+selection for the page type. Select the appropriate channel for sending the newsletter here.
+
+![Select newsletter channel](Documentation/Newsletter-Step-3.png)
+
 ## Testing
 ```bash
 composer install
