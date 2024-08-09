@@ -1,0 +1,30 @@
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <main>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform</sheetTitle>
+                </TCEforms>
+                <el>
+                    <settings.replacementBodyText>
+                        <TCEforms>
+                            <label>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform.replacementBodyText</label>
+                            <description>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform.replacementBodyText.description</description>
+                            <config>
+                                <type>text</type>
+                                <cols>80</cols>
+                                <rows>15</rows>
+                                <eval>int,required</eval>
+                                <softref>typolink_tag,email[subst],url</softref>
+                                <enableRichtext>1</enableRichtext>
+                            </config>
+                        </TCEforms>
+                    </settings.replacementBodyText>
+                </el>
+            </ROOT>
+        </main>
+    </sheets>
+</T3DataStructure>

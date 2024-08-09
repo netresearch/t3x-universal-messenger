@@ -1,0 +1,10 @@
+#
+# Create a new tab for the content elements wizard
+#
+mod.wizards {
+    newContentElement.wizardItems {
+        universalmessenger {
+            header = LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_group.universalmessenger
+        }
+    }
+}

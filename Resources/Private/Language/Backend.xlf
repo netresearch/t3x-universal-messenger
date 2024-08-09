@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages">
+        <header/>
+        <body>
+            <trans-unit id="content_group.universalmessenger">
+                <source>Universal Messenger</source>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure">
+                <source>Control Structure</source>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.description">
+                <source>The control structures allow for very flexible personalization, for which you can evaluate any attribute.</source>
+            </trans-unit>
+
+            <!-- Flex form -->
+            <trans-unit id="content_element.control_structure.bodytext">
+                <source>Control Structure</source>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.bodytext.description">
+                <source>A control structure formatted as HTML that is passed 1:1 to the Universal Messenger.</source>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.flexform">
+                <source>Control Structure Settings</source>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.flexform.replacementBodyText">
+                <source>Alternative text</source>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.flexform.replacementBodyText.description">
+                <source>The alternative text that is displayed when the control structure is presented within a web page and not as a newsletter.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

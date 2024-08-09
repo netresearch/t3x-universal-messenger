@@ -1,0 +1,29 @@
+<html data-namespace-typo3-fluid="true"
+      xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:um="http://typo3.org/ns/Netresearch/UniversalMessenger/ViewHelpers"
+>
+    <f:render section="ControlStructure" arguments="{_all}" />
+
+    <f:comment><!-- Control structure --></f:comment>
+    <f:section name="ControlStructure">
+        <um:condition.isNewsletterTypeNumber>
+            <f:then>
+                <f:render section="ControlStructureNewsletter" arguments="{_all}" />
+            </f:then>
+            <f:else>
+                <f:render section="ControlStructureWebsite" arguments="{_all}" />
+            </f:else>
+        </um:condition.isNewsletterTypeNumber>
+    </f:section>
+
+    <f:comment><!-- Newsletter --></f:comment>
+    <f:section name="ControlStructureNewsletter">
+        <f:format.raw>{data.bodytext}</f:format.raw>
+    </f:section>
+
+    <f:comment><!-- Website --></f:comment>
+    <f:section name="ControlStructureWebsite">
+        <f:format.raw>{flexformConfiguration.settings.replacementBodyText}</f:format.raw>
+    </f:section>
+</html>

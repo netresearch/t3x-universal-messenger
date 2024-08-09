@@ -1,0 +1,2 @@
+# Manual inclusion to keep control over loading order
+@import 'EXT:universal_messenger/Configuration/TypoScript/Default/ContentElements/ControlStructure.typoscript'

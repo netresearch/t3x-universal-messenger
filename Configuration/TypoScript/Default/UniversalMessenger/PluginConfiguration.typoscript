@@ -1,0 +1,27 @@
+# Plugin configuration
+plugin {
+    tx_universalmessenger {
+        view {
+            templateRootPaths {
+                100 = EXT:universal_messenger/Resources/Private/Backend/Templates/
+            }
+
+            partialRootPaths {
+                100 = EXT:universal_messenger/Resources/Private/Backend/Partials/
+            }
+
+            layoutRootPaths {
+                100 = EXT:universal_messenger/Resources/Private/Backend/Layouts/
+            }
+        }
+
+        settings {
+            inlineCssFiles {
+                10 = EXT:bootstrap_package/Resources/Public/Css/ZurbFoundation.css
+            }
+        }
+    }
+}
+
+# Copy plugin configuration
+module.tx_universalmessenger < plugin.tx_universalmessenger

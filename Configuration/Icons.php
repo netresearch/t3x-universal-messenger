@@ -25,4 +25,12 @@ return [
         'provider' => SvgIconProvider::class,
         'source'   => 'EXT:universal_messenger/Resources/Public/Icons/DokTypeNewsletter.svg',
     ],
+
+    // Content elements
+    //
+    // Using more than two hyphens in the identifier will fail with rendering the icon in some places
+    'content-universalmessenger-controlstructure' => [
+        'provider' => SvgIconProvider::class,
+        'source'   => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/content/content-special-html.svg',
+    ]
 ];

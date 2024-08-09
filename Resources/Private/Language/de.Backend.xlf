@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file target-language="de" datatype="plaintext" original="messages">
+        <header/>
+        <body>
+            <trans-unit id="content_group.universalmessenger">
+                <target>Universal Messenger</target>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure">
+                <target>Kontrollstruktur</target>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.description">
+                <target>Durch die Kontrollstrukturen ist eine sehr flexible Personalisierung möglich, bei der Sie beliebige Attribute auswerten können.</target>
+            </trans-unit>
+
+            <!-- Flex form -->
+            <trans-unit id="content_element.control_structure.bodytext">
+                <target>Kontrollstruktur</target>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.bodytext.description">
+                <target>Eine als HTML formatierte Kontrollstruktur die so 1 zu 1 an den Universal Messenger übergeben wird.</target>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.flexform">
+                <target>Kontrollstruktur Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.flexform.replacementBodyText">
+                <target>Alternativtext</target>
+            </trans-unit>
+            <trans-unit id="content_element.control_structure.flexform.replacementBodyText.description">
+                <target>Der alternative Text der angezeigt wird, wenn die Kontrollstruktur innerhalb einer Webseite und nicht als Newsletter dargestellt wird.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

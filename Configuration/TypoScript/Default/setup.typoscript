@@ -1,0 +1,4 @@
+# Manual inclusion to keep control over loading order
+@import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/PluginConfiguration.typoscript'
+@import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/PageConfiguration.typoscript'
+@import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/ContentElementsConfiguration.typoscript'

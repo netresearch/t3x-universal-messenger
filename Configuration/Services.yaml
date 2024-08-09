@@ -25,5 +25,10 @@ services:
             - name: event.listener
               event: TYPO3\CMS\Lowlevel\Event\ModifyBlindedConfigurationOptionsEvent
 
+    Netresearch\UniversalMessenger\Backend\EventListener\PageContentPreviewRenderingEventListener:
+        tags:
+            - name: event.listener
+              event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
+
     Netresearch\UniversalMessenger\Controller\UniversalMessengerController:
         tags: [ 'backend.controller' ]

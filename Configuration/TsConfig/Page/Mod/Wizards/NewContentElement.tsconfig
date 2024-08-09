@@ -1,0 +1,21 @@
+#
+# Define content elements in "New Content Element Wizard"
+#
+mod.wizards {
+    newContentElement.wizardItems {
+        universalmessenger {
+            elements {
+                control_structure {
+                    iconIdentifier = content-universalmessenger-controlstructure
+                    title = LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure
+                    description = LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.description
+                    tt_content_defValues {
+                        CType = control_structure
+                    }
+                }
+            }
+
+            show := addToList(control_structure)
+        }
+    }
+}

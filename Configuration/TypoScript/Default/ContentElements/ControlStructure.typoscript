@@ -1,0 +1,8 @@
+tt_content.control_structure = FLUIDTEMPLATE
+tt_content.control_structure {
+    file = EXT:universal_messenger/Resources/Private/Templates/ContentElements/ControlStructure.html
+
+    dataProcessing {
+        10 = Netresearch\UniversalMessenger\DataProcessing\ControlStructureProcessor
+    }
+}

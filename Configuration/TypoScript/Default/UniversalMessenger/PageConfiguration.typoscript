@@ -1,0 +1,22 @@
+# Newsletter preview
+newsletterPreview = PAGE
+newsletterPreview {
+    typeNum = 1715682913
+    config {
+        disableAllHeaderCode = 1
+        disablePrefixComment = 1
+        xhtml_cleaning = 0
+        admPanel = 0
+        debug = 0
+    }
+
+    10 = USER_INT
+    10 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        vendorName = Netresearch
+        extensionName = UniversalMessenger
+        pluginName = NewsletterPreview
+        controller = NewsletterPreview
+        action = preview
+    }
+}
