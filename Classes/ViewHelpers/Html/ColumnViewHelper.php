@@ -12,13 +12,12 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\ViewHelpers\Html;
 
 use Closure;
-use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * ColumnViewHelper
+ * ColumnViewHelper.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
@@ -62,7 +61,7 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
     }
 
     /**
-     * @param array                     $arguments
+     * @param array<string, mixed>      $arguments
      * @param Closure                   $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      *

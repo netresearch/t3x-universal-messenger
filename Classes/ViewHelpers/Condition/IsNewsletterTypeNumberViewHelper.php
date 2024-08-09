@@ -13,11 +13,10 @@ namespace Netresearch\UniversalMessenger\ViewHelpers\Condition;
 
 use Exception;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
- * IsNewsletterTypeNumberViewHelper
+ * IsNewsletterTypeNumberViewHelper.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
@@ -34,6 +33,10 @@ class IsNewsletterTypeNumberViewHelper extends AbstractConditionViewHelper
      */
     protected static function evaluateCondition($arguments = null): bool
     {
-        return NewsletterRenderService::VIEW_TYPE_NUMBER === (int) GeneralUtility::_GP('type');
+        return (int) (
+            $GLOBALS['TYPO3_REQUEST']->getParsedBody()['type']
+            ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['type']
+            ?? null
+        ) === NewsletterRenderService::VIEW_TYPE_NUMBER;
     }
 }

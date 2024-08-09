@@ -32,5 +32,5 @@ return [
     'content-universalmessenger-controlstructure' => [
         'provider' => SvgIconProvider::class,
         'source'   => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/content/content-special-html.svg',
-    ]
+    ],
 ];

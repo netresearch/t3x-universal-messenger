@@ -21,7 +21,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
- * AbstractHtmlViewHelper
+ * AbstractHtmlViewHelper.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
@@ -54,7 +54,7 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
         $setup = static::getConfigurationManager()
             ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
 
-        $layoutRootPaths = [];
+        $layoutRootPaths   = [];
         $layoutRootPaths[] = GeneralUtility::getFileAbsFileName(
             'EXT:universal_messenger/Resources/Private/Layouts/ViewHelpers/'
         );
@@ -65,7 +65,7 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
             }
         }
 
-        $partialRootPaths = [];
+        $partialRootPaths   = [];
         $partialRootPaths[] = GeneralUtility::getFileAbsFileName(
             'EXT:universal_messenger/Resources/Private/Partials/ViewHelpers/'
         );
@@ -76,7 +76,7 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
             }
         }
 
-        $templateRootPaths = [];
+        $templateRootPaths   = [];
         $templateRootPaths[] = GeneralUtility::getFileAbsFileName(
             'EXT:universal_messenger/Resources/Private/Templates/ViewHelpers/'
         );

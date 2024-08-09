@@ -14,7 +14,6 @@ namespace Netresearch\UniversalMessenger\Service;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
-use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -134,9 +133,6 @@ class NewsletterRenderService implements SingletonInterface
      * @param int                    $pageId
      *
      * @return string
-     *
-     * @throws ParseException
-     * @throws RuntimeException
      */
     public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
     {
@@ -154,9 +150,6 @@ class NewsletterRenderService implements SingletonInterface
      * @param string $url
      *
      * @return string
-     *
-     * @throws ParseException
-     * @throws RuntimeException
      */
     public function renderNewsletterPage(string $url): string
     {
@@ -233,7 +226,7 @@ class NewsletterRenderService implements SingletonInterface
 
         return // $this->renderFluidView(
             $this->getContentFromUrl($url)
-        //)
+        // )
         ;
     }
 
@@ -249,27 +242,27 @@ class NewsletterRenderService implements SingletonInterface
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
 
-    /**
-     * @param string $templateSource
-     *
-     * @return string
-     */
-    private function renderFluidView(string $templateSource): string
-    {
-        if ($templateSource !== '') {
-            $configuration = $this->getExtensionSettings();
-
-            $standaloneView = $this->getStandaloneView();
-            $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
-            $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
-            $standaloneView->setTemplateRootPaths($configuration['view']['templateRootPaths']);
-            $standaloneView->setTemplateSource($templateSource);
-
-            return $standaloneView->render();
-        }
-
-        return $templateSource;
-    }
+    //    /**
+    //     * @param string $templateSource
+    //     *
+    //     * @return string
+    //     */
+    //    private function renderFluidView(string $templateSource): string
+    //    {
+    //        if ($templateSource !== '') {
+    //            $configuration = $this->getExtensionSettings();
+    //
+    //            $standaloneView = $this->getStandaloneView();
+    //            $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
+    //            $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
+    //            $standaloneView->setTemplateRootPaths($configuration['view']['templateRootPaths']);
+    //            $standaloneView->setTemplateSource($templateSource);
+    //
+    //            return $standaloneView->render();
+    //        }
+    //
+    //        return $templateSource;
+    //    }
 
     /**
      * Performs a GET-request and returns the content from the called URL.

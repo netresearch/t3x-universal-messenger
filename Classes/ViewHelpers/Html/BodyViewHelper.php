@@ -12,11 +12,12 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\ViewHelpers\Html;
 
 use Closure;
-use Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * BodyViewHelper
+ * BodyViewHelper.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
@@ -32,13 +33,14 @@ class BodyViewHelper extends AbstractHtmlViewHelper
     protected static string $viewHelperTemplate = 'Html/Body';
 
     /**
-     * @param array $arguments
-     * @param Closure $renderChildrenClosure
+     * @param array<string, mixed>      $arguments
+     * @param Closure                   $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      *
      * @return string
      *
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function renderStatic(
         array $arguments,

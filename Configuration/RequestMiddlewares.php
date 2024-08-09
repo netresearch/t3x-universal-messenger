@@ -15,9 +15,9 @@ return [
     'frontend' => [
         'universal-messenger/inline-css' => [
             'target' => InlineCssMiddleware::class,
-            'after' => [
-                'typo3/cms-frontend/content-length-headers'
+            'after'  => [
+                'typo3/cms-frontend/content-length-headers',
             ],
         ],
-    ]
+    ],
 ];

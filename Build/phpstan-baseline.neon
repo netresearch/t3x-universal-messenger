@@ -1,2 +1,21 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$contentObjectConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../Classes/DataProcessing/ControlStructureProcessor.php
+
+		-
+			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$processedData with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../Classes/DataProcessing/ControlStructureProcessor.php
+
+		-
+			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$processorConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../Classes/DataProcessing/ControlStructureProcessor.php
+
+		-
+			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../Classes/DataProcessing/ControlStructureProcessor.php

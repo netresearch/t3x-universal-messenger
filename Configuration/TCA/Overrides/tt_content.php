@@ -51,7 +51,7 @@ call_user_func(static function (): void {
         $GLOBALS['TCA']['tt_content'],
         [
             // Add the icon to the icon class configuration
-            'ctrl'  => [
+            'ctrl' => [
                 'typeicon_classes' => [
                     'control_structure' => 'content-universalmessenger-controlstructure',
                 ],

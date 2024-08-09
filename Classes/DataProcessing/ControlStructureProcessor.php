@@ -26,14 +26,14 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
 class ControlStructureProcessor implements DataProcessorInterface
 {
     /**
-     * Get rows of teasered elements and crop tt_content.bodytext
+     * Get rows of elements and add flex form configuration to processed data.
      *
      * @param ContentObjectRenderer $cObj                       The data of the content element or page
      * @param array                 $contentObjectConfiguration The configuration of Content Object
      * @param array                 $processorConfiguration     The configuration of this processor
-     * @param array                 $processedData              Key/value store of processed data (e.g. to be passed to a Fluid View)
+     * @param array                 $processedData              Key/Value store of processed data (e.g., to be passed to a Fluid View)
      *
-     * @return array the processed data as key/value store
+     * @return array The processed data as key/value store
      */
     public function process(
         ContentObjectRenderer $cObj,
@@ -42,21 +42,25 @@ class ControlStructureProcessor implements DataProcessorInterface
         array $processedData
     ): array {
         // Pass the flex form configuration to the content element template
-        $processedData['flexformConfiguration'] = $this->getFlexFormConfiguration($processedData);
+        $processedData['flexformConfiguration'] = $this->convertFlexFormContentToArray(
+            $processedData['data']['pi_flexform'] ?? ''
+        );
 
         return $processedData;
     }
 
     /**
-     * @param array $processedData
+     * Converts the flex form data from XML to array.
      *
-     * @return array
+     * @param string $flexFormContent
+     *
+     * @return string[]
      */
-    private function getFlexFormConfiguration(array $processedData): array
+    private function convertFlexFormContentToArray(string $flexFormContent): array
     {
-        if (!empty($processedData['data']['pi_flexform'])) {
+        if ($flexFormContent !== '') {
             return GeneralUtility::makeInstance(FlexFormService::class)
-                ->convertFlexFormContentToArray($processedData['data']['pi_flexform']);
+                ->convertFlexFormContentToArray($flexFormContent);
         }
 
         return [];
