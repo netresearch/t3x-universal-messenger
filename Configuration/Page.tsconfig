@@ -1,0 +1,2 @@
+@import 'EXT:universal_messenger/Configuration/TsConfig/Page/ContentElement/Categories.tsconfig'
+@import 'EXT:universal_messenger/Configuration/TsConfig/Page/Mod/Wizards/NewContentElement.tsconfig'

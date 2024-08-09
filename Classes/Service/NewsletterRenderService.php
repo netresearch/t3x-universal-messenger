@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Service;
 
-use Pelago\Emogrifier\CssInliner;
-use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
-use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -39,7 +36,7 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * @var int
      */
-    private const VIEW_TYPE_NUMBER = 1_716_283_827;
+    public const VIEW_TYPE_NUMBER = 1_716_283_827;
 
     /**
      * @var ConfigurationManagerInterface
@@ -143,11 +140,9 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
     {
-        $content = $this->addInlineCss(
-            $this->renderNewsletterContainer(
-                $request,
-                $this->renderByPageId($pageId)
-            )
+        $content = $this->renderNewsletterContainer(
+            $request,
+            $this->renderByPageId($pageId)
         );
 
         return $this->clearUpContent($content);
@@ -165,7 +160,7 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function renderNewsletterPage(string $url): string
     {
-        $content = $this->addInlineCss($this->getContentFromUrl($url));
+        $content = $this->getContentFromUrl($url);
 
         return $this->clearUpContent($content);
     }
@@ -206,6 +201,9 @@ class NewsletterRenderService implements SingletonInterface
             $standaloneView->setTemplatePathAndFilename($configuration['view']['templatePathAndFilename']);
         }
 
+        // Pass the content as "content" variable to the container template, otherwise
+        // use the "f:cObject" view helper to render the different template columns of
+        // the selected backend page layout.
         $standaloneView->assign('content', $content);
 
         return $standaloneView->render();
@@ -233,9 +231,10 @@ class NewsletterRenderService implements SingletonInterface
             throw new RuntimeException('Preview URL is invalid: ' . $url);
         }
 
-        return $this->renderFluidView(
+        return // $this->renderFluidView(
             $this->getContentFromUrl($url)
-        );
+        //)
+        ;
     }
 
     /**
@@ -302,48 +301,5 @@ class NewsletterRenderService implements SingletonInterface
         return $response
             ->getBody()
             ->getContents();
-    }
-
-    /**
-     * Converts external CSS styles into inline style attributes to ensure proper display on email
-     * and mobile device readers that lack stylesheet support.
-     *
-     * @param string $content
-     *
-     * @return string
-     *
-     * @throws ParseException
-     */
-    private function addInlineCss(string $content): string
-    {
-        $configuration = $this->getExtensionSettings();
-
-        if (isset($configuration['settings']['inlineCssFiles'])
-            && ($configuration['settings']['inlineCssFiles'] !== [])
-        ) {
-            $files      = array_reverse($configuration['settings']['inlineCssFiles']);
-            $cssContent = '';
-
-            foreach ($files as $path) {
-                $file = GeneralUtility::getFileAbsFileName($path);
-
-                if (file_exists($file)) {
-                    $cssContent .= file_get_contents($file);
-                }
-            }
-
-            $cssInliner  = CssInliner::fromHtml($content)->inlineCss($cssContent);
-            $domDocument = $cssInliner->getDomDocument();
-
-            HtmlPruner::fromDomDocument($domDocument)
-                ->removeElementsWithDisplayNone()
-                ->removeRedundantClassesAfterCssInlined($cssInliner);
-
-            $content = CssToAttributeConverter::fromDomDocument($domDocument)
-                ->convertCssToVisualAttributes()
-                ->render();
-        }
-
-        return $content;
     }
 }
