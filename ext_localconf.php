@@ -22,13 +22,13 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::addTypoScript(
         'universal_messenger',
         'constants',
-        '@import "EXT:universal_messenger/Configuration/TypoScript/constants.typoscript"'
+        '@import "EXT:universal_messenger/Configuration/TypoScript/Default/constants.typoscript"'
     );
 
     ExtensionManagementUtility::addTypoScript(
         'universal_messenger',
         'setup',
-        '@import "EXT:universal_messenger/Configuration/TypoScript/setup.typoscript"'
+        '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"'
     );
 
     // We need to add the following user typoscript config to all users, so that the new
