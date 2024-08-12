@@ -2,8 +2,32 @@
 [![License](https://img.shields.io/github/license/netresearch/universal-messenger)](https://github.com/netresearch/universal-messenger/blob/main/LICENSE)
 [![CI](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml/badge.svg)](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml)
 
-# universal-messenger
-Extension providing a TYPO3 backend module to send TYPO3 pages as newsletters via Universal Messenger API. 
+# Universal Messenger
+A TYPO3 extension that provides a TYPO3 backend module to send TYPO3 pages as newsletters using the Universal Messenger API.
+
+
+<!-- TOC -->
+  * [Installation](#installation)
+  * [Setup](#setup)
+    * [Update database structure](#update-database-structure)
+    * [Webservice](#webservice)
+      * [API endpoint](#api-endpoint)
+    * [Extension configuration](#extension-configuration)
+      * [General](#general)
+      * [Webservice](#webservice-1)
+        * [API logging](#api-logging)
+      * [Expert](#expert)
+        * [Test-/Live channels](#test-live-channels)
+    * [Backend user configuration](#backend-user-configuration)
+    * [TypoScript](#typoscript)
+    * [Scheduler-Task](#scheduler-task)
+  * [Usage](#usage)
+  * [Creating newsletters](#creating-newsletters)
+    * [Content elements](#content-elements)
+      * [Control structure](#control-structure)
+  * [Development](#development)
+    * [Testing](#testing)
+<!-- TOC -->
 
 
 ## Installation
@@ -16,8 +40,39 @@ The extension should be installed via composer:
 ### Update database structure
 Use the "Analyze Database Structure" in the "Maintenance" Admin Tools section to update the database structure.
 
+### Webservice
+
+#### API endpoint
+To access the Universal Messenger API, store the corresponding configuration in the file `additional.php` within the
+global structure "TYPO3_CONF_VARS" under "EXTENSIONS" and "universal_messenger" (note the spelling) of your TYPO3 installation.
+
+```php
+
+// The universal messenger API endpoint
+$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] = array_merge(
+    $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] ?? [],
+    [
+        'apiUrl' => 'YOUR-API-URL',
+        'apiKey' => 'YOUR-API-KEY',
+    ]
+);
+```
+
+| Field  | Description                                                                                                                        |
+|:-------|:-----------------------------------------------------------------------------------------------------------------------------------|
+| apiUrl | Your general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p |
+| apiKey | Your Universal Messenger API key                                                                                                   |
+
 
 ### Extension configuration
+Open the "Settings" page under the "Admin Tools" section and switch to the "Extension Configuration". Open the
+configuration section of the extension "universal_messenger".
+
+#### General
+
+![Extension Configuration Tab "General"](Documentation/ExtensionConfiguration1.png)
+*Fig. 1: Extension Configuration Tab "General"*
+
 | Field                          | Tab        | Default value | Description                                                                                                                                                                                                                            |
 |:-------------------------------|:-----------|:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Storage page ID                | General    | 0             | The page ID used to store the Universal Messenger newsletter channel records.                                                                                                                                                          |
@@ -26,35 +81,10 @@ Use the "Analyze Database Structure" in the "Maintenance" Admin Tools section to
 | Test newsletter channel suffix | Expert     | _Test         | Enter the suffix for the TEST newsletter channels here.                                                                                                                                                                                |
 | Live newsletter channel suffix | Expert     | _Live         | Enter the suffix for the LIVE newsletter channels here.                                                                                                                                                                                |
 
-#### General
-![Extension Configuration Tab "General"](Documentation/ExtensionConfiguration1.png) 
-*Fig. 1: Extension Configuration Tab "General"*
-
 
 #### Webservice
 ![Extension Configuration Tab "Webservice"](Documentation/ExtensionConfiguration2.png)
 *Fig. 2: Extension Configuration Tab "Webservice"*
-
-##### API endpoint
-To access the Universal Messenger API, store the corresponding configuration in the file `additional.php` within the global structure "TYPO3_CONF_VARS" under "EXTENSIONS" and "universal_messenger" (note the spelling) of your TYPO3 installation.
-
-```php
-
-// The universal messenger API endpoint
-$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] = array_merge(
-    $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'],
-    [
-        'apiUrl' => 'YOUR-API-URL',
-        'apiKey' => 'YOUR-API-KEY',
-    ]
-);
-```
-
-| Field  | Description                                                                                                                       |
-|:-------|:----------------------------------------------------------------------------------------------------------------------------------|
-| apiUrl | The general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p |
-| apiKey | The Universal Messenger API Key                                                                                                   |
-
 
 ##### API logging
 To enable the request/response logging of the Universal Messenger, enable the extension configuration "Enable logging"
@@ -100,14 +130,22 @@ for sending via individual newsletter channels.
 
 
 ### TypoScript
-By setting the "inlineCssFiles" setting, additional CSS can be passed to the newsletter container. This can, 
-for example, be the CSS of an email framework such as https://github.com/foundation/foundation-emails:
+Go to the "TypoScript" page, select "Edit TypoScript Record" and then click "Edit the whole TypoScript record". On the
+page that opens, go to the "Advanced Options" tab and add the static TypoScript
+"Universal Messenger: Fluid Content Elements" to the list of selected TypoScript configurations.
+
+When creating a newsletter, the CSS is finally read from an external CSS file and the information is added as
+inline style attributes to the respective HTML elements.
+
+By setting the "inlineCssFiles" setting, additional CSS can be passed to the newsletter container. By default,
+the CSS of the "Foundation for Emails 2" framework is already included (https://get.foundation/emails.html, https://github.com/foundation/foundation-emails).
 
 ```typo3_typoscript
 plugin.tx_universalmessenger {
     settings {
         inlineCssFiles {
-            10 = EXT:<YOUR-EXTENTSION>/Resources/Private/Css/<YOUR-CSS-FILE>.css
+            10 = EXT:universal_messenger/Resources/Public/Css/ZurbFoundation.css
+            20 = EXT:<YOUR-EXTENTSION>/Resources/Private/Css/<YOUR-CSS-FILE>.css
         }
     }
 }
@@ -123,10 +161,11 @@ newsletter channels into TYPO3 once a day, for example.
 
 
 ## Usage
+### Basic
 The newsletter channels are imported into TYPO3 as generic channels, i.e. the configured suffixes for the
 test or live channels are cut off (regardless of the spelling, i.e. an upper and lower case is ignored).
 
-A newsletter page is always assigned only the generic channel name, and the separation after a TEST or LIVE 
+A newsletter page is always assigned only the generic channel name, and the separation after a TEST or LIVE
 dispatch only takes place in the dispatch module.
 
 Each newsletter channel can also be configured with additional settings (a new import does not overwrite these settings):
@@ -141,8 +180,8 @@ Each newsletter channel can also be configured with additional settings (a new i
 These settings are sent to the Universal Messenger API when the newsletter page is submitted.
 
 
-## Creating newsletters
-To create a new newsletter, simply create a new page in the TYPO3 backend. To do this, use the new shortcut 
+### Creating newsletters
+To create a new newsletter, simply create a new page in the TYPO3 backend. To do this, use the new shortcut
 "Newsletter" in the page tree or create a new standard page.
 
 ![Create new newsletter page](Documentation/Newsletter-Step-1.png)
@@ -151,12 +190,51 @@ Then open the page properties. For a standard page, select the new page type "Ne
 
 ![Select page type](Documentation/Newsletter-Step-2.png)
 
-The page will then reload and the selection for the Universal Messenger newsletter channel will appear below the 
+The page will then reload and the selection for the Universal Messenger newsletter channel will appear below the
 selection for the page type. Select the appropriate channel for sending the newsletter here.
 
 ![Select newsletter channel](Documentation/Newsletter-Step-3.png)
 
-## Testing
+Create your newsletter with the usual TYPO3 content elements. If necessary, use a container framework such
+as https://extensions.typo3.org/extension/container_elements to group elements more easily into columns and rows.
+
+The Universal Messenger Extension already provides some ViewHelpers to group and arrange elements according to
+the "Foundation for Emails 2" framework (See https://get.foundation/emails.html how to create newsletters using
+this framework).
+
+
+### Content elements
+The extension also provides content elements for use with the Universal Messenger API.
+
+#### Control structure
+In the settings of the content element, you enter the corresponding control structure (e.g. personalized salutation)
+of the Universal Messenger. You also specify the alternative that is displayed if the newsletter is displayed in the
+web view, for example, and personalization is not available.
+
+![Content Element: Control Structure](Documentation/CE-ControlStructure.png)
+
+Both the control structure and the alternative can be formatted using the RTE editor and thus adapted to the layout of the newsletter.
+
+
+### Backend module
+To open the backend module, click on the new entry "Universal Messenger" below the "Netresearch" group on the left side navigation.
+
+![Backend module](Documentation/Module-Step1.png)
+
+In the view that now opens, you have the option of selecting the corresponding newsletter page and, assuming you have
+the appropriate access rights, you can see a preview of the respective newsletter as it would be transferred to the
+Universal Messenger and sent.
+
+A language switcher will appear above the preview if there are multiple versions of a newsletter in different languages.
+
+![Newsletter preview](Documentation/Module-Step2.png)
+
+Below the preview there are two buttons for testing the sending and for the final LIVE sending. The actual LIVE sending
+must be confirmed again in a dialog.
+
+
+## Development
+### Testing
 ```bash
 composer install
 
