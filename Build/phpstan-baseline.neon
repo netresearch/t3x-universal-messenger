@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Method Netresearch\\\\UniversalMessenger\\\\Controller\\\\UniversalMessengerController\\:\\:getPageTitle\\(\\) has parameter \\$pageRecord with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../Classes/Controller/UniversalMessengerController.php
+
+		-
 			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$contentObjectConfiguration with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
@@ -19,3 +24,13 @@ parameters:
 			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
+
+		-
+			message: "#^Class Netresearch\\\\UniversalMessenger\\\\Domain\\\\Repository\\\\PageRepository extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository but does not specify its types\\: T$#"
+			count: 1
+			path: ../Classes/Domain/Repository/PageRepository.php
+
+		-
+			message: "#^Method Netresearch\\\\UniversalMessenger\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getExistingPageTranslations\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../Classes/Domain/Repository/PageRepository.php

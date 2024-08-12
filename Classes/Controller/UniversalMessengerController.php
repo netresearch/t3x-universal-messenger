@@ -18,13 +18,16 @@ use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBui
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
+use Netresearch\UniversalMessenger\Domain\Repository\PageRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use TYPO3\CMS\Backend\Module\ModuleData;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -69,6 +72,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * @param ModuleTemplateFactory       $moduleTemplateFactory
      * @param ExtensionConfiguration      $extensionConfiguration
      * @param UniversalMessengerService   $universalMessengerService
+     * @param PageRepository              $pageRepository
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
      * @param SiteFinder                  $siteFinder
@@ -77,6 +81,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         ModuleTemplateFactory $moduleTemplateFactory,
         ExtensionConfiguration $extensionConfiguration,
         UniversalMessengerService $universalMessengerService,
+        PageRepository $pageRepository,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
         SiteFinder $siteFinder
@@ -85,6 +90,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $moduleTemplateFactory,
             $extensionConfiguration,
             $universalMessengerService,
+            $pageRepository,
             $newsletterChannelRepository,
             $newsletterRenderService
         );
@@ -96,9 +102,26 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * The main entry point.
      *
      * @return ResponseInterface
+     *
+     * @throws SiteNotFoundException
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     * @throws RouteNotFoundException
      */
     public function indexAction(): ResponseInterface
     {
+        // Create button bar
+        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+
+        // Add language dropdown
+        if (($languageButton = $this->makeLanguageSwitchButton($buttonBar)) instanceof ButtonInterface) {
+            $buttonBar->addButton(
+                $languageButton,
+                ButtonBar::BUTTON_POSITION_LEFT,
+                0
+            );
+        }
+
         $contentRecord = BackendUtility::getRecord('pages', $this->pageId);
 
         // Check if the selected page matches our newsletter page type
@@ -127,9 +150,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.accessNotAllowed');
         }
 
-        /** @var ModuleData $moduleData */
-        $moduleData    = $this->request->getAttribute('moduleData');
-        $languageId    = (int) $moduleData->get('language');
+        $languageId    = (int) $this->moduleData->get('language');
         $newsletterUrl = $this->getNewsletterUrl($this->pageId, $languageId);
 
         // Check if the created preview URL is valid
@@ -157,21 +178,34 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $this->renderStatusMessage($status);
         }
 
-        $pageTitle       = $contentRecord['title'];
-        $localizedRecord = BackendUtility::getRecordLocalization('pages', $this->pageId, $languageId);
-
-        if ($localizedRecord !== []) {
-            $pageTitle = $localizedRecord[0]['title'];
-        }
-
         $this->view->assign('pageId', $this->pageId);
-        $this->view->assign('pageTitle', $pageTitle);
+        $this->view->assign('pageTitle', $this->getPageTitle($contentRecord, $languageId));
         $this->view->assign('previewUrl', $newsletterUrl);
         $this->view->assign('newsletterChannel', $newsletterChannel);
 
         $this->moduleTemplate->assign('content', $this->view->render());
 
         return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+    }
+
+    /**
+     * Returns the localized page title.
+     *
+     * @param array $pageRecord
+     * @param int   $languageId
+     *
+     * @return string
+     */
+    private function getPageTitle(array $pageRecord, int $languageId): string
+    {
+        $pageTitle       = $pageRecord['title'];
+        $localizedRecord = BackendUtility::getRecordLocalization('pages', $this->pageId, $languageId);
+
+        if ($localizedRecord !== []) {
+            return $localizedRecord[0]['title'];
+        }
+
+        return $pageTitle;
     }
 
     /**
@@ -224,8 +258,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         }
 
         try {
-            $moduleData    = $this->request->getAttribute('moduleData');
-            $languageId    = (int) $moduleData->get('language');
+            $languageId    = (int) $this->moduleData->get('language');
             $newsletterUrl = $this->getNewsletterUrl($this->pageId, $languageId, false);
 
             // Check if the created newsletter URL is valid
@@ -273,7 +306,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     $newsletterChannel->getSender() !== '' ? $newsletterChannel->getSender() : null,
                     $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null
                 )
-                ->setEmailSubject($contentRecord['title'])
+                ->setEmailSubject($this->getPageTitle($contentRecord, $languageId))
                 ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
                 ->setHtmlBodyEncoding('UTF-8')
                 ->setHtmlBodyTracking(

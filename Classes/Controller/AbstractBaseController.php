@@ -13,19 +13,33 @@ namespace Netresearch\UniversalMessenger\Controller;
 
 use Exception;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
+use Netresearch\UniversalMessenger\Domain\Repository\PageRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Module\ModuleData;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
+use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownItemInterface;
+use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownRadio;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
+use function count;
 
 /**
  * AbstractBaseController.
@@ -62,6 +76,11 @@ abstract class AbstractBaseController extends ActionController
     protected UniversalMessengerService $universalMessengerService;
 
     /**
+     * @var PageRepository
+     */
+    protected PageRepository $pageRepository;
+
+    /**
      * @var NewsletterChannelRepository
      */
     protected NewsletterChannelRepository $newsletterChannelRepository;
@@ -79,11 +98,36 @@ abstract class AbstractBaseController extends ActionController
     protected int $pageId = 0;
 
     /**
+     * Backend module data.
+     *
+     * @var ModuleData|null
+     */
+    protected ?ModuleData $moduleData = null;
+
+    /**
+     * The available site languages.
+     *
+     * @var SiteLanguage[]
+     */
+    protected array $availableLanguages = [];
+
+    /**
+     * @var array<int, string>
+     */
+    protected mixed $languages;
+
+    /**
+     * @var int
+     */
+    protected int $currentSelectedLanguage;
+
+    /**
      * AbstractBaseController constructor.
      *
      * @param ModuleTemplateFactory       $moduleTemplateFactory
      * @param ExtensionConfiguration      $extensionConfiguration
      * @param UniversalMessengerService   $universalMessengerService
+     * @param PageRepository              $pageRepository,
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
      */
@@ -91,12 +135,14 @@ abstract class AbstractBaseController extends ActionController
         ModuleTemplateFactory $moduleTemplateFactory,
         ExtensionConfiguration $extensionConfiguration,
         UniversalMessengerService $universalMessengerService,
+        PageRepository $pageRepository,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
         $this->extensionConfiguration      = $extensionConfiguration;
         $this->universalMessengerService   = $universalMessengerService;
+        $this->pageRepository              = $pageRepository;
         $this->newsletterChannelRepository = $newsletterChannelRepository;
         $this->newsletterRenderService     = $newsletterRenderService;
     }
@@ -112,6 +158,17 @@ abstract class AbstractBaseController extends ActionController
 
         $this->pageId         = $this->getPageId();
         $this->moduleTemplate = $this->getModuleTemplate();
+        $this->moduleData     = $this->request->getAttribute('moduleData');
+
+        $this->availableLanguages = $this->request
+            ->getAttribute('site')
+            ->getAvailableLanguages(
+                $this->getBackendUserAuthentication(),
+                false,
+                $this->pageId
+            );
+
+        $this->currentSelectedLanguage = (int) $this->moduleData->get('language');
     }
 
     /**
@@ -168,6 +225,92 @@ abstract class AbstractBaseController extends ActionController
     }
 
     /**
+     * Creates the language switch button of the button bar.
+     *
+     * @param ButtonBar $buttonbar
+     *
+     * @return ButtonInterface|null
+     *
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     * @throws RouteNotFoundException
+     */
+    protected function makeLanguageSwitchButton(ButtonBar $buttonbar): ?ButtonInterface
+    {
+        $backendUserAuthentication = $this->getBackendUserAuthentication();
+
+        $this->languages = [
+            0 => isset($this->availableLanguages[0])
+                ? $this->availableLanguages[0]->getTitle()
+                : $this->getLanguageService()->sL(
+                    'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:m_default'
+                ),
+        ];
+
+        // First, select all localized page records on the current page.
+        // Each represents a possibility for a language on the page. Add these to language selector.
+        if ($this->pageId > 0) {
+            // Compile language data for pid != 0 only. The language drop-down is not shown on pid 0
+            // since pid 0 can't be localized.
+            $pageTranslations = $this->pageRepository
+                ->getExistingPageTranslations(
+                    $this->pageId,
+                    $backendUserAuthentication
+                );
+
+            foreach ($pageTranslations as $pageTranslation) {
+                $languageId = $pageTranslation[$GLOBALS['TCA']['pages']['ctrl']['languageField']];
+
+                if (isset($this->availableLanguages[$languageId])) {
+                    $this->languages[$languageId] = $this->availableLanguages[$languageId]->getTitle();
+                }
+            }
+        }
+
+        // Early return if less than 2 languages are available
+        if (count($this->languages) < 2) {
+            return null;
+        }
+
+        $languageDropDownButton = $buttonbar->makeDropDownButton()
+            ->setLabel(
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.language'
+                )
+            )
+            ->setShowLabelText(true);
+
+        foreach (array_keys($this->languages) as $key) {
+            $siteLanguage = $this->availableLanguages[$key] ?? null;
+
+            // Skip invalid language keys
+            if (!($siteLanguage instanceof SiteLanguage)) {
+                continue;
+            }
+
+            /** @var DropDownItemInterface $languageItem */
+            $languageItem = GeneralUtility::makeInstance(DropDownRadio::class)
+                ->setActive($this->currentSelectedLanguage === $siteLanguage->getLanguageId())
+                ->setIcon($this->getIconFactory()->getIcon($siteLanguage->getFlagIdentifier()))
+                ->setHref(
+                    (string) $this->getBackendUriBuilder()
+                        ->buildUriFromRoute(
+                            'netresearch_universal_messenger',
+                            [
+                                'id'       => $this->pageId,
+                                'language' => $siteLanguage->getLanguageId(),
+                            ]
+                        )
+                )
+                ->setLabel($siteLanguage->getTitle());
+
+            $languageDropDownButton->addItem($languageItem);
+        }
+
+        return $languageDropDownButton;
+    }
+
+    /**
      * Adds a flash message to the message queue and forward to the error action to abort further processing.
      *
      * @param string                     $key
@@ -194,6 +337,34 @@ abstract class AbstractBaseController extends ActionController
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * Returns an instance of the language service.
+     *
+     * @return LanguageService
+     */
+    protected function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
+    }
+
+    /**
+     * @return IconFactory
+     */
+    protected function getIconFactory(): IconFactory
+    {
+        return GeneralUtility::makeInstance(IconFactory::class);
+    }
+
+    /**
+     * Returns an instance of the backend uri builder.
+     *
+     * @return UriBuilder
+     */
+    protected function getBackendUriBuilder(): UriBuilder
+    {
+        return GeneralUtility::makeInstance(UriBuilder::class);
     }
 
     /**

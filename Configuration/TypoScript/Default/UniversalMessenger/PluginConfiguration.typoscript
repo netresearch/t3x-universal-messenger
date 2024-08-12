@@ -17,7 +17,7 @@ plugin {
 
         settings {
             inlineCssFiles {
-                10 = EXT:bootstrap_package/Resources/Public/Css/ZurbFoundation.css
+                10 = EXT:universal_messenger/Resources/Public/Css/ZurbFoundation.css
             }
         }
     }

@@ -211,7 +211,6 @@ class NewsletterRenderService implements SingletonInterface
      * @param int $languageId The language UID of the page
      *
      * @return string
-     *
      */
     private function renderByPageId(int $pageId, int $languageId): string
     {
