@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\ViewHelpers\Html;
 
-use Closure;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * ColumnViewHelper.
@@ -61,28 +59,21 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
     }
 
     /**
-     * @param array<string, mixed>      $arguments
-     * @param Closure                   $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     *
      * @return string
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function renderStatic(
-        array $arguments,
-        Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $view = parent::getTemplateObject();
+    public function render(): string
+    {
+        $view = $this->getTemplateObject();
 
         $class       = ['columns', 'small-12'];
-        $number      = (int) ($arguments['number'] ?? 1);
-        $totalNumber = (int) ($arguments['totalNumber'] ?? 1);
+        $number      = (int) ($this->arguments['number'] ?? 1);
+        $totalNumber = (int) ($this->arguments['totalNumber'] ?? 1);
 
-        if (isset($arguments['class'])) {
-            $class = explode(' ', trim($arguments['class']));
+        if (isset($this->arguments['class'])) {
+            $class = explode(' ', trim($this->arguments['class']));
         } else {
             $class[] = 'large-' . (12 / $totalNumber);
 
@@ -97,7 +88,7 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
 
         // Template
         $view->assign('class', implode(' ', $class))
-            ->assign('content', $renderChildrenClosure());
+            ->assign('content', $this->buildRenderChildrenClosure()());
 
         return $view->render();
     }

@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\ViewHelpers\Html;
 
-use Closure;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * RowViewHelper.
@@ -51,23 +49,16 @@ class RowViewHelper extends AbstractHtmlViewHelper
     }
 
     /**
-     * @param array<string, mixed>      $arguments
-     * @param Closure                   $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     *
      * @return string
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function renderStatic(
-        array $arguments,
-        Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ): string {
-        $view = parent::getTemplateObject()
-            ->assign('class', $arguments['class'])
-            ->assign('content', $renderChildrenClosure());
+    public function render(): string
+    {
+        $view = $this->getTemplateObject()
+            ->assign('class', $this->arguments['class'])
+            ->assign('content', $this->buildRenderChildrenClosure()());
 
         return $view->render();
     }

@@ -18,7 +18,6 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * AbstractHtmlViewHelper.
@@ -29,8 +28,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 abstract class AbstractHtmlViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -49,9 +46,9 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected static function getTemplateObject(): StandaloneView
+    protected function getTemplateObject(): StandaloneView
     {
-        $setup = static::getConfigurationManager()
+        $setup = $this->getConfigurationManager()
             ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
 
         $layoutRootPaths   = [];
@@ -103,7 +100,7 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected static function getConfigurationManager(): ConfigurationManagerInterface
+    protected function getConfigurationManager(): ConfigurationManagerInterface
     {
         /** @var ConfigurationManager $configurationManager */
         $configurationManager = GeneralUtility::getContainer()

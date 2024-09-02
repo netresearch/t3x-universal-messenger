@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\ViewHelpers\Html;
 
-use Closure;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * SpacerViewHelper.
@@ -59,24 +57,17 @@ class SpacerViewHelper extends AbstractHtmlViewHelper
     }
 
     /**
-     * @param array<string, mixed>      $arguments
-     * @param Closure                   $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     *
      * @return string
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function renderStatic(
-        array $arguments,
-        Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
+    public function render(): string
+    {
         // Template
-        $view = parent::getTemplateObject()
-            ->assign('class', $arguments['class'])
-            ->assign('size', (int) $arguments['size']);
+        $view = $this->getTemplateObject()
+            ->assign('class', $this->arguments['class'])
+            ->assign('size', (int) $this->arguments['size']);
 
         return $view->render();
     }
