@@ -77,6 +77,9 @@
             <trans-unit id="error.missingChannelConfiguration">
                 <target>Bitte wählen Sie einen gültigen Newsletter-Kanal in den Seiteneigenschaften aus.</target>
             </trans-unit>
+            <trans-unit id="error.pageHidden">
+                <target>Bitte wählen Sie eine nicht deaktivierte Seite aus.</target>
+            </trans-unit>
 
             <!-- status -->
             <trans-unit id="newsletter.status.hold">

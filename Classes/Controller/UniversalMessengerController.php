@@ -124,6 +124,13 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
         $contentRecord = BackendUtility::getRecord('pages', $this->pageId);
 
+        // Check if the page is hidden
+        if (!isset($contentRecord['hidden'])
+            || ($contentRecord['hidden'] >= 1)
+        ) {
+            return $this->forwardFlashMessage('error.pageHidden');
+        }
+
         // Check if the selected page matches our newsletter page type
         if (($contentRecord === null)
             || ($contentRecord['doktype'] !== Configuration::getNewsletterPageDokType())
@@ -134,7 +141,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             );
         }
 
-        // Check if page has required newsletter channel configuration or just the default value
+        // Check if the page has required newsletter channel configuration or just the default value
         if (!isset($contentRecord['universal_messenger_channel'])
             || ($contentRecord['universal_messenger_channel'] <= 0)
         ) {

@@ -77,6 +77,9 @@
             <trans-unit id="error.missingChannelConfiguration">
                 <source>Please select a valid newsletter channel in the page properties.</source>
             </trans-unit>
+            <trans-unit id="error.pageHidden">
+                <source>Please select a non disabled page.</source>
+            </trans-unit>
 
             <!-- status -->
             <trans-unit id="newsletter.status.hold">
