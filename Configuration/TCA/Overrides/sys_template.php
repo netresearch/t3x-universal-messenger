@@ -20,4 +20,10 @@ call_user_func(static function (): void {
         'Configuration/TypoScript/FluidContentElements/',
         'Universal Messenger: Fluid Content Elements'
     );
+
+    ExtensionManagementUtility::addStaticFile(
+        'universal_messenger',
+        'Configuration/TypoScript/ExampleNewsletter/',
+        'Universal Messenger: Example Newsletter Template'
+    );
 });

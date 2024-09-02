@@ -15,6 +15,13 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 call_user_func(static function (): void {
+    // Register our example backend layout
+    ExtensionManagementUtility::registerPageTSConfigFile(
+        'universal_messenger',
+        'Configuration/TsConfig/Page/Mod/WebLayout/example_newsletter.tsconfig',
+        'Universal Messenger: Example Newsletter Backend Layout'
+    );
+
     $newsletterDokType = Configuration::getNewsletterPageDokType();
 
     // Add the new page type to the page type selector

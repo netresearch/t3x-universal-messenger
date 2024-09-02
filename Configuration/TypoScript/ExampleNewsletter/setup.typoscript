@@ -1,0 +1,24 @@
+page {
+    10 {
+        templateRootPaths {
+            100 = EXT:universal_messenger/Resources/Private/Templates/Page/
+        }
+        layoutRootPaths {
+            100 = EXT:universal_messenger/Resources/Private/Layouts/Page/
+        }
+    }
+}
+
+plugin {
+    tx_universalmessenger {
+        view {
+            templatePathAndFilename = EXT:universal_messenger/Resources/Private/Templates/Page/ExampleNewsletter.html
+
+            layoutRootPaths {
+                0 = EXT:universal_messenger/Resources/Private/Layouts/Page/
+            }
+        }
+    }
+}
+
+module.tx_universalmessenger < plugin.tx_universalmessenger

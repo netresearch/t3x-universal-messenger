@@ -1,0 +1,31 @@
+<html data-namespace-typo3-fluid="true"
+      xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:um="http://typo3.org/ns/Netresearch/UniversalMessenger/ViewHelpers"
+>
+    <f:layout name="ExampleNewsletterLayout"/>
+
+    <f:section name="Main">
+        <f:if condition="{content}">
+            <f:link.page pageUid="{data.uid}">Zur Webversion</f:link.page>
+        </f:if>
+
+        <um:html.spacer size="16" />
+
+        <um:html.container>
+            <um:html.spacer size="16" />
+
+            <f:if condition="{content}">
+                <f:then>
+                    <f:comment><!-- Render content (Newsletter preview in TYPO3 backend)--></f:comment>
+                    <f:format.raw>{content}</f:format.raw>
+                </f:then>
+                <f:else>
+                    <f:comment><!-- Render content elements (Website view) --></f:comment>
+                    <f:cObject typoscriptObjectPath="lib.dynamicContent"
+                               data="{pageUid: data.uid, colPos: '0', slide: '{theme.pagelayout.{pagelayout}.colPos.0.slide}'}"/>
+                </f:else>
+            </f:if>
+        </um:html.container>
+    </f:section>
+</html>
