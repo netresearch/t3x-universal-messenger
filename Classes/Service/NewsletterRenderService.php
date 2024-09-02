@@ -22,6 +22,7 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * NewsletterRenderService.
@@ -196,10 +197,15 @@ class NewsletterRenderService implements SingletonInterface
             $standaloneView->setTemplatePathAndFilename($configuration['view']['templatePathAndFilename']);
         }
 
+        /** @var TypoScriptFrontendController $typoScriptFrontendController */
+        $typoScriptFrontendController = $request->getAttribute('frontend.controller');
+
         // Pass the content as "content" variable to the container template, otherwise
         // use the "f:cObject" view helper to render the different template columns of
         // the selected backend page layout.
         $standaloneView->assign('content', $content);
+        $standaloneView->assign('settings', $configuration['settings']);
+        $standaloneView->assign('data', $typoScriptFrontendController->page);
 
         return $standaloneView->render();
     }
