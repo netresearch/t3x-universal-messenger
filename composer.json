@@ -25,7 +25,7 @@
         "netresearch/sdk-api-universal-messenger": "^1.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "3.63.2",
+        "friendsofphp/php-cs-fixer": "3.64.0",
         "friendsoftypo3/phpstan-typo3": "^0.9",
         "overtrue/phplint": "^9.3",
         "phpstan/phpstan": "^1.10",
