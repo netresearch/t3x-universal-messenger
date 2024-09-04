@@ -25,11 +25,6 @@ call_user_func(static function (): void {
         '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"'
     );
 
-    // Add example backend layout
-    ExtensionManagementUtility::addPageTSConfig(
-        '@import "EXT:universal_messenger/Configuration/TsConfig/Page/Mod/WebLayout/example_newsletter.tsconfig"'
-    );
-
     // We need to add the following user typoscript config to all users, so that the new
     // page type is displayed in the wizard
     ExtensionManagementUtility::addUserTSConfig(

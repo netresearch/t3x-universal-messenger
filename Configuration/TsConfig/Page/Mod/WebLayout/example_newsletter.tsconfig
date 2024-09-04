@@ -6,6 +6,8 @@ mod {
                 title = Example Newsletter
                 config {
                     backend_layout {
+                        colCount = 1
+                        rowCount = 1
                         rows {
                             1 {
                                 columns {
