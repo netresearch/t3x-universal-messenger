@@ -40,7 +40,7 @@ abstract class AbstractRepository implements LoggerAwareInterface, SingletonInte
      * @param UniversalMessengerService $universalMessengerService
      */
     public function __construct(
-        UniversalMessengerService $universalMessengerService
+        UniversalMessengerService $universalMessengerService,
     ) {
         $this->universalMessengerService = $universalMessengerService;
     }

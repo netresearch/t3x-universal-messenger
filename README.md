@@ -209,11 +209,27 @@ The extension also provides content elements for use with the Universal Messenge
 #### Control structure
 In the settings of the content element, you enter the corresponding control structure (e.g. personalized salutation)
 of the Universal Messenger. You also specify the alternative that is displayed if the newsletter is displayed in the
-web view, for example, and personalization is not available.
+web view, for examp le, and personalization is not available.
 
 ![Content Element: Control Structure](Documentation/CE-ControlStructure.png)
 
 Both the control structure and the alternative can be formatted using the RTE editor and thus adapted to the layout of the newsletter.
+
+
+### View helpers
+#### Initialization
+To use the ViewHelpers provided by the extension, they must be made known within the HTML using the namespace
+`xmlns:um="http://typo3.org/ns/Netresearch/UniversalMessenger/ViewHelpers"`.
+
+#### View helper "format.placeholder"
+To pass additional placeholders within URLs, e.g. the unsubscribe link for newsletters, to the Universal Messenger, the
+view helper `um:format.placeholder` can be used to mark a value as a placeholder using curly brackets.
+
+```html
+<f:link.external uri="https://newsletter.example.org/unsubscribe?identifier={um:format.placeholder(value: 'identifier')}">Unsubscribe</f:link.external>
+```
+
+This results in an URL like `https://newsletter.example.org/unsubscribe?identifier={identifier}`.
 
 
 ### Backend module

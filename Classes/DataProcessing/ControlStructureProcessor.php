@@ -39,7 +39,7 @@ class ControlStructureProcessor implements DataProcessorInterface
         ContentObjectRenderer $cObj,
         array $contentObjectConfiguration,
         array $processorConfiguration,
-        array $processedData
+        array $processedData,
     ): array {
         // Pass the flex form configuration to the content element template
         $processedData['flexformConfiguration'] = $this->convertFlexFormContentToArray(

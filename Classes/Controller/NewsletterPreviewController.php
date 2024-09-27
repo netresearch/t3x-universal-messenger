@@ -35,7 +35,7 @@ class NewsletterPreviewController extends ActionController
      * @param NewsletterRenderService $newsletterRenderService
      */
     public function __construct(
-        NewsletterRenderService $newsletterRenderService
+        NewsletterRenderService $newsletterRenderService,
     ) {
         $this->newsletterRenderService = $newsletterRenderService;
     }

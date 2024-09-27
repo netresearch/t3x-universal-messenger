@@ -65,7 +65,7 @@ class PageRepository extends Repository
      */
     public function getExistingPageTranslations(
         int $pageId,
-        BackendUserAuthentication $backendUserAuthentication
+        BackendUserAuthentication $backendUserAuthentication,
     ): array {
         if ($pageId === 0) {
             return [];

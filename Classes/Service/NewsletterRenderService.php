@@ -63,7 +63,7 @@ class NewsletterRenderService implements SingletonInterface
     public function __construct(
         ConfigurationManagerInterface $configurationManager,
         RequestFactory $requestFactory,
-        SiteFinder $siteFinder
+        SiteFinder $siteFinder,
     ) {
         $this->configurationManager = $configurationManager;
         $this->requestFactory       = $requestFactory;

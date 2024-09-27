@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Middleware;
 
+use Netresearch\UniversalMessenger\Constants;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlNormalizer;
@@ -20,8 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Symfony\Component\CssSelector\Exception\ParseException;
-use TYPO3\CMS\Core\Http\NullResponse;
-use TYPO3\CMS\Core\Http\Stream;
+use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
@@ -45,7 +45,7 @@ class InlineCssMiddleware implements MiddlewareInterface
      * @param ConfigurationManagerInterface $configurationManager
      */
     public function __construct(
-        ConfigurationManagerInterface $configurationManager
+        ConfigurationManagerInterface $configurationManager,
     ) {
         $this->configurationManager = $configurationManager;
     }
@@ -60,32 +60,22 @@ class InlineCssMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         $response = $handler->handle($request);
 
-        if ($response instanceof NullResponse) {
+        if (!$this->isPreviewTypeNumSet($request)) {
             return $response;
         }
 
-        if (((int) ($request->getQueryParams()['type'] ?? 0)) !== 1715682913) {
-            return $response;
-        }
+        $stream = $handler->handle($request)->getBody();
+        $stream->rewind();
 
-        // Extract the content
-        $body = $response->getBody();
-        $body->rewind();
+        $content   = $stream->getContents();
+        $newStream = (new StreamFactory())
+            ->createStream($this->addInlineCss($content));
 
-        $content = $response->getBody()->getContents();
-
-        // Perform CSS inlining
-        $content = $this->addInlineCss($content);
-
-        // Push new content back into the response
-        $body = new Stream('php://temp', 'rw');
-        $body->write($content);
-
-        return $response->withBody($body);
+        return $response->withBody($newStream);
     }
 
     /**
@@ -143,5 +133,15 @@ class InlineCssMiddleware implements MiddlewareInterface
         return $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
         );
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return bool
+     */
+    private function isPreviewTypeNumSet(ServerRequestInterface $request): bool
+    {
+        return ((int) $request->getAttribute('routing')->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;
     }
 }

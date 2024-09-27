@@ -44,7 +44,7 @@ class WebserviceConfiguration
      * @throws RuntimeException
      */
     public function __construct(
-        ExtensionConfiguration $extensionConfiguration
+        ExtensionConfiguration $extensionConfiguration,
     ) {
         try {
             $configuration = $extensionConfiguration->get('universal_messenger');

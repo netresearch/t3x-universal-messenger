@@ -137,7 +137,7 @@ abstract class AbstractBaseController extends ActionController
         UniversalMessengerService $universalMessengerService,
         PageRepository $pageRepository,
         NewsletterChannelRepository $newsletterChannelRepository,
-        NewsletterRenderService $newsletterRenderService
+        NewsletterRenderService $newsletterRenderService,
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
         $this->extensionConfiguration      = $extensionConfiguration;
@@ -320,7 +320,7 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function forwardFlashMessage(
         string $key,
-        ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::ERROR
+        ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::ERROR,
     ): ResponseInterface {
         $this->moduleTemplate->addFlashMessage(
             $this->translate($key),
@@ -379,7 +379,7 @@ abstract class AbstractBaseController extends ActionController
     protected function translate(
         string $key,
         ?array $arguments = null,
-        string $languageFile = 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf'
+        string $languageFile = 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf',
     ): string {
         return LocalizationUtility::translate(
             $languageFile . ':' . $key,

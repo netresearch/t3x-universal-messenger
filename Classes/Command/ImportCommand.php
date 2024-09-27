@@ -199,7 +199,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function hydrateNewsletterChannel(
         NewsletterChannel $newsletterChannel,
-        int $storagePid
+        int $storagePid,
     ): NewsletterChannelDomainModel {
         $channelId = $this->stripChannelSuffix($newsletterChannel->id);
 

@@ -5,7 +5,7 @@
 >
     <f:layout name="ExampleNewsletterLayout"/>
 
-    <f:section name="Main">
+    <f:section name="Content">
         <f:if condition="{content}">
             <f:link.page pageUid="{data.uid}">Zur Webversion</f:link.page>
         </f:if>
@@ -26,6 +26,19 @@
                                data="{pageUid: data.uid, colPos: '0', slide: '{theme.pagelayout.{pagelayout}.colPos.0.slide}'}"/>
                 </f:else>
             </f:if>
+        </um:html.container>
+
+        <um:html.container>
+            <um:html.row>
+                <um:html.column>
+                    <p>
+                        To pass additional placeholders within URLs, e.g. the unsubscribe link for newsletters, to
+                        the Universal Messenger, the ViewHelper "format.placeholder" can be used to mark a value as
+                        a placeholder using curly brackets.
+                        <f:link.external uri="https://newsletter.example.org/unsubscribe?identifier={um:format.placeholder(value: 'identifier')}">Unsubscribe</f:link.external>
+                    </p>
+                </um:html.column>
+            </um:html.row>
         </um:html.container>
     </f:section>
 </html>

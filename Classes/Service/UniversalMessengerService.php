@@ -49,7 +49,7 @@ class UniversalMessengerService implements SingletonInterface
     public function __construct(
         LogManager $logManager,
         ExtensionConfiguration $extensionConfiguration,
-        WebserviceConfiguration $webserviceConfiguration
+        WebserviceConfiguration $webserviceConfiguration,
     ) {
         $this->logger = $this->isLoggingEnabled($extensionConfiguration)
             ? $logManager->getLogger(self::class)

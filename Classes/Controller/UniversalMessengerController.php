@@ -84,7 +84,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         PageRepository $pageRepository,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
-        SiteFinder $siteFinder
+        SiteFinder $siteFinder,
     ) {
         parent::__construct(
             $moduleTemplateFactory,
