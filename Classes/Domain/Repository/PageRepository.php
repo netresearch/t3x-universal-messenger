@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Domain\Repository;
 
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
@@ -53,15 +53,14 @@ class PageRepository extends Repository
     /**
      * Fetch all records of the current page ID. Does not check permissions.
      *
-     * @see \TYPO3\CMS\Backend\Controller\PageLayoutController::getExistingPageTranslations
-     *
      * @param int                       $pageId
      * @param BackendUserAuthentication $backendUserAuthentication
      *
      * @return array
      *
      * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
+     *
+     * @see \TYPO3\CMS\Backend\Controller\PageLayoutController::getExistingPageTranslations
      */
     public function getExistingPageTranslations(
         int $pageId,
@@ -74,7 +73,9 @@ class PageRepository extends Repository
         $queryBuilder = $this->getQueryBuilder();
         $queryBuilder->getRestrictions()
             ->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
+            ->add(
+                GeneralUtility::makeInstance(DeletedRestriction::class)
+            )
             ->add(
                 GeneralUtility::makeInstance(
                     WorkspaceRestriction::class,

@@ -80,7 +80,10 @@ class NewsletterChannelRepository extends Repository
      */
     public function findByChannelId(string $channelId): ?NewsletterChannel
     {
-        return $this->findOneBy(['channelId' => $channelId]);
+        /** @var NewsletterChannel|null $newsletterChannel */
+        $newsletterChannel = $this->findOneBy(['channelId' => $channelId]);
+
+        return $newsletterChannel;
     }
 
     /**
@@ -88,7 +91,7 @@ class NewsletterChannelRepository extends Repository
      *
      * @param string[] $channelIds
      *
-     * @return QueryResultInterface<int, NewsletterChannel>
+     * @return QueryResultInterface<NewsletterChannel>
      *
      * @throws InvalidQueryException
      */
