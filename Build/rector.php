@@ -15,7 +15,6 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -57,7 +56,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         CatchExceptionNameMatchingTypeRector::class,
         ClassPropertyAssignToConstructorPromotionRector::class,
-        MixedTypeRector::class,
         NullToStrictStringFuncCallArgRector::class,
         RemoveUselessParamTagRector::class,
         RemoveUselessReturnTagRector::class,

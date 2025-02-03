@@ -25,13 +25,13 @@
         "netresearch/sdk-api-universal-messenger": "^1.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.60",
-        "saschaegerer/phpstan-typo3": "^1.10",
-        "overtrue/phplint": "^9.0",
-        "phpstan/phpstan": "^1.0 || ^2.0",
-        "phpstan/phpstan-deprecation-rules": "^1.0 || ^2.0",
-        "phpstan/phpstan-strict-rules": "^1.0 || ^2.0",
-        "ssch/typo3-rector": "^2.0 || ^3.0"
+        "friendsofphp/php-cs-fixer": "^3.65",
+        "saschaegerer/phpstan-typo3": "v2.x-dev",
+        "overtrue/phplint": "^9.5",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "ssch/typo3-rector": "^3.0"
     },
     "config": {
         "bin-dir": ".build/bin",
@@ -62,7 +62,7 @@
     },
     "scripts": {
         "ci:cgl": [
-            "php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
+            "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
         ],
         "ci:rector": [
             "rector process --config Build/rector.php"
