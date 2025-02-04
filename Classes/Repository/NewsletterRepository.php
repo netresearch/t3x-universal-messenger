@@ -46,6 +46,8 @@ class NewsletterRepository extends AbstractRepository
     /**
      * Get newsletter status.
      *
+     * @param string $eventId
+     *
      * @return NewsletterStatus
      *
      * @throws AuthenticationException

@@ -3,28 +3,25 @@
         <langDisable>1</langDisable>
     </meta>
     <sheets>
-        <main>
+        <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform</sheetTitle>
+                <type>array</type>
                 <el>
                     <settings.replacementBodyText>
-                        <TCEforms>
-                            <label>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform.replacementBodyText</label>
-                            <description>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform.replacementBodyText.description</description>
-                            <config>
-                                <type>text</type>
-                                <cols>80</cols>
-                                <rows>15</rows>
-                                <eval>int,required</eval>
-                                <softref>typolink_tag,email[subst],url</softref>
-                                <enableRichtext>1</enableRichtext>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform.replacementBodyText</label>
+                        <description>LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.flexform.replacementBodyText.description</description>
+                        <config>
+                            <type>text</type>
+                            <cols>80</cols>
+                            <rows>15</rows>
+                            <eval>int,required</eval>
+                            <softref>typolink_tag,email[subst],url</softref>
+                            <enableRichtext>1</enableRichtext>
+                        </config>
                     </settings.replacementBodyText>
                 </el>
             </ROOT>
-        </main>
+        </sDEF>
     </sheets>
 </T3DataStructure>

@@ -6,14 +6,19 @@ includes:
 
 parameters:
     # You can currently choose from 10 levels (0 is the loosest and 9 is the strictest).
-    level: 6
+    level: 8
 
     paths:
         - %currentWorkingDirectory%/Classes/
         - %currentWorkingDirectory%/Configuration/
         - %currentWorkingDirectory%/Resources/
         - %currentWorkingDirectory%/ext_localconf.php
+        - %currentWorkingDirectory%/ext_tables.php
 
     excludePaths:
         - %currentWorkingDirectory%/.build/*
         - %currentWorkingDirectory%/ext_emconf.php
+
+    ignoreErrors:
+        -
+            identifier: arrayFilter.strict

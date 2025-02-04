@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Domain\Repository;
 
-use Exception;
+use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
@@ -32,6 +31,24 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class NewsletterChannelRepository extends Repository
 {
     /**
+     * @var Configuration
+     */
+    private Configuration $configuration;
+
+    /**
+     * NewsletterChannelRepository constructor.
+     *
+     * @param Configuration $configuration
+     */
+    public function __construct(
+        Configuration $configuration,
+    ) {
+        parent::__construct();
+
+        $this->configuration = $configuration;
+    }
+
+    /**
      * Initializes the repository.
      *
      * @return void
@@ -47,30 +64,13 @@ class NewsletterChannelRepository extends Repository
     }
 
     /**
-     * Get the extension configuration.
-     *
-     * @param string $path Path to get the config for
-     *
-     * @return mixed
-     */
-    private function getExtensionConfiguration(string $path): mixed
-    {
-        try {
-            return GeneralUtility::makeInstance(ExtensionConfiguration::class)
-                ->get('universal_messenger', $path);
-        } catch (Exception) {
-            return null;
-        }
-    }
-
-    /**
      * Returns the page ID used to store the records.
      *
      * @return int
      */
     private function getStoragePageId(): int
     {
-        return (int) ($this->getExtensionConfiguration('storagePageId') ?? 0);
+        return (int) ($this->configuration->getExtensionSetting('storagePageId') ?? 0);
     }
 
     /**
@@ -80,10 +80,7 @@ class NewsletterChannelRepository extends Repository
      */
     public function findByChannelId(string $channelId): ?NewsletterChannel
     {
-        /** @var NewsletterChannel|null $newsletterChannel */
-        $newsletterChannel = $this->findOneBy(['channelId' => $channelId]);
-
-        return $newsletterChannel;
+        return $this->findOneBy(['channelId' => $channelId]);
     }
 
     /**
@@ -91,22 +88,23 @@ class NewsletterChannelRepository extends Repository
      *
      * @param string[] $channelIds
      *
-     * @return QueryResultInterface<NewsletterChannel>
+     * @return QueryResultInterface<int, NewsletterChannel>
      *
      * @throws InvalidQueryException
      */
     public function findAllExceptWithChannelId(array $channelIds): QueryResultInterface
     {
         $query = $this->createQuery();
-        $query->matching(
-            $query->logicalNot(
-                $query->in(
-                    'channel_id',
-                    $channelIds
+
+        return $query
+            ->matching(
+                $query->logicalNot(
+                    $query->in(
+                        'channel_id',
+                        $channelIds
+                    )
                 )
             )
-        );
-
-        return $query->execute();
+            ->execute();
     }
 }

@@ -19,7 +19,7 @@ CREATE TABLE be_users
 #
 CREATE TABLE pages
 (
-    universal_messenger_channel int(11) unsigned DEFAULT '0' NOT NULL
+    universal_messenger_channel int(10) UNSIGNED NOT NULL DEFAULT 0
 );
 
 #
@@ -27,23 +27,23 @@ CREATE TABLE pages
 #
 CREATE TABLE tx_universalmessenger_domain_model_newsletterchannel
 (
-    uid          int(11) unsigned                    NOT NULL auto_increment,
-    pid          int(11) unsigned     DEFAULT '0'    NOT NULL,
-    tstamp       int(11) unsigned     DEFAULT '0'    NOT NULL,
-    crdate       int(11) unsigned     DEFAULT '0'    NOT NULL,
-    deleted      smallint(5) unsigned DEFAULT '0'    NOT NULL,
-    hidden       smallint(5) unsigned DEFAULT '0'    NOT NULL,
-    starttime    int(11) unsigned     DEFAULT '0'    NOT NULL,
-    endtime      int(11) unsigned     DEFAULT '0'    NOT NULL,
-    sorting      int(11) unsigned     DEFAULT '0'    NOT NULL,
+    uid          int(10) UNSIGNED     NOT NULL AUTO_INCREMENT,
+    pid          int(10) UNSIGNED     NOT NULL DEFAULT 0,
+    tstamp       int(10) UNSIGNED     NOT NULL DEFAULT 0,
+    crdate       int(10) UNSIGNED     NOT NULL DEFAULT 0,
+    deleted      smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+    hidden       smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+    starttime    int(10) UNSIGNED     NOT NULL DEFAULT 0,
+    endtime      int(10) UNSIGNED     NOT NULL DEFAULT 0,
+    sorting      int(10) UNSIGNED     NOT NULL DEFAULT 0,
 
-    channel_id   varchar(255)                        NOT NULL,
-    title        varchar(255)         DEFAULT ''     NOT NULL,
-    description  text                 DEFAULT ''     NOT NULL,
-    sender       varchar(255)         DEFAULT ''     NOT NULL,
-    reply_to     varchar(255)         DEFAULT ''     NOT NULL,
-    skip_used_id smallint(5) unsigned DEFAULT '0'    NOT NULL,
-    embed_images varchar(255)         DEFAULT 'none' NOT NULL,
+    channel_id   varchar(255)         NOT NULL,
+    title        varchar(255)         NOT NULL DEFAULT '',
+    description  text                 NOT NULL DEFAULT '',
+    sender       varchar(255)         NOT NULL DEFAULT '',
+    reply_to     varchar(255)         NOT NULL DEFAULT '',
+    skip_used_id smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+    embed_images varchar(255)         NOT NULL DEFAULT 'none',
 
     PRIMARY KEY (uid),
     KEY parent (pid),

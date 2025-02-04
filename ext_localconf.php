@@ -13,6 +13,7 @@ use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\NewsletterPreviewController;
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 defined('TYPO3') || exit('Access denied.');
@@ -25,10 +26,18 @@ call_user_func(static function (): void {
         '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"'
     );
 
-    // We need to add the following user typoscript config to all users, so that the new
+    $configuration         = GeneralUtility::makeInstance(Configuration::class);
+    $newsletterPageDokType = $configuration->getNewsletterPageDokType();
+
+    // We need to add the following user TypoScript config to all users, so that the new
     // page type is displayed in the wizard
+    //
+    // In TYPO3 v14, the dynamic configuration must be rebuilt. Currently, you cannot access
+    // configured constants.typoscript in the user.tsconfig.
+    //
+    // See https://forge.typo3.org/issues/106069
     ExtensionManagementUtility::addUserTSConfig(
-        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . Configuration::getNewsletterPageDokType() . ')'
+        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')'
     );
 
     // Service
@@ -58,13 +67,6 @@ call_user_func(static function (): void {
         [
             NewsletterPreviewController::class => 'preview',
         ],
-    );
-
-    // Hide the "new" button on the record detail view in backend
-    ExtensionManagementUtility::addUserTSConfig(
-        <<<TYPOSCRIPT
-        options.saveDocNew.tx_universalmessenger_domain_model_newsletterchannel = 0
-TYPOSCRIPT
     );
 
     // Ignore the following parameters in cHash calculation

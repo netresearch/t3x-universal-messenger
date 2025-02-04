@@ -50,16 +50,26 @@ class ControlStructureProcessor implements DataProcessorInterface
     }
 
     /**
+     * Returns the FlexForm service instance.
+     *
+     * @return FlexFormService
+     */
+    private function getFlexFormService(): FlexFormService
+    {
+        return GeneralUtility::makeInstance(FlexFormService::class);
+    }
+
+    /**
      * Converts the flex form data from XML to array.
      *
      * @param string $flexFormContent
      *
-     * @return string[]
+     * @return array<string, array<string, string>>
      */
     private function convertFlexFormContentToArray(string $flexFormContent): array
     {
         if ($flexFormContent !== '') {
-            return GeneralUtility::makeInstance(FlexFormService::class)
+            return $this->getFlexFormService()
                 ->convertFlexFormContentToArray($flexFormContent);
         }
 

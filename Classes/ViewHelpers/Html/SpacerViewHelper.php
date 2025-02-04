@@ -69,6 +69,6 @@ class SpacerViewHelper extends AbstractHtmlViewHelper
             ->assign('class', $this->arguments['class'])
             ->assign('size', (int) $this->arguments['size']);
 
-        return $view->render();
+        return $view->render(self::$viewHelperTemplate);
     }
 }

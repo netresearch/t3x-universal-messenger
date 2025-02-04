@@ -42,6 +42,6 @@ class BodyViewHelper extends AbstractHtmlViewHelper
         $view = $this->getTemplateObject()
             ->assign('content', $this->buildRenderChildrenClosure()());
 
-        return $view->render();
+        return $view->render(self::$viewHelperTemplate);
     }
 }

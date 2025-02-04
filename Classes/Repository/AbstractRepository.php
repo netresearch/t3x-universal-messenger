@@ -12,8 +12,6 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Repository;
 
 use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
@@ -23,10 +21,8 @@ use TYPO3\CMS\Core\SingletonInterface;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-abstract class AbstractRepository implements LoggerAwareInterface, SingletonInterface
+abstract class AbstractRepository implements SingletonInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * The UM service instance.
      *

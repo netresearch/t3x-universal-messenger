@@ -60,6 +60,6 @@ class RowViewHelper extends AbstractHtmlViewHelper
             ->assign('class', $this->arguments['class'])
             ->assign('content', $this->buildRenderChildrenClosure()());
 
-        return $view->render();
+        return $view->render(self::$viewHelperTemplate);
     }
 }

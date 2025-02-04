@@ -66,8 +66,7 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
      */
     public function render(): string
     {
-        $view = $this->getTemplateObject();
-
+        $view        = $this->getTemplateObject();
         $class       = ['columns', 'small-12'];
         $number      = (int) ($this->arguments['number'] ?? 1);
         $totalNumber = (int) ($this->arguments['totalNumber'] ?? 1);
@@ -87,9 +86,10 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
         }
 
         // Template
-        $view->assign('class', implode(' ', $class))
+        $view
+            ->assign('class', implode(' ', $class))
             ->assign('content', $this->buildRenderChildrenClosure()());
 
-        return $view->render();
+        return $view->render(self::$viewHelperTemplate);
     }
 }

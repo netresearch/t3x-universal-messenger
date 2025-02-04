@@ -13,6 +13,7 @@ use Netresearch\UniversalMessenger\Configuration;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 call_user_func(static function (): void {
     // Register our example backend layout
@@ -22,7 +23,8 @@ call_user_func(static function (): void {
         'Universal Messenger: Example Newsletter Backend Layout'
     );
 
-    $newsletterDokType = Configuration::getNewsletterPageDokType();
+    $configuration         = GeneralUtility::makeInstance(Configuration::class);
+    $newsletterPageDokType = $configuration->getNewsletterPageDokType();
 
     // Add the new page type to the page type selector
     ExtensionManagementUtility::addTcaSelectItem(
@@ -30,7 +32,7 @@ call_user_func(static function (): void {
         'doktype',
         [
             'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.page_type_newsletter',
-            'value' => $newsletterDokType,
+            'value' => $newsletterPageDokType,
             'icon'  => 'universal-messenger-dok-type-newsletter',
             'group' => 'default',
         ],
@@ -42,14 +44,14 @@ call_user_func(static function (): void {
             // Add the icon to the icon class configuration
             'ctrl' => [
                 'typeicon_classes' => [
-                    $newsletterDokType                 => 'universal-messenger-dok-type-newsletter',
-                    $newsletterDokType . '-hideinmenu' => 'universal-messenger-dok-type-newsletter',
+                    $newsletterPageDokType                 => 'universal-messenger-dok-type-newsletter',
+                    $newsletterPageDokType . '-hideinmenu' => 'universal-messenger-dok-type-newsletter',
                 ],
             ],
 
             // Add all page standard fields and tabs to your new page type
             'types' => [
-                $newsletterDokType => [
+                $newsletterPageDokType => [
                     'showitem' => $GLOBALS['TCA']['pages']['types'][PageRepository::DOKTYPE_DEFAULT]['showitem'],
                 ],
             ],
@@ -61,7 +63,7 @@ call_user_func(static function (): void {
             'exclude'     => true,
             'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.universal_messenger_channel',
             'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.universal_messenger_channel.description',
-            'displayCond' => 'FIELD:doktype:=:' . $newsletterDokType,
+            'displayCond' => 'FIELD:doktype:=:' . $newsletterPageDokType,
             'config'      => [
                 'type'          => 'select',
                 'renderType'    => 'selectSingle',

@@ -16,10 +16,10 @@ use Netresearch\Sdk\UniversalMessenger\Api;
 use Netresearch\Sdk\UniversalMessenger\Exception\DetailedServiceException;
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\UniversalMessenger;
+use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\WebserviceConfiguration;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\SingletonInterface;
 
@@ -35,6 +35,11 @@ class UniversalMessengerService implements SingletonInterface
     private readonly LoggerInterface $logger;
 
     /**
+     * @var Configuration
+     */
+    private Configuration $configuration;
+
+    /**
      * @var UniversalMessenger
      */
     private readonly UniversalMessenger $universalMessenger;
@@ -43,15 +48,17 @@ class UniversalMessengerService implements SingletonInterface
      * UniversalMessengerService constructor.
      *
      * @param LogManager              $logManager
-     * @param ExtensionConfiguration  $extensionConfiguration
+     * @param Configuration           $configuration
      * @param WebserviceConfiguration $webserviceConfiguration
      */
     public function __construct(
         LogManager $logManager,
-        ExtensionConfiguration $extensionConfiguration,
+        Configuration $configuration,
         WebserviceConfiguration $webserviceConfiguration,
     ) {
-        $this->logger = $this->isLoggingEnabled($extensionConfiguration)
+        $this->configuration = $configuration;
+
+        $this->logger = $this->isLoggingEnabled()
             ? $logManager->getLogger(self::class)
             : new NullLogger();
 
@@ -63,22 +70,17 @@ class UniversalMessengerService implements SingletonInterface
     }
 
     /**
-     * @param ExtensionConfiguration $extensionConfiguration
-     *
      * @return bool
      */
-    private function isLoggingEnabled(ExtensionConfiguration $extensionConfiguration): bool
+    private function isLoggingEnabled(): bool
     {
         try {
-            // Get extension configuration
-            $settings = $extensionConfiguration->get('universal_messenger');
+            $enableLogging = $this->configuration->getExtensionSetting('enableLogging');
         } catch (Exception) {
             return false;
         }
 
-        /** @var array{enableLogging: bool|null, ...} $settings */
-        return isset($settings['enableLogging'])
-            && $settings['enableLogging'];
+        return (bool) $enableLogging;
     }
 
     /**

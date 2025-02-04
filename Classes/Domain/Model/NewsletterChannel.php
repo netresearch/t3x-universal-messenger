@@ -24,14 +24,14 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 class NewsletterChannel extends AbstractEntity
 {
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected DateTime $crdate;
+    protected ?DateTime $crdate = null;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected DateTime $tstamp;
+    protected ?DateTime $tstamp = null;
 
     /**
      * @var bool
@@ -74,19 +74,19 @@ class NewsletterChannel extends AbstractEntity
     protected string $embedImages = 'none';
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getCrdate(): DateTime
+    public function getCrdate(): ?DateTime
     {
         return $this->crdate;
     }
 
     /**
-     * @param DateTime $crdate
+     * @param DateTime|null $crdate
      *
      * @return NewsletterChannel
      */
-    public function setCrdate(DateTime $crdate): NewsletterChannel
+    public function setCrdate(?DateTime $crdate): NewsletterChannel
     {
         $this->crdate = $crdate;
 
@@ -94,19 +94,19 @@ class NewsletterChannel extends AbstractEntity
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getTstamp(): DateTime
+    public function getTstamp(): ?DateTime
     {
         return $this->tstamp;
     }
 
     /**
-     * @param DateTime $tstamp
+     * @param DateTime|null $tstamp
      *
      * @return NewsletterChannel
      */
-    public function setTstamp(DateTime $tstamp): NewsletterChannel
+    public function setTstamp(?DateTime $tstamp): NewsletterChannel
     {
         $this->tstamp = $tstamp;
 

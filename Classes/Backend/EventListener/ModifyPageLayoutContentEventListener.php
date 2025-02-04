@@ -14,12 +14,13 @@ namespace Netresearch\UniversalMessenger\Backend\EventListener;
 use Netresearch\UniversalMessenger\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
+use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -49,16 +50,19 @@ final class ModifyPageLayoutContentEventListener
         $contentPage = BackendUtility::getRecord('pages', $pageId);
 
         // Show button only at pages matching our page type.
-        if ($contentPage['doktype'] !== Configuration::getNewsletterPageDokType()) {
+        if (($contentPage['doktype'] ?? 0) !== $this->getConfiguration()->getNewsletterPageDokType()) {
             return;
         }
+
+        /** @var ModuleData|null $moduleData */
+        $moduleData = $event->getRequest()->getAttribute('moduleData');
 
         $uri = (string) $this->getUriBuilder()
             ->buildUriFromRoute(
                 'netresearch_universal_messenger',
                 [
                     'id'       => $pageId,
-                    'language' => $event->getRequest()->getAttribute('moduleData')->get('language'),
+                    'language' => $moduleData?->get('language') ?? 0,
                 ]
             );
 
@@ -72,7 +76,7 @@ final class ModifyPageLayoutContentEventListener
             ->setIcon(
                 $this->getIconFactory()->getIcon(
                     'actions-file-view',
-                    Icon::SIZE_SMALL
+                    IconSize::SMALL
                 )
             )
             ->setShowLabelText(true);
@@ -108,6 +112,14 @@ final class ModifyPageLayoutContentEventListener
     private function getIconFactory(): IconFactory
     {
         return GeneralUtility::makeInstance(IconFactory::class);
+    }
+
+    /**
+     * @return Configuration
+     */
+    private function getConfiguration(): Configuration
+    {
+        return GeneralUtility::makeInstance(Configuration::class);
     }
 
     /**

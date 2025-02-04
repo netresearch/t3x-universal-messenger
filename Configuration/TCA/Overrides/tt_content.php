@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 defined('TYPO3') || exit('Access denied.');
 
 call_user_func(static function (): void {
-    // Add content element group to selector list
+    // Add a content element group to the selector list
     ExtensionManagementUtility::addTcaSelectItemGroup(
         'tt_content',
         'CType',
@@ -35,7 +35,7 @@ call_user_func(static function (): void {
         'Universal Messenger Content Element: Control Structure'
     );
 
-    // Add content element to selector list
+    // Add a content element to the selector list
     ExtensionManagementUtility::addTcaSelectItem(
         'tt_content',
         'CType',

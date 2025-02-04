@@ -1,36 +1,52 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Netresearch\\\\UniversalMessenger\\\\Controller\\\\UniversalMessengerController\\:\\:getPageTitle\\(\\) has parameter \\$pageRecord with no value type specified in iterable type array\\.$#"
+			message: '#^Cannot access offset ''id'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../Classes/Controller/UniversalMessengerController.php
+			path: ../Classes/Backend/EventListener/ModifyPageLayoutContentEventListener.php
 
 		-
-			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$contentObjectConfiguration with no value type specified in iterable type array\\.$#"
+			message: '#^Method Netresearch\\UniversalMessenger\\Command\\ImportCommand\:\:getStoragePageId\(\) should return int\<0, max\> but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: ../Classes/Command/ImportCommand.php
+
+		-
+			message: '#^Cannot access offset ''id'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Controller/AbstractBaseController.php
+
+		-
+			message: '#^Method Netresearch\\UniversalMessenger\\DataProcessing\\ControlStructureProcessor\:\:process\(\) has parameter \$contentObjectConfiguration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
 
 		-
-			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$processedData with no value type specified in iterable type array\\.$#"
+			message: '#^Method Netresearch\\UniversalMessenger\\DataProcessing\\ControlStructureProcessor\:\:process\(\) has parameter \$processedData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
 
 		-
-			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) has parameter \\$processorConfiguration with no value type specified in iterable type array\\.$#"
+			message: '#^Method Netresearch\\UniversalMessenger\\DataProcessing\\ControlStructureProcessor\:\:process\(\) has parameter \$processorConfiguration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
 
 		-
-			message: "#^Method Netresearch\\\\UniversalMessenger\\\\DataProcessing\\\\ControlStructureProcessor\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: '#^Method Netresearch\\UniversalMessenger\\DataProcessing\\ControlStructureProcessor\:\:process\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
 
 		-
-			message: "#^Class Netresearch\\\\UniversalMessenger\\\\Domain\\\\Repository\\\\PageRepository extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository but does not specify its types\\: TEntityClass$#"
+			message: '''
+				#^Call to deprecated method addUserTSConfig\(\) of class TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility\:
+				since TYPO3 v13\.0, will be removed in TYPO3 v14\.0\.$#
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
-			path: ../Classes/Domain/Repository/PageRepository.php
-
-		-
-			message: "#^Method Netresearch\\\\UniversalMessenger\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getExistingPageTranslations\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: ../Classes/Domain/Repository/PageRepository.php
+			path: ../ext_localconf.php

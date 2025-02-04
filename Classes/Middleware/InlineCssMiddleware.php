@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Middleware;
 
+use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Constants;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
@@ -22,8 +23,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use TYPO3\CMS\Core\Http\StreamFactory;
+use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
  * Inline CSS middleware.
@@ -35,19 +36,19 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 class InlineCssMiddleware implements MiddlewareInterface
 {
     /**
-     * @var ConfigurationManagerInterface
+     * @var Configuration
      */
-    private readonly ConfigurationManagerInterface $configurationManager;
+    private Configuration $configuration;
 
     /**
      * Constructor.
      *
-     * @param ConfigurationManagerInterface $configurationManager
+     * @param Configuration $configuration
      */
     public function __construct(
-        ConfigurationManagerInterface $configurationManager,
+        Configuration $configuration,
     ) {
-        $this->configurationManager = $configurationManager;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -90,16 +91,17 @@ class InlineCssMiddleware implements MiddlewareInterface
      */
     private function addInlineCss(string $content): string
     {
-        $configuration = $this->getExtensionSettings();
+        $inlineCssFiles = $this->configuration->getTypoScriptSetting('settings/inlineCssFiles');
 
         // Abort if no CSS files should be inlined
-        if (!isset($configuration['settings']['inlineCssFiles'])
-            || ($configuration['settings']['inlineCssFiles'] === [])
+        if (
+            ($inlineCssFiles === null)
+            || ($inlineCssFiles === [])
         ) {
             return $content;
         }
 
-        $files      = array_reverse($configuration['settings']['inlineCssFiles']);
+        $files      = array_reverse($inlineCssFiles);
         $cssContent = '';
 
         foreach ($files as $path) {
@@ -124,24 +126,18 @@ class InlineCssMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Returns the extensions typoscript configuration.
-     *
-     * @return array<string, array<string, string|string[]>>
-     */
-    private function getExtensionSettings(): array
-    {
-        return $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-        );
-    }
-
-    /**
      * @param ServerRequestInterface $request
      *
      * @return bool
      */
     private function isPreviewTypeNumSet(ServerRequestInterface $request): bool
     {
-        return ((int) $request->getAttribute('routing')->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;
+        $pageArguments = $request->getAttribute('routing');
+
+        if ($pageArguments instanceof PageArguments) {
+            return ((int) $pageArguments->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;
+        }
+
+        return false;
     }
 }

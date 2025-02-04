@@ -17,6 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\StreamFactory;
+use TYPO3\CMS\Core\Routing\PageArguments;
 
 /**
  * Decodes curly braces middleware.
@@ -67,7 +68,7 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
     private function decodeCurlyBraces(string $content): string
     {
         // Replaces %7B and %7D back to { and }
-        return preg_replace_callback(
+        return (string) preg_replace_callback(
             '/' . urlencode('{') . '.*' . urlencode('}') . '/',
             static fn (array $matches): string => urldecode($matches[0]),
             $content
@@ -81,6 +82,12 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
      */
     private function isPreviewTypeNumSet(ServerRequestInterface $request): bool
     {
-        return ((int) $request->getAttribute('routing')->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;
+        $pageArguments = $request->getAttribute('routing');
+
+        if ($pageArguments instanceof PageArguments) {
+            return ((int) $pageArguments->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;
+        }
+
+        return false;
     }
 }

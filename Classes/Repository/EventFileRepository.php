@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Repository;
 
+use Netresearch\Sdk\UniversalMessenger\Exception\AuthenticationException;
 use Netresearch\Sdk\UniversalMessenger\Exception\DetailedServiceException;
+use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\Request\Event;
-use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Class EventFileRepository.
@@ -31,8 +32,9 @@ class EventFileRepository extends AbstractRepository
      *
      * @return bool
      *
+     * @throws AuthenticationException
      * @throws DetailedServiceException
-     * @throws ClientExceptionInterface
+     * @throws ServiceException
      */
     public function sendEventFile(Event $request): bool
     {

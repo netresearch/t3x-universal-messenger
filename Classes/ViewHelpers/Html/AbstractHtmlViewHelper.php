@@ -11,12 +11,11 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\ViewHelpers\Html;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Netresearch\UniversalMessenger\Configuration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -34,30 +33,41 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * The view helper template to render.
-     *
-     * @var string
+     * @var ViewFactoryInterface
      */
-    protected static string $viewHelperTemplate;
+    private ViewFactoryInterface $viewFactory;
 
     /**
-     * @return StandaloneView
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @var Configuration
      */
-    protected function getTemplateObject(): StandaloneView
-    {
-        $setup = $this->getConfigurationManager()
-            ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
+    private Configuration $configuration;
 
+    /**
+     * Constructor.
+     *
+     * @param ViewFactoryInterface $viewFactory
+     * @param Configuration        $configuration
+     */
+    public function __construct(
+        ViewFactoryInterface $viewFactory,
+        Configuration $configuration,
+    ) {
+        $this->viewFactory   = $viewFactory;
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @return ViewInterface
+     */
+    protected function getTemplateObject(): ViewInterface
+    {
         $layoutRootPaths   = [];
         $layoutRootPaths[] = GeneralUtility::getFileAbsFileName(
             'EXT:universal_messenger/Resources/Private/Layouts/ViewHelpers/'
         );
 
-        if (isset($setup['plugin.']['tx_universalmessenger.']['view.']['layoutRootPaths.'])) {
-            foreach ($setup['plugin.']['tx_universalmessenger.']['view.']['layoutRootPaths.'] as $layoutRootPath) {
+        if ($this->configuration->hasTypoScriptSetting('view/layoutRootPaths')) {
+            foreach ($this->configuration->getTypoScriptSetting('view/layoutRootPaths') as $layoutRootPath) {
                 $layoutRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim($layoutRootPath, '/') . '/ViewHelpers/');
             }
         }
@@ -67,8 +77,8 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
             'EXT:universal_messenger/Resources/Private/Partials/ViewHelpers/'
         );
 
-        if (isset($setup['plugin.']['tx_universalmessenger.']['view.']['partialRootPaths.'])) {
-            foreach ($setup['plugin.']['tx_universalmessenger.']['view.']['partialRootPaths.'] as $partialRootPath) {
+        if ($this->configuration->hasTypoScriptSetting('view/partialRootPaths')) {
+            foreach ($this->configuration->getTypoScriptSetting('view/partialRootPaths') as $partialRootPath) {
                 $partialRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim($partialRootPath, '/') . '/ViewHelpers/');
             }
         }
@@ -78,34 +88,19 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
             'EXT:universal_messenger/Resources/Private/Templates/ViewHelpers/'
         );
 
-        if (isset($setup['plugin.']['tx_universalmessenger.']['view.']['templateRootPaths.'])) {
-            foreach ($setup['plugin.']['tx_universalmessenger.']['view.']['templateRootPaths.'] as $templateRootPath) {
+        if ($this->configuration->hasTypoScriptSetting('view/templateRootPaths')) {
+            foreach ($this->configuration->getTypoScriptSetting('view/templateRootPaths') as $templateRootPath) {
                 $templateRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim($templateRootPath, '/') . '/ViewHelpers/');
             }
         }
 
-        /** @var StandaloneView $view */
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setLayoutRootPaths($layoutRootPaths);
-        $view->setPartialRootPaths($partialRootPaths);
-        $view->setTemplateRootPaths($templateRootPaths);
-        $view->setTemplate(static::$viewHelperTemplate);
+        $viewFactoryData = new ViewFactoryData(
+            templateRootPaths: $templateRootPaths,
+            partialRootPaths : $partialRootPaths,
+            layoutRootPaths  : $layoutRootPaths,
+        );
 
-        return $view;
-    }
-
-    /**
-     * @return ConfigurationManagerInterface
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function getConfigurationManager(): ConfigurationManagerInterface
-    {
-        /** @var ConfigurationManager $configurationManager */
-        $configurationManager = GeneralUtility::getContainer()
-            ->get(ConfigurationManager::class);
-
-        return $configurationManager;
+        return $this->viewFactory
+            ->create($viewFactoryData);
     }
 }

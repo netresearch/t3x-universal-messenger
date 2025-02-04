@@ -16,10 +16,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 defined('TYPO3') || exit('Access denied.');
 
 call_user_func(static function (): void {
+    $configuration         = GeneralUtility::makeInstance(Configuration::class);
+    $newsletterPageDokType = $configuration->getNewsletterPageDokType();
+
     // Add the page type to the system
     $dokTypeRegistry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
     $dokTypeRegistry->add(
-        Configuration::getNewsletterPageDokType(),
+        $newsletterPageDokType,
         [
             'type'          => 'web',
             'allowedTables' => '*',

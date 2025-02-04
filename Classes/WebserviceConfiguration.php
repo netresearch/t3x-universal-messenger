@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger;
 
-use Exception;
-use RuntimeException;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-
 /**
  * Webservice configuration.
  *
@@ -40,20 +36,12 @@ class WebserviceConfiguration
 
     /**
      * WebserviceConfiguration constructor.
-     *
-     * @throws RuntimeException
      */
     public function __construct(
-        ExtensionConfiguration $extensionConfiguration,
+        Configuration $configuration,
     ) {
-        try {
-            $configuration = $extensionConfiguration->get('universal_messenger');
-        } catch (Exception) {
-            $configuration = [];
-        }
-
-        $this->apiBaseUrl = $configuration['apiUrl'] ?? '';
-        $this->apiKey     = $configuration['apiKey'] ?? '';
+        $this->apiBaseUrl = $configuration->getExtensionSetting('apiUrl') ?? '';
+        $this->apiKey     = $configuration->getExtensionSetting('apiKey') ?? '';
     }
 
     /**

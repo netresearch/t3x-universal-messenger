@@ -15,17 +15,23 @@ use DateTime;
 use Exception;
 use Netresearch\Sdk\UniversalMessenger\Model\Collection\NewsletterChannelCollection;
 use Netresearch\Sdk\UniversalMessenger\Model\NewsletterChannel;
+use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel as NewsletterChannelDomainModel;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
-use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
+use Netresearch\UniversalMessenger\Repository\NewsletterRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+
+use function sprintf;
 
 /**
  * Class ImportCommand.
@@ -39,19 +45,29 @@ class ImportCommand extends Command implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
+     * @var SymfonyStyle
+     */
+    private SymfonyStyle $io;
+
+    /**
      * @var PersistenceManagerInterface
      */
     private PersistenceManagerInterface $persistenceManager;
 
     /**
-     * @var UniversalMessengerService
-     */
-    private UniversalMessengerService $universalMessengerService;
-
-    /**
      * @var NewsletterChannelRepository
      */
     private NewsletterChannelRepository $newsletterChannelRepository;
+
+    /**
+     * @var NewsletterRepository
+     */
+    private NewsletterRepository $newsletterRepository;
+
+    /**
+     * @var Configuration
+     */
+    private Configuration $configuration;
 
     /**
      * Configures the command.
@@ -67,16 +83,6 @@ class ImportCommand extends Command implements LoggerAwareInterface
     }
 
     /**
-     * Bootstrap.
-     */
-    private function bootstrap(): void
-    {
-        $this->persistenceManager          = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
-        $this->universalMessengerService   = GeneralUtility::makeInstance(UniversalMessengerService::class);
-        $this->newsletterChannelRepository = GeneralUtility::makeInstance(NewsletterChannelRepository::class);
-    }
-
-    /**
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
@@ -84,20 +90,54 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->io = new SymfonyStyle($input, $output);
+        $this->io->title($this->getName() ?? '');
+
+        $this->initCliEnvironment();
         $this->bootstrap();
 
-        return $this->importNewsletterChannels($output);
+        return $this->importNewsletterChannels();
     }
 
     /**
-     * @param OutputInterface $output
+     * Create a request object as with TYPO3 v13.3 extbase components rely on a request instance.
      *
+     * @return void
+     *
+     * @see https://forge.typo3.org/issues/105554
+     * @see https://forge.typo3.org/issues/105616
+     * @see https://forge.typo3.org/issues/105954
+     */
+    private function initCliEnvironment(): void
+    {
+        if ((PHP_SAPI === 'cli') && !isset($GLOBALS['TYPO3_REQUEST'])) {
+            $serverRequest = (new ServerRequest())
+                ->withAttribute('extbase', [])
+                ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+
+            $GLOBALS['TYPO3_REQUEST'] = $serverRequest;
+        }
+    }
+
+    /**
+     * Bootstrap.
+     */
+    private function bootstrap(): void
+    {
+        $this->persistenceManager          = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
+        $this->newsletterChannelRepository = GeneralUtility::makeInstance(NewsletterChannelRepository::class);
+        $this->newsletterRepository        = GeneralUtility::makeInstance(NewsletterRepository::class);
+        $this->configuration               = GeneralUtility::makeInstance(Configuration::class);
+    }
+
+    /**
      * @return int
      */
-    private function importNewsletterChannels(OutputInterface $output): int
+    private function importNewsletterChannels(): int
     {
         // Query all active newsletter channels from UM webservice
-        $newsletterChannelCollection = $this->queryNewsletterChannelCollection($output);
+        $newsletterChannelCollection = $this->queryNewsletterChannelCollection();
+        $storagePid                  = $this->getStoragePageId();
 
         // Abort further import if webservice response does not contain any data
         if ($newsletterChannelCollection->count() === 0) {
@@ -105,10 +145,9 @@ class ImportCommand extends Command implements LoggerAwareInterface
             return self::FAILURE;
         }
 
-        $storagePid = $this->getStoragePageId();
-
-        $output->writeln('Start importing...');
-        $count = 0;
+        $this->io->text('Perform import');
+        $this->io->newLine();
+        $this->io->progressStart($newsletterChannelCollection->count());
 
         // List of newsletter channels imported
         $channelIds = [];
@@ -123,37 +162,22 @@ class ImportCommand extends Command implements LoggerAwareInterface
                     $storagePid
                 );
 
-                // Add the new entity to the repository
+                // Add the new entity and persist it
                 $this->newsletterChannelRepository->add($newsletterChannelDomainModel);
-
-                // Persist the new entity
                 $this->persistenceManager->persistAll();
-
-                ++$count;
-
-                $output->write('.');
-
-                if (($count % 10) === 0) {
-                    $output->writeln(
-                        sprintf(' %6d', $count)
-                    );
-                }
             } catch (Exception $exception) {
-                $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
-
-                $this->logger->error(
-                    $exception->getMessage(),
-                    [
-                        'exception' => $exception,
-                    ]
-                );
+                $this->handleException($exception);
             }
+
+            $this->io->progressAdvance();
         }
 
-        // Remove all obsolete records
-        $this->removeObsoleteRecords($channelIds, $output);
+        $this->io->progressFinish();
 
-        $output->writeln("\nImport done");
+        // Remove all obsolete records
+        $this->removeObsoleteRecords($channelIds);
+
+        $this->io->success('Import done');
 
         // All fine
         return self::SUCCESS;
@@ -162,28 +186,16 @@ class ImportCommand extends Command implements LoggerAwareInterface
     /**
      * Query all active newsletter channels from UM webservice.
      *
-     * @param OutputInterface $output
-     *
      * @return NewsletterChannelCollection
      */
-    private function queryNewsletterChannelCollection(OutputInterface $output): NewsletterChannelCollection
+    private function queryNewsletterChannelCollection(): NewsletterChannelCollection
     {
         try {
-            $output->writeln('Download updated list of newsletter channels from Universal Messenger');
+            $this->io->note('Download updated list of newsletter channels from Universal Messenger');
 
-            return $this->universalMessengerService
-                ->api()
-                ->newsletter()
-                ->channels();
+            return $this->newsletterRepository->findAllChannels();
         } catch (Exception $exception) {
-            $this->logger->error(
-                $exception->getMessage(),
-                [
-                    'exception' => $exception,
-                ]
-            );
-
-            $output->writeln($exception->getMessage());
+            $this->handleException($exception);
         }
 
         return new NewsletterChannelCollection();
@@ -193,7 +205,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      * Hydrate a newsletter channel record with the given Universal Messenger webservice response.
      *
      * @param NewsletterChannel $newsletterChannel
-     * @param int               $storagePid
+     * @param int<0, max>       $storagePid
      *
      * @return NewsletterChannelDomainModel
      */
@@ -206,21 +218,54 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $newsletterChannelDomainModel = $this->newsletterChannelRepository
             ->findByChannelId($channelId);
 
-        if ($newsletterChannelDomainModel instanceof NewsletterChannelDomainModel) {
-            return $newsletterChannelDomainModel;
+        // Create new record if it not exists in the database
+        if (!($newsletterChannelDomainModel instanceof NewsletterChannelDomainModel)) {
+            /** @var NewsletterChannelDomainModel $newsletterChannelDomainModel */
+            $newsletterChannelDomainModel = GeneralUtility::makeInstance(NewsletterChannelDomainModel::class);
+            $newsletterChannelDomainModel->setPid($storagePid);
+            $newsletterChannelDomainModel->setChannelId($channelId);
         }
 
-        $newsletterChannelDomainModel = GeneralUtility::makeInstance(NewsletterChannelDomainModel::class);
-        $newsletterChannelDomainModel->setPid($storagePid);
+        $title = $this->getUpdatedValue(
+            $newsletterChannelDomainModel->getTitle(),
+            $this->cleanChannelTitle($newsletterChannel->title)
+        );
+
+        $description = $this->getUpdatedValue(
+            $newsletterChannelDomainModel->getDescription(),
+            $this->cleanChannelTitle($newsletterChannel->description)
+        );
 
         $newsletterChannelDomainModel
-            ->setChannelId($channelId)
-            ->setTitle($this->cleanChannelTitle($newsletterChannel->title))
-            ->setDescription($newsletterChannel->description)
+            ->setTitle($title)
+            ->setDescription($description)
             ->setCrdate(new DateTime())
             ->setTstamp(new DateTime());
 
         return $newsletterChannelDomainModel;
+    }
+
+    /**
+     * Returns either the current value or the updated value if the updated is not empty.
+     *
+     * @param string $existingValue
+     * @param string $updatedValue
+     *
+     * @return string
+     */
+    private function getUpdatedValue(string $existingValue, string $updatedValue): string
+    {
+        if (
+            ($existingValue === '')
+            || (
+                ($updatedValue !== '')
+                && ($existingValue !== $updatedValue)
+            )
+        ) {
+            return $updatedValue;
+        }
+
+        return $existingValue;
     }
 
     /**
@@ -268,14 +313,16 @@ class ImportCommand extends Command implements LoggerAwareInterface
     /**
      * Finds all records not in the list of imported records and remove them.
      *
-     * @param string[]        $channelIds
-     * @param OutputInterface $output
+     * @param string[] $channelIds
      *
      * @return void
      */
-    private function removeObsoleteRecords(array $channelIds, OutputInterface $output): void
+    private function removeObsoleteRecords(array $channelIds): void
     {
         try {
+            $this->io->text('Remove obsolete records');
+            $this->io->newLine();
+
             $queryResult = $this->newsletterChannelRepository
                 ->findAllExceptWithChannelId($channelIds);
 
@@ -287,42 +334,18 @@ class ImportCommand extends Command implements LoggerAwareInterface
             // Persist everything
             $this->persistenceManager->persistAll();
         } catch (Exception $exception) {
-            $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
-
-            $this->logger->error(
-                $exception->getMessage(),
-                [
-                    'exception' => $exception,
-                ]
-            );
-        }
-    }
-
-    /**
-     * Get the extension configuration.
-     *
-     * @param string $path Path to get the config for
-     *
-     * @return mixed
-     */
-    private function getExtensionConfiguration(string $path): mixed
-    {
-        try {
-            return GeneralUtility::makeInstance(ExtensionConfiguration::class)
-                ->get('universal_messenger', $path);
-        } catch (Exception) {
-            return null;
+            $this->handleException($exception);
         }
     }
 
     /**
      * Returns the page ID used to store the records.
      *
-     * @return int
+     * @return int<0, max>
      */
     private function getStoragePageId(): int
     {
-        return (int) ($this->getExtensionConfiguration('storagePageId') ?? 0);
+        return (int) ($this->configuration->getExtensionSetting('storagePageId') ?? 0);
     }
 
     /**
@@ -332,7 +355,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function getTestChannelSuffix(): string
     {
-        return $this->getExtensionConfiguration('newsletter/testChannelSuffix') ?? '';
+        return $this->configuration->getExtensionSetting('newsletter/testChannelSuffix') ?? '';
     }
 
     /**
@@ -342,6 +365,30 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function getLiveChannelSuffix(): string
     {
-        return $this->getExtensionConfiguration('newsletter/liveChannelSuffix') ?? '';
+        return $this->configuration->getExtensionSetting('newsletter/liveChannelSuffix') ?? '';
+    }
+
+    /**
+     * Handles the exception processing.
+     *
+     * @param Throwable $exception
+     *
+     * @return void
+     */
+    private function handleException(Throwable $exception): void
+    {
+        $this->io->writeln(
+            sprintf(
+                '<error>%s</error>',
+                $exception->getMessage()
+            )
+        );
+
+        $this->logger?->error(
+            $exception->getMessage(),
+            [
+                'exception' => $exception,
+            ]
+        );
     }
 }

@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\ViewHelpers\Condition;
 
-use Exception;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
@@ -25,13 +25,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 class IsNewsletterTypeNumberViewHelper extends AbstractConditionViewHelper
 {
     /**
-     * @param array<string, mixed> $arguments
+     * @param array<string, mixed>      $arguments
+     * @param RenderingContextInterface $renderingContext
      *
      * @return bool
-     *
-     * @throws Exception
      */
-    protected static function evaluateCondition($arguments = null): bool
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return (int) (
             $GLOBALS['TYPO3_REQUEST']->getParsedBody()['type']

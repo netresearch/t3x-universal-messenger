@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Service;
 
+use Netresearch\UniversalMessenger\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -18,10 +19,11 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -36,12 +38,7 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * @var int
      */
-    public const VIEW_TYPE_NUMBER = 1_716_283_827;
-
-    /**
-     * @var ConfigurationManagerInterface
-     */
-    private readonly ConfigurationManagerInterface $configurationManager;
+    public const VIEW_TYPE_NUMBER = 1716283827;
 
     /**
      * @var RequestFactory
@@ -54,40 +51,51 @@ class NewsletterRenderService implements SingletonInterface
     private readonly SiteFinder $siteFinder;
 
     /**
+     * @var ViewFactoryInterface
+     */
+    private ViewFactoryInterface $viewFactory;
+
+    /**
+     * @var Configuration
+     */
+    protected Configuration $configuration;
+
+    /**
      * Constructor.
      *
-     * @param ConfigurationManagerInterface $configurationManager
-     * @param RequestFactory                $requestFactory
-     * @param SiteFinder                    $siteFinder
+     * @param RequestFactory       $requestFactory
+     * @param SiteFinder           $siteFinder
+     * @param ViewFactoryInterface $viewFactory
+     * @param Configuration        $configuration
      */
     public function __construct(
-        ConfigurationManagerInterface $configurationManager,
         RequestFactory $requestFactory,
         SiteFinder $siteFinder,
+        ViewFactoryInterface $viewFactory,
+        Configuration $configuration,
     ) {
-        $this->configurationManager = $configurationManager;
-        $this->requestFactory       = $requestFactory;
-        $this->siteFinder           = $siteFinder;
+        $this->requestFactory = $requestFactory;
+        $this->siteFinder     = $siteFinder;
+        $this->viewFactory    = $viewFactory;
+        $this->configuration  = $configuration;
     }
 
     /**
-     * Returns the extensions typoscript configuration.
+     * @param ServerRequestInterface $request
      *
-     * @return array<string, array<string, string|string[]>>
+     * @return ViewInterface
      */
-    private function getExtensionSettings(): array
+    private function getView(ServerRequestInterface $request): ViewInterface
     {
-        return $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+        $viewFactoryData = new ViewFactoryData(
+            templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
+            partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
+            layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
+            templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
+            request                : $request,
         );
-    }
 
-    /**
-     * @return StandaloneView
-     */
-    private function getStandaloneView(): StandaloneView
-    {
-        return GeneralUtility::makeInstance(StandaloneView::class);
+        return $this->viewFactory->create($viewFactoryData);
     }
 
     /**
@@ -137,7 +145,8 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
     {
-        $languageId = $request->getAttribute('language')->getLanguageId();
+        $language   = $request->getAttribute('language');
+        $languageId = $language instanceof SiteLanguage ? $language->getLanguageId() : 0;
 
         $content = $this->renderNewsletterContainer(
             $request,
@@ -171,10 +180,13 @@ class NewsletterRenderService implements SingletonInterface
     private function clearUpContent(string $content): string
     {
         // Replace tab with space
-        $content = preg_replace('/\t/', ' ', trim($content));
+        $content = (string) preg_replace('/\t/', ' ', trim($content));
 
         // Removes redundant spaces between HTML tags
-        return trim(preg_replace('/>\s+</', '><', $content));
+        $content = (string) preg_replace('/>\s+</', '><', $content);
+
+        // Removes redundant spaces between HTML tags
+        return trim($content);
     }
 
     /**
@@ -185,29 +197,17 @@ class NewsletterRenderService implements SingletonInterface
      */
     private function renderNewsletterContainer(ServerRequestInterface $request, string $content): string
     {
-        $configuration = $this->getExtensionSettings();
-
-        $standaloneView = $this->getStandaloneView();
-        $standaloneView->setRequest($request);
-        $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
-        $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
-        $standaloneView->setTemplateRootPaths($configuration['view']['templateRootPaths']);
-
-        if (isset($configuration['view']['templatePathAndFilename'])) {
-            $standaloneView->setTemplatePathAndFilename($configuration['view']['templatePathAndFilename']);
-        }
-
         /** @var TypoScriptFrontendController $typoScriptFrontendController */
         $typoScriptFrontendController = $request->getAttribute('frontend.controller');
 
         // Pass the content as "content" variable to the container template, otherwise
         // use the "f:cObject" view helper to render the different template columns of
         // the selected backend page layout.
-        $standaloneView->assign('content', $content);
-        $standaloneView->assign('settings', $configuration['settings']);
-        $standaloneView->assign('data', $typoScriptFrontendController->page);
-
-        return $standaloneView->render();
+        return $this->getView($request)
+            ->assign('content', $content)
+            ->assign('settings', $this->configuration->getTypoScriptSetting('settings'))
+            ->assign('data', $typoScriptFrontendController->page)
+            ->render();
     }
 
     /**
