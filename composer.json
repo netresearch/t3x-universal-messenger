@@ -14,12 +14,12 @@
     "require": {
         "ext-fileinfo": "*",
         "ext-libxml": "*",
-        "typo3/cms-core": "^13.0",
-        "typo3/cms-backend": "^13.0",
-        "typo3/cms-frontend": "^13.0",
-        "typo3/cms-extbase": "^13.0",
-        "typo3/cms-fluid": "^13.0",
-        "typo3/cms-lowlevel": "^13.0",
+        "typo3/cms-core": "^13.4",
+        "typo3/cms-backend": "^13.4",
+        "typo3/cms-frontend": "^13.4",
+        "typo3/cms-extbase": "^13.4",
+        "typo3/cms-fluid": "^13.4",
+        "typo3/cms-lowlevel": "^13.4",
         "nyholm/psr7": "^1.8",
         "pelago/emogrifier": "^7.2",
         "netresearch/sdk-api-universal-messenger": "^1.0"
