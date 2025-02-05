@@ -61,28 +61,6 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
      */
     protected function getTemplateObject(): ViewInterface
     {
-        $layoutRootPaths   = [];
-        $layoutRootPaths[] = GeneralUtility::getFileAbsFileName(
-            'EXT:universal_messenger/Resources/Private/Layouts/ViewHelpers/'
-        );
-
-        if ($this->configuration->hasTypoScriptSetting('view/layoutRootPaths')) {
-            foreach ($this->configuration->getTypoScriptSetting('view/layoutRootPaths') as $layoutRootPath) {
-                $layoutRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim($layoutRootPath, '/') . '/ViewHelpers/');
-            }
-        }
-
-        $partialRootPaths   = [];
-        $partialRootPaths[] = GeneralUtility::getFileAbsFileName(
-            'EXT:universal_messenger/Resources/Private/Partials/ViewHelpers/'
-        );
-
-        if ($this->configuration->hasTypoScriptSetting('view/partialRootPaths')) {
-            foreach ($this->configuration->getTypoScriptSetting('view/partialRootPaths') as $partialRootPath) {
-                $partialRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim($partialRootPath, '/') . '/ViewHelpers/');
-            }
-        }
-
         $templateRootPaths   = [];
         $templateRootPaths[] = GeneralUtility::getFileAbsFileName(
             'EXT:universal_messenger/Resources/Private/Templates/ViewHelpers/'
@@ -96,8 +74,6 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
 
         $viewFactoryData = new ViewFactoryData(
             templateRootPaths: $templateRootPaths,
-            partialRootPaths : $partialRootPaths,
-            layoutRootPaths  : $layoutRootPaths,
         );
 
         return $this->viewFactory

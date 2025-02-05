@@ -81,24 +81,6 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * @param ServerRequestInterface $serverRequest
-     *
-     * @return ViewInterface
-     */
-    private function getView(ServerRequestInterface $serverRequest): ViewInterface
-    {
-        $viewFactoryData = new ViewFactoryData(
-            templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
-            partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
-            layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
-            templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
-            request                : $serverRequest,
-        );
-
-        return $this->viewFactory->create($viewFactoryData);
-    }
-
-    /**
      * Returns the URI to the newsletter page to render.
      *
      * @param int                $pageId
@@ -150,7 +132,7 @@ class NewsletterRenderService implements SingletonInterface
 
         $content = $this->renderNewsletterContainer(
             $serverRequest,
-            $this->renderByPageId($pageId, $languageId)
+            $this->renderByPageId($serverRequest, $pageId, $languageId)
         );
 
         return $this->clearUpContent($content);
@@ -191,6 +173,24 @@ class NewsletterRenderService implements SingletonInterface
 
     /**
      * @param ServerRequestInterface $serverRequest
+     *
+     * @return ViewInterface
+     */
+    private function getView(ServerRequestInterface $serverRequest): ViewInterface
+    {
+        $viewFactoryData = new ViewFactoryData(
+            layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
+            templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
+            partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
+            templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
+            request                : $serverRequest,
+        );
+
+        return $this->viewFactory->create($viewFactoryData);
+    }
+
+    /**
+     * @param ServerRequestInterface $serverRequest
      * @param string                 $content
      *
      * @return string
@@ -213,12 +213,13 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Renders the page with the given page ID.
      *
-     * @param int $pageId     The page UID
-     * @param int $languageId The language UID of the page
+     * @param ServerRequestInterface $serverRequest
+     * @param int                    $pageId        The page UID
+     * @param int                    $languageId    The language UID of the page
      *
      * @return string
      */
-    private function renderByPageId(int $pageId, int $languageId): string
+    private function renderByPageId(ServerRequestInterface $serverRequest, int $pageId, int $languageId): string
     {
         $url = (string) $this->generatePageUri(
             $pageId,
@@ -232,10 +233,10 @@ class NewsletterRenderService implements SingletonInterface
             throw new RuntimeException('Preview URL is invalid: ' . $url);
         }
 
-        return // $this->renderFluidView(
+        return $this->renderFluidView(
+            $serverRequest,
             $this->getContentFromUrl($url)
-        // )
-        ;
+        );
     }
 
     /**
@@ -250,27 +251,40 @@ class NewsletterRenderService implements SingletonInterface
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
 
-    //    /**
-    //     * @param string $templateSource
-    //     *
-    //     * @return string
-    //     */
-    //    private function renderFluidView(string $templateSource): string
-    //    {
-    //        if ($templateSource !== '') {
-    //            $configuration = $this->getExtensionSettings();
-    //
-    //            $standaloneView = $this->getStandaloneView();
-    //            $standaloneView->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
-    //            $standaloneView->setPartialRootPaths($configuration['view']['partialRootPaths']);
-    //            $standaloneView->setTemplateRootPaths($configuration['view']['templateRootPaths']);
-    //            $standaloneView->setTemplateSource($templateSource);
-    //
-    //            return $standaloneView->render();
-    //        }
-    //
-    //        return $templateSource;
-    //    }
+    /**
+     * @param ServerRequestInterface $serverRequest
+     * @param string                 $templateSource
+     *
+     * @return string
+     */
+    private function renderFluidView(ServerRequestInterface $serverRequest, string $templateSource): string
+    {
+        //        if ($templateSource !== '') {
+        //            $viewFactoryData = new ViewFactoryData(
+        //                layoutRootPaths  : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
+        //                templateRootPaths: $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
+        //                partialRootPaths : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
+        //                request          : $serverRequest,
+        //            );
+        //
+        //            /** @var FluidViewAdapter $viewAdapter */
+        //            $viewAdapter = $this->viewFactory
+        //                ->create($viewFactoryData);
+        //
+        //            $renderingContext = $viewAdapter
+        //                ->getRenderingContext();
+        //
+        // //            $renderingContext->setControllerName('NewsletterPreview');
+        // //            $renderingContext->setControllerAction('Preview');
+        //            $renderingContext->getTemplatePaths()
+        //                ->setTemplateSource($templateSource);
+        //
+        //            return $viewAdapter
+        //                ->render();
+        //        }
+
+        return $templateSource;
+    }
 
     /**
      * Performs a GET-request and returns the content from the called URL.

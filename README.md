@@ -160,7 +160,7 @@ page that opens, go to the `Advanced Options` tab and add the static TypoScript
 `Universal Messenger: Example Newsletter Template` to the list of selected TypoScript configurations.
 
 Open a page where you want to use the backend layout and switch to page properties and select `resources` tab and add
-`Universal Messenger: Newsletter Backend Layout` to the `Page TSconfig` selection.
+`Universal Messenger: Backend Layout` to the `Page TSconfig` selection.
 
 Now you can select the backend layout in the `layout` tab.
 
