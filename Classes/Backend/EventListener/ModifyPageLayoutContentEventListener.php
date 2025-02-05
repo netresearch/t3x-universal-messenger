@@ -44,10 +44,10 @@ final class ModifyPageLayoutContentEventListener
      */
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
-        $view        = $event->getModuleTemplate();
-        $buttonBar   = $view->getDocHeaderComponent()->getButtonBar();
-        $pageId      = $this->getPageId($event->getRequest());
-        $contentPage = BackendUtility::getRecord('pages', $pageId);
+        $moduleTemplate = $event->getModuleTemplate();
+        $buttonBar      = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        $pageId         = $this->getPageId($event->getRequest());
+        $contentPage    = BackendUtility::getRecord('pages', $pageId);
 
         // Show button only at pages matching our page type.
         if (($contentPage['doktype'] ?? 0) !== $this->getConfiguration()->getNewsletterPageDokType()) {
@@ -66,7 +66,7 @@ final class ModifyPageLayoutContentEventListener
                 ]
             );
 
-        $returnButton = $buttonBar->makeLinkButton()
+        $linkButton = $buttonBar->makeLinkButton()
             ->setHref($uri)
             ->setTitle(
                 $this->getLanguageService()->sL(
@@ -82,7 +82,7 @@ final class ModifyPageLayoutContentEventListener
             ->setShowLabelText(true);
 
         $buttonBar->addButton(
-            $returnButton,
+            $linkButton,
             ButtonBar::BUTTON_POSITION_LEFT,
             3
         );
@@ -125,12 +125,12 @@ final class ModifyPageLayoutContentEventListener
     /**
      * Returns the page ID extracted from the given request object.
      *
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $serverRequest
      *
      * @return int
      */
-    private function getPageId(ServerRequestInterface $request): int
+    private function getPageId(ServerRequestInterface $serverRequest): int
     {
-        return (int) ($request->getParsedBody()['id'] ?? $request->getQueryParams()['id'] ?? 0);
+        return (int) ($serverRequest->getParsedBody()['id'] ?? $serverRequest->getQueryParams()['id'] ?? 0);
     }
 }

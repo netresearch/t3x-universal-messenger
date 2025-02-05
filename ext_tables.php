@@ -20,8 +20,8 @@ call_user_func(static function (): void {
     $newsletterPageDokType = $configuration->getNewsletterPageDokType();
 
     // Add the page type to the system
-    $dokTypeRegistry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
-    $dokTypeRegistry->add(
+    $pageDokTypeRegistry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
+    $pageDokTypeRegistry->add(
         $newsletterPageDokType,
         [
             'type'          => 'web',

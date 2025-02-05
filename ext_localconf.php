@@ -67,6 +67,7 @@ call_user_func(static function (): void {
         [
             NewsletterPreviewController::class => 'preview',
         ],
+        ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
     );
 
     // Ignore the following parameters in cHash calculation

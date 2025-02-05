@@ -81,18 +81,18 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $serverRequest
      *
      * @return ViewInterface
      */
-    private function getView(ServerRequestInterface $request): ViewInterface
+    private function getView(ServerRequestInterface $serverRequest): ViewInterface
     {
         $viewFactoryData = new ViewFactoryData(
             templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
             partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
             layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
             templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
-            request                : $request,
+            request                : $serverRequest,
         );
 
         return $this->viewFactory->create($viewFactoryData);
@@ -138,18 +138,18 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Renders the newsletter and returns the generated HTML.
      *
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $serverRequest
      * @param int                    $pageId
      *
      * @return string
      */
-    public function renderNewsletterPreviewPage(ServerRequestInterface $request, int $pageId): string
+    public function renderNewsletterPreviewPage(ServerRequestInterface $serverRequest, int $pageId): string
     {
-        $language   = $request->getAttribute('language');
+        $language   = $serverRequest->getAttribute('language');
         $languageId = $language instanceof SiteLanguage ? $language->getLanguageId() : 0;
 
         $content = $this->renderNewsletterContainer(
-            $request,
+            $serverRequest,
             $this->renderByPageId($pageId, $languageId)
         );
 
@@ -190,20 +190,20 @@ class NewsletterRenderService implements SingletonInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $serverRequest
      * @param string                 $content
      *
      * @return string
      */
-    private function renderNewsletterContainer(ServerRequestInterface $request, string $content): string
+    private function renderNewsletterContainer(ServerRequestInterface $serverRequest, string $content): string
     {
         /** @var TypoScriptFrontendController $typoScriptFrontendController */
-        $typoScriptFrontendController = $request->getAttribute('frontend.controller');
+        $typoScriptFrontendController = $serverRequest->getAttribute('frontend.controller');
 
         // Pass the content as "content" variable to the container template, otherwise
         // use the "f:cObject" view helper to render the different template columns of
         // the selected backend page layout.
-        return $this->getView($request)
+        return $this->getView($serverRequest)
             ->assign('content', $content)
             ->assign('settings', $this->configuration->getTypoScriptSetting('settings'))
             ->assign('data', $typoScriptFrontendController->page)

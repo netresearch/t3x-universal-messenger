@@ -27,7 +27,7 @@ final class PageContentPreviewRenderingEventListener
     /**
      * @var FlexFormService
      */
-    protected FlexFormService $flexFormService;
+    private FlexFormService $flexFormService;
 
     /**
      * Constructor.

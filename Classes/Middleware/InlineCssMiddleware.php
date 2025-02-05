@@ -52,24 +52,24 @@ class InlineCssMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
+     * @param ServerRequestInterface  $serverRequest
+     * @param RequestHandlerInterface $requestHandler
      *
      * @return ResponseInterface
      *
      * @throws ParseException
      */
     public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler,
+        ServerRequestInterface $serverRequest,
+        RequestHandlerInterface $requestHandler,
     ): ResponseInterface {
-        $response = $handler->handle($request);
+        $response = $requestHandler->handle($serverRequest);
 
-        if (!$this->isPreviewTypeNumSet($request)) {
+        if (!$this->isPreviewTypeNumSet($serverRequest)) {
             return $response;
         }
 
-        $stream = $handler->handle($request)->getBody();
+        $stream = $requestHandler->handle($serverRequest)->getBody();
         $stream->rewind();
 
         $content   = $stream->getContents();
@@ -126,13 +126,13 @@ class InlineCssMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $serverRequest
      *
      * @return bool
      */
-    private function isPreviewTypeNumSet(ServerRequestInterface $request): bool
+    private function isPreviewTypeNumSet(ServerRequestInterface $serverRequest): bool
     {
-        $pageArguments = $request->getAttribute('routing');
+        $pageArguments = $serverRequest->getAttribute('routing');
 
         if ($pageArguments instanceof PageArguments) {
             return ((int) $pageArguments->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;

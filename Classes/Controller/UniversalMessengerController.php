@@ -181,11 +181,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $newsletterChannel = $this->newsletterChannelRepository
             ->findByUid($contentRecord['universal_messenger_channel']);
 
-        $status = $this->getNewsletterStatus($newsletterEventId);
+        $newsletterStatus = $this->getNewsletterStatus($newsletterEventId);
 
         // Show the status if available
-        if (($status instanceof NewsletterStatus)
-            && ($status->error === null)
+        if (($newsletterStatus instanceof NewsletterStatus)
+            && ($newsletterStatus->error === null)
         ) {
             if (($newsletterChannel instanceof NewsletterChannel)
                 && $newsletterChannel->isSkipUsedId()
@@ -193,7 +193,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 $this->view->assign('disableLiveButton', true);
             }
 
-            $this->renderStatusMessage($status);
+            $this->renderStatusMessage($newsletterStatus);
         }
 
         $this->view->assign('pageId', $this->pageId);
@@ -368,33 +368,33 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     /**
      * Renders the newsletter status message.
      *
-     * @param NewsletterStatus $status
+     * @param NewsletterStatus $newsletterStatus
      *
      * @return void
      */
-    private function renderStatusMessage(NewsletterStatus $status): void
+    private function renderStatusMessage(NewsletterStatus $newsletterStatus): void
     {
         // Default on hold status is displayed if the API is not yet returning a valid status response
         $severity = ContextualFeedbackSeverity::INFO;
         $message  = $this->translate('newsletter.status.hold');
 
-        if ($status->isFailed) {
+        if ($newsletterStatus->isFailed) {
             $message  = $this->translate('newsletter.status.failed');
             $severity = ContextualFeedbackSeverity::WARNING;
-        } elseif ($status->isStopped) {
+        } elseif ($newsletterStatus->isStopped) {
             $message  = $this->translate('newsletter.status.stopped');
             $severity = ContextualFeedbackSeverity::WARNING;
-        } elseif ($status->inQueue) {
+        } elseif ($newsletterStatus->inQueue) {
             $message  = $this->translate('newsletter.status.queue');
             $severity = ContextualFeedbackSeverity::OK;
-        } elseif ($status->isFinished) {
-            if ($status->contacted === 1) {
+        } elseif ($newsletterStatus->isFinished) {
+            if ($newsletterStatus->contacted === 1) {
                 $message = $this->translate('newsletter.status.finished');
             } else {
                 $message = $this->translate(
                     'newsletter.status.finished.plural',
                     [
-                        $status->contacted,
+                        $newsletterStatus->contacted,
                     ]
                 );
             }

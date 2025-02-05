@@ -55,12 +55,12 @@ class NewsletterChannelRepository extends Repository
      */
     public function initializeObject(): void
     {
-        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
-        $querySettings
+        $typo3QuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $typo3QuerySettings
             ->setRespectStoragePage(true)
             ->setStoragePageIds([$this->getStoragePageId()]);
 
-        $this->setDefaultQuerySettings($querySettings);
+        $this->setDefaultQuerySettings($typo3QuerySettings);
     }
 
     /**

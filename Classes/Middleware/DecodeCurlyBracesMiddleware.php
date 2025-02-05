@@ -29,18 +29,18 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 class DecodeCurlyBracesMiddleware implements MiddlewareInterface
 {
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
+     * @param ServerRequestInterface  $serverRequest
+     * @param RequestHandlerInterface $requestHandler
      *
      * @return ResponseInterface
      */
     public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler,
+        ServerRequestInterface $serverRequest,
+        RequestHandlerInterface $requestHandler,
     ): ResponseInterface {
-        $response = $handler->handle($request);
+        $response = $requestHandler->handle($serverRequest);
 
-        if (!$this->isPreviewTypeNumSet($request)) {
+        if (!$this->isPreviewTypeNumSet($serverRequest)) {
             return $response;
         }
 
@@ -76,13 +76,13 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $serverRequest
      *
      * @return bool
      */
-    private function isPreviewTypeNumSet(ServerRequestInterface $request): bool
+    private function isPreviewTypeNumSet(ServerRequestInterface $serverRequest): bool
     {
-        $pageArguments = $request->getAttribute('routing');
+        $pageArguments = $serverRequest->getAttribute('routing');
 
         if ($pageArguments instanceof PageArguments) {
             return ((int) $pageArguments->getPageType()) === Constants::NEWSLETTER_PREVIEW_TYPENUM;

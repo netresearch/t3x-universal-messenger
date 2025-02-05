@@ -47,7 +47,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     /**
      * @var SymfonyStyle
      */
-    private SymfonyStyle $io;
+    private SymfonyStyle $symfonyStyle;
 
     /**
      * @var PersistenceManagerInterface
@@ -90,8 +90,8 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->io = new SymfonyStyle($input, $output);
-        $this->io->title($this->getName() ?? '');
+        $this->symfonyStyle = new SymfonyStyle($input, $output);
+        $this->symfonyStyle->title($this->getName() ?? '');
 
         $this->initCliEnvironment();
         $this->bootstrap();
@@ -145,9 +145,9 @@ class ImportCommand extends Command implements LoggerAwareInterface
             return self::FAILURE;
         }
 
-        $this->io->text('Perform import');
-        $this->io->newLine();
-        $this->io->progressStart($newsletterChannelCollection->count());
+        $this->symfonyStyle->text('Perform import');
+        $this->symfonyStyle->newLine();
+        $this->symfonyStyle->progressStart($newsletterChannelCollection->count());
 
         // List of newsletter channels imported
         $channelIds = [];
@@ -169,15 +169,15 @@ class ImportCommand extends Command implements LoggerAwareInterface
                 $this->handleException($exception);
             }
 
-            $this->io->progressAdvance();
+            $this->symfonyStyle->progressAdvance();
         }
 
-        $this->io->progressFinish();
+        $this->symfonyStyle->progressFinish();
 
         // Remove all obsolete records
         $this->removeObsoleteRecords($channelIds);
 
-        $this->io->success('Import done');
+        $this->symfonyStyle->success('Import done');
 
         // All fine
         return self::SUCCESS;
@@ -191,7 +191,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     private function queryNewsletterChannelCollection(): NewsletterChannelCollection
     {
         try {
-            $this->io->note('Download updated list of newsletter channels from Universal Messenger');
+            $this->symfonyStyle->note('Download updated list of newsletter channels from Universal Messenger');
 
             return $this->newsletterRepository->findAllChannels();
         } catch (Exception $exception) {
@@ -320,8 +320,8 @@ class ImportCommand extends Command implements LoggerAwareInterface
     private function removeObsoleteRecords(array $channelIds): void
     {
         try {
-            $this->io->text('Remove obsolete records');
-            $this->io->newLine();
+            $this->symfonyStyle->text('Remove obsolete records');
+            $this->symfonyStyle->newLine();
 
             $queryResult = $this->newsletterChannelRepository
                 ->findAllExceptWithChannelId($channelIds);
@@ -377,7 +377,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function handleException(Throwable $exception): void
     {
-        $this->io->writeln(
+        $this->symfonyStyle->writeln(
             sprintf(
                 '<error>%s</error>',
                 $exception->getMessage()

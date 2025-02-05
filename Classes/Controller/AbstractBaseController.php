@@ -50,7 +50,7 @@ abstract class AbstractBaseController extends ActionController
     /**
      * @var int
      */
-    protected const PREVIEW_TYPE_NUMBER = 1_715_682_913;
+    protected const PREVIEW_TYPE_NUMBER = 1715682913;
 
     /**
      * @var ModuleTemplateFactory
@@ -298,18 +298,18 @@ abstract class AbstractBaseController extends ActionController
      * Adds a flash message to the message queue and forward to the error action to abort further processing.
      *
      * @param string                     $key
-     * @param ContextualFeedbackSeverity $severity
+     * @param ContextualFeedbackSeverity $contextualFeedbackSeverity
      *
      * @return ResponseInterface
      */
     protected function forwardFlashMessage(
         string $key,
-        ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::ERROR,
+        ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
     ): ResponseInterface {
         $this->moduleTemplate->addFlashMessage(
             $this->translate($key),
             $this->translate('common.universalMessenger'),
-            $severity
+            $contextualFeedbackSeverity
         );
 
         return new ForwardResponse('error');
