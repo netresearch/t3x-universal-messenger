@@ -304,6 +304,12 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             /** @var CreateRequestBuilder $createRequestBuilder */
             $createRequestBuilder = GeneralUtility::makeInstance(CreateRequestBuilder::class);
 
+            // TODO Make subject prefix configurable
+            $pageTitle = $this->getPageTitle($contentRecord);
+            if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
+                $pageTitle = 'TEST: ' . $pageTitle;
+            }
+
             // Create the event file request
             $eventRequest = $createRequestBuilder
                 ->addChannel($newsletterChannelId)
@@ -325,7 +331,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     $newsletterChannel->getSender() !== '' ? $newsletterChannel->getSender() : null,
                     $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null
                 )
-                ->setEmailSubject($this->getPageTitle($contentRecord))
+                ->setEmailSubject($pageTitle)
                 ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
                 ->setHtmlBodyEncoding('UTF-8')
                 ->setHtmlBodyTracking(
