@@ -19,8 +19,8 @@ call_user_func(static function (): void {
     // Register our example backend layout
     ExtensionManagementUtility::registerPageTSConfigFile(
         'universal_messenger',
-        'Configuration/TsConfig/Page/Mod/WebLayout/example_newsletter.tsconfig',
-        'Universal Messenger: Example Newsletter Backend Layout'
+        'Configuration/TsConfig/Page/Mod/WebLayout/BackendLayouts.tsconfig',
+        'Universal Messenger: Newsletter Backend Layouts'
     );
 
     $configuration         = GeneralUtility::makeInstance(Configuration::class);

@@ -38,13 +38,13 @@ The extension should be installed via composer:
 
 ## Setup
 ### Update database structure
-Use the "Analyze Database Structure" in the "Maintenance" Admin Tools section to update the database structure.
+Use the `Analyze Database Structure` in the `Maintenance` Admin Tools section to update the database structure.
 
 ### Webservice
 
 #### API endpoint
 To access the Universal Messenger API, store the corresponding configuration in the file `additional.php` within the
-global structure "TYPO3_CONF_VARS" under "EXTENSIONS" and "universal_messenger" (note the spelling) of your TYPO3 installation.
+global structure `TYPO3_CONF_VARS` under `EXTENSIONS` and `universal_messenger` (note the spelling) of your TYPO3 installation.
 
 ```php
 
@@ -65,13 +65,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] = array_merge(
 
 
 ### Extension configuration
-Open the "Settings" page under the "Admin Tools" section and switch to the "Extension Configuration". Open the
-configuration section of the extension "universal_messenger".
+Open the `Settings` page under the `Admin Tools` section and switch to the `Extension Configuration`. Open the
+configuration section of the extension `universal_messenger`.
 
 #### General
 
 ![Extension Configuration Tab "General"](Documentation/ExtensionConfiguration1.png)
-*Fig. 1: Extension Configuration Tab "General"*
+*Fig. 1: Extension Configuration Tab `General`*
 
 | Field                          | Tab        | Default value | Description                                                                                                                                                                                                                            |
 |:-------------------------------|:-----------|:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -84,10 +84,10 @@ configuration section of the extension "universal_messenger".
 
 #### Webservice
 ![Extension Configuration Tab "Webservice"](Documentation/ExtensionConfiguration2.png)
-*Fig. 2: Extension Configuration Tab "Webservice"*
+*Fig. 2: Extension Configuration Tab `Webservice`*
 
 ##### API logging
-To enable the request/response logging of the Universal Messenger, enable the extension configuration "Enable logging"
+To enable the request/response logging of the Universal Messenger, enable the extension configuration `Enable logging`
 and add a log writer configuration to your `ext_localconf.php`:
 
 ```php
@@ -103,7 +103,7 @@ $GLOBALS['TYPO3_CONF_VARS']['LOG']['Netresearch']['UniversalMessenger']['writerC
 
 #### Expert
 ![Extension Configuration Tab "Expert"](Documentation/ExtensionConfiguration3.png)
-*Fig. 3: Extension Configuration Tab "Expert"*
+*Fig. 3: Extension Configuration Tab `Expert`*
 
 ##### Test-/Live channels
 To enable test operation, a separate channel can be set up as a test channel for a newsletter in
@@ -117,12 +117,12 @@ Live operation
 - Channel: Newsletter_LIVE
 - Recipient: Recipient list with customer addresses
 
-Using the setting "newsletter" => "testChannelSuffix" and "liveChannelSuffix", this suffix can be
+Using the setting `newsletter` => `testChannelSuffix` and `liveChannelSuffix`, this suffix can be
 adapted to the setting in Universal Messenger.
 
 
 ### Backend user configuration
-Use the backend user setting in the "Universal Messenger" tab to allow individual backend users specific rights 
+Use the backend user setting in the `Universal Messenger` tab to allow individual backend users specific rights 
 for sending via individual newsletter channels.
 
 ![Backend user configuration](Documentation/BackendUserConfiguration.png)
@@ -130,15 +130,15 @@ for sending via individual newsletter channels.
 
 
 ### TypoScript
-Go to the "TypoScript" page, select "Edit TypoScript Record" and then click "Edit the whole TypoScript record". On the
-page that opens, go to the "Advanced Options" tab and add the static TypoScript
-"Universal Messenger: Fluid Content Elements" to the list of selected TypoScript configurations.
+Go to the `TypoScript` page, select `Edit TypoScript Record` and then click `Edit the whole TypoScript record`. On the
+page that opens, go to the `Advanced Options` tab and add the static TypoScript
+`Universal Messenger: Fluid Content Elements` to the list of selected TypoScript configurations.
 
 When creating a newsletter, the CSS is finally read from an external CSS file and the information is added as
 inline style attributes to the respective HTML elements.
 
-By setting the "inlineCssFiles" setting, additional CSS can be passed to the newsletter container. By default,
-the CSS of the "Foundation for Emails 2" framework is already included (https://get.foundation/emails.html, https://github.com/foundation/foundation-emails).
+By setting the `inlineCssFiles` setting, additional CSS can be passed to the newsletter container. By default,
+the CSS of the `Foundation for Emails 2` framework is already included (https://get.foundation/emails.html, https://github.com/foundation/foundation-emails).
 
 ```typo3_typoscript
 plugin.tx_universalmessenger {
@@ -152,6 +152,17 @@ plugin.tx_universalmessenger {
 
 module.tx_universalmessenger < plugin.tx_universalmessenger
 ```
+
+
+#### Example backend layout
+Go to the `TypoScript` page, select `Edit TypoScript Record` and then click `Edit the whole TypoScript record`. On the
+page that opens, go to the `Advanced Options` tab and add the static TypoScript
+`Universal Messenger: Example Newsletter Template` to the list of selected TypoScript configurations.
+
+Open a page where you want to use the backend layout and switch to page properties and select `resources` tab and add
+`Universal Messenger: Newsletter Backend Layout` to the `Page TSconfig` selection.
+
+Now you can select the backend layout in the `layout` tab.
 
 
 ### Scheduler-Task
@@ -182,11 +193,11 @@ These settings are sent to the Universal Messenger API when the newsletter page 
 
 ### Creating newsletters
 To create a new newsletter, simply create a new page in the TYPO3 backend. To do this, use the new shortcut
-"Newsletter" in the page tree or create a new standard page.
+`Newsletter` in the page tree or create a new standard page.
 
 ![Create new newsletter page](Documentation/Newsletter-Step-1.png)
 
-Then open the page properties. For a standard page, select the new page type "Newsletter".
+Then open the page properties. For a standard page, select the new page type `Newsletter`.
 
 ![Select page type](Documentation/Newsletter-Step-2.png)
 
@@ -199,7 +210,7 @@ Create your newsletter with the usual TYPO3 content elements. If necessary, use 
 as https://extensions.typo3.org/extension/container_elements to group elements more easily into columns and rows.
 
 The Universal Messenger Extension already provides some ViewHelpers to group and arrange elements according to
-the "Foundation for Emails 2" framework (See https://get.foundation/emails.html how to create newsletters using
+the `Foundation for Emails 2` framework (See https://get.foundation/emails.html how to create newsletters using
 this framework).
 
 
@@ -233,7 +244,7 @@ This results in an URL like `https://newsletter.example.org/unsubscribe?identifi
 
 
 ### Backend module
-To open the backend module, click on the new entry "Universal Messenger" below the "Netresearch" group on the left side navigation.
+To open the backend module, click on the new entry `Universal Messenger` below the `Netresearch` group on the left side navigation.
 
 ![Backend module](Documentation/Module-Step1.png)
 
