@@ -332,6 +332,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null
                 )
                 ->setEmailSubject($pageTitle)
+                ->setHtmlBodyBaseAndDownloadUrl(null, (string) $site->getBase(), null)
                 ->setHtmlBodyEmbedImages($newsletterChannel->getEmbedImages())
                 ->setHtmlBodyEncoding('UTF-8')
                 ->setHtmlBodyTracking(
