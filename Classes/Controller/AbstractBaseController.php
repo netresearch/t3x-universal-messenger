@@ -27,7 +27,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
@@ -92,9 +92,9 @@ abstract class AbstractBaseController extends ActionController
     protected ?ModuleData $moduleData = null;
 
     /**
-     * @var Site|null
+     * @var SiteInterface|null
      */
-    private ?Site $site = null;
+    private ?SiteInterface $site = null;
 
     /**
      * The available site languages.
