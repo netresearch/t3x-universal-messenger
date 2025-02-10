@@ -60,7 +60,7 @@
                 <target>Fehlende Übersetzung für:</target>
             </trans-unit>
             <trans-unit id="error.pageNotAllowed">
-                <target>Bitte wählen Sie eine Seite vom Seiten-Typ "Newsletter" aus.</target>
+                <target>Bitte wählen Sie eine Seite vom Seitentyp "Newsletter" aus.</target>
             </trans-unit>
             <trans-unit id="error.accessNotAllowed">
                 <target>Sie oder ihre Benutzergruppe verfügen nicht über die notwendigen Rechte, um diesen Newsletter zu versenden.</target>

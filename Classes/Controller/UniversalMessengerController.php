@@ -31,7 +31,6 @@ use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
@@ -488,9 +487,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     {
         /** @var SiteLanguage|null $language */
         $language = $this->request->getAttribute('language');
-
-        /** @var SiteInterface|null $site */
-        $site = $this->request->getAttribute('site');
+        $site     = $this->request->getAttribute('site');
 
         $language ??= $site?->getDefaultLanguage();
 
