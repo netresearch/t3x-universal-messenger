@@ -1,3 +1,25 @@
+# 2.0.0
+
+## MISC
+
+- 6df24af Set download URL for HTML body content
+- 2976a45 Use SiteInteface when querying attribute "site"
+- f2efa40 Use TYPO3 v13.4
+- c66064d Add prefix to subject for test newsletters
+- 2eafe10 Move viewhelper in right place
+- 4d3168e Fix backend layout configuration
+- c72190c Update CS
+- e66a2d6 Update rector rules
+- 0468639 Rework extension, fix phpstan issues
+- 69782d2 Update dev tools
+- 43da5c9 Update TYPO3 to v13.4
+- 6544889 Add NR logo to backend module
+- 9444246 Update dev tools
+
+## Contributors
+
+- Rico Sonntag
+
 # 1.0.1
 
 ## MISC
