@@ -1,3 +1,13 @@
+# 2.0.1
+
+## MISC
+
+- 799d40f Fix phpstan false positive issue
+
+## Contributors
+
+- Rico Sonntag
+
 # 2.0.0
 
 ## MISC
