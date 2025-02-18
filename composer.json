@@ -33,6 +33,9 @@
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "ssch/typo3-rector": "^3.0"
     },
+    "suggest": {
+        "typo3/cms-scheduler": "Allows you to run CLI scripts as a task within TYPO3"
+    },
     "config": {
         "bin-dir": ".build/bin",
         "vendor-dir": ".build/vendor",
