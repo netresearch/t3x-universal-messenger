@@ -1,3 +1,18 @@
+# 2.0.2
+
+## MISC
+
+- 19a4925 Drop deprecated usage of TypoScriptFrontendController
+- 059a146 Prevent still open issue-4497 of typo3-rector
+- 3ee31f6 Add renovate.json
+- 67d1f4a Add suggest for "typo3/cms-scheduler"
+- a3835ed Update typo3 phpstan tools
+
+## Contributors
+
+- Rico Sonntag
+- renovate[bot]
+
 # 2.0.1
 
 ## MISC
