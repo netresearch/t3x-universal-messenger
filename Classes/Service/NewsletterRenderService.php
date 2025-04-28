@@ -24,7 +24,6 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Core\View\ViewInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * NewsletterRenderService.
@@ -197,8 +196,9 @@ class NewsletterRenderService implements SingletonInterface
      */
     private function renderNewsletterContainer(ServerRequestInterface $serverRequest, string $content): string
     {
-        /** @var TypoScriptFrontendController $typoScriptFrontendController */
-        $typoScriptFrontendController = $serverRequest->getAttribute('frontend.controller');
+        $pageRecord = $serverRequest
+            ->getAttribute('frontend.page.information')
+            ?->getPageRecord() ?? [];
 
         // Pass the content as "content" variable to the container template, otherwise
         // use the "f:cObject" view helper to render the different template columns of
@@ -206,7 +206,7 @@ class NewsletterRenderService implements SingletonInterface
         return $this->getView($serverRequest)
             ->assign('content', $content)
             ->assign('settings', $this->configuration->getTypoScriptSetting('settings'))
-            ->assign('data', $typoScriptFrontendController->page)
+            ->assign('data', $pageRecord)
             ->render();
     }
 
