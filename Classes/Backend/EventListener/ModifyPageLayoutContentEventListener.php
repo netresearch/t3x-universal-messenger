@@ -22,7 +22,6 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Event listener to add a link button to the Universal Messenger module to the default button bar.
@@ -33,6 +32,38 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class ModifyPageLayoutContentEventListener
 {
+    /**
+     * @var Configuration
+     */
+    private Configuration $configuration;
+
+    /**
+     * @var IconFactory
+     */
+    private IconFactory $iconFactory;
+
+    /**
+     * @var UriBuilder
+     */
+    private UriBuilder $uriBuilder;
+
+    /**
+     * Constructor.
+     *
+     * @param Configuration $configuration
+     * @param IconFactory   $iconFactory
+     * @param UriBuilder    $uriBuilder
+     */
+    public function __construct(
+        Configuration $configuration,
+        IconFactory $iconFactory,
+        UriBuilder $uriBuilder,
+    ) {
+        $this->configuration = $configuration;
+        $this->iconFactory   = $iconFactory;
+        $this->uriBuilder    = $uriBuilder;
+    }
+
     /**
      * Invokes the event listener.
      *
@@ -50,14 +81,14 @@ final class ModifyPageLayoutContentEventListener
         $contentPage    = BackendUtility::getRecord('pages', $pageId);
 
         // Show button only at pages matching our page type.
-        if (($contentPage['doktype'] ?? 0) !== $this->getConfiguration()->getNewsletterPageDokType()) {
+        if (($contentPage['doktype'] ?? 0) !== $this->configuration->getNewsletterPageDokType()) {
             return;
         }
 
         /** @var ModuleData|null $moduleData */
         $moduleData = $event->getRequest()->getAttribute('moduleData');
 
-        $uri = (string) $this->getUriBuilder()
+        $uri = (string) $this->uriBuilder
             ->buildUriFromRoute(
                 'netresearch_universal_messenger',
                 [
@@ -74,7 +105,7 @@ final class ModifyPageLayoutContentEventListener
                 )
             )
             ->setIcon(
-                $this->getIconFactory()->getIcon(
+                $this->iconFactory->getIcon(
                     'actions-file-view',
                     IconSize::SMALL
                 )
@@ -96,30 +127,6 @@ final class ModifyPageLayoutContentEventListener
     private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
-    }
-
-    /**
-     * @return UriBuilder
-     */
-    private function getUriBuilder(): UriBuilder
-    {
-        return GeneralUtility::makeInstance(UriBuilder::class);
-    }
-
-    /**
-     * @return IconFactory
-     */
-    private function getIconFactory(): IconFactory
-    {
-        return GeneralUtility::makeInstance(IconFactory::class);
-    }
-
-    /**
-     * @return Configuration
-     */
-    private function getConfiguration(): Configuration
-    {
-        return GeneralUtility::makeInstance(Configuration::class);
     }
 
     /**
