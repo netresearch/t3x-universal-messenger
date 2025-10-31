@@ -12,6 +12,7 @@
         }
     ],
     "require": {
+        "php": "^8.2",
         "ext-fileinfo": "*",
         "ext-libxml": "*",
         "typo3/cms-core": "^13.4",
@@ -65,7 +66,7 @@
     },
     "scripts": {
         "ci:cgl": [
-            "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
+            "php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
         ],
         "ci:rector": [
             "rector process --config Build/rector.php"
