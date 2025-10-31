@@ -33,7 +33,7 @@ class NewsletterChannelRepository extends Repository
     /**
      * @var Configuration
      */
-    private Configuration $configuration;
+    private readonly Configuration $configuration;
 
     /**
      * NewsletterChannelRepository constructor.

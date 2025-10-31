@@ -52,7 +52,7 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * @var ViewFactoryInterface
      */
-    private ViewFactoryInterface $viewFactory;
+    private readonly ViewFactoryInterface $viewFactory;
 
     /**
      * @var Configuration
@@ -178,9 +178,9 @@ class NewsletterRenderService implements SingletonInterface
     private function getView(ServerRequestInterface $serverRequest): ViewInterface
     {
         $viewFactoryData = new ViewFactoryData(
-            layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
             templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
             partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
+            layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
             templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
             request                : $serverRequest,
         );

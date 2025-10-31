@@ -287,7 +287,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
             $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($newsletterUrl);
             $contentRecord       = BackendUtility::getRecord('pages', $this->pageId);
-            $newsletterType      = strtoupper($this->request->getArgument('send'));
+            $newsletterType      = strtoupper((string) $this->request->getArgument('send'));
             $newsletterChannelId = $newsletterChannel->getChannelId();
 
             if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {

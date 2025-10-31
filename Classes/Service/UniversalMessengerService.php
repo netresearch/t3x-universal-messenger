@@ -37,7 +37,7 @@ class UniversalMessengerService implements SingletonInterface
     /**
      * @var Configuration
      */
-    private Configuration $configuration;
+    private readonly Configuration $configuration;
 
     /**
      * @var UniversalMessenger
