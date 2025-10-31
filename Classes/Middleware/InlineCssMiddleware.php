@@ -38,7 +38,7 @@ class InlineCssMiddleware implements MiddlewareInterface
     /**
      * @var Configuration
      */
-    private Configuration $configuration;
+    private readonly Configuration $configuration;
 
     /**
      * Constructor.
@@ -101,6 +101,11 @@ class InlineCssMiddleware implements MiddlewareInterface
             return $content;
         }
 
+        // Abort if content is empty
+        if ($content === '') {
+            return $content;
+        }
+
         $files      = array_reverse($inlineCssFiles);
         $cssContent = '';
 
@@ -112,7 +117,13 @@ class InlineCssMiddleware implements MiddlewareInterface
             }
         }
 
-        $content     = HtmlNormalizer::fromHtml($content)->render();
+        $content = HtmlNormalizer::fromHtml($content)->render();
+
+        // Ensure content is not empty after normalization
+        if ($content === '') {
+            return $content;
+        }
+
         $cssInliner  = CssInliner::fromHtml($content)->inlineCss($cssContent);
         $domDocument = $cssInliner->getDomDocument();
 

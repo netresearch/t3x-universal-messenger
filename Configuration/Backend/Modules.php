@@ -29,7 +29,7 @@ return [
         'labels'                                   => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf',
         'extensionName'                            => 'UniversalMessenger',
         'inheritNavigationComponentFromMainModule' => false,
-        'navigationComponent'                      => '@typo3/backend/page-tree/page-tree-element',
+        'navigationComponent'                      => '@typo3/backend/tree/page-tree-element',
         'controllerActions'                        => [
             UniversalMessengerController::class => [
                 'index',

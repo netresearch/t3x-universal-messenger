@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\Localization\LanguageService;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-final class ModifyPageLayoutContentEventListener
+final readonly class ModifyPageLayoutContentEventListener
 {
     /**
      * @var Configuration

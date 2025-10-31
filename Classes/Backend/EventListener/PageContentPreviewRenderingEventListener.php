@@ -22,7 +22,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-final class PageContentPreviewRenderingEventListener
+final readonly class PageContentPreviewRenderingEventListener
 {
     /**
      * @var FlexFormService

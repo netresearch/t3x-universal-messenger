@@ -35,12 +35,12 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
     /**
      * @var ViewFactoryInterface
      */
-    private ViewFactoryInterface $viewFactory;
+    private readonly ViewFactoryInterface $viewFactory;
 
     /**
      * @var Configuration
      */
-    private Configuration $configuration;
+    private readonly Configuration $configuration;
 
     /**
      * Constructor.
@@ -68,7 +68,7 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
 
         if ($this->configuration->hasTypoScriptSetting('view/templateRootPaths')) {
             foreach ($this->configuration->getTypoScriptSetting('view/templateRootPaths') as $templateRootPath) {
-                $templateRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim($templateRootPath, '/') . '/ViewHelpers/');
+                $templateRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim((string) $templateRootPath, '/') . '/ViewHelpers/');
             }
         }
 

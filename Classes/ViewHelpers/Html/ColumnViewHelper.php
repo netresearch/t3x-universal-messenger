@@ -72,7 +72,7 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
         $totalNumber = (int) ($this->arguments['totalNumber'] ?? 1);
 
         if (isset($this->arguments['class'])) {
-            $class = explode(' ', trim($this->arguments['class']));
+            $class = explode(' ', trim((string) $this->arguments['class']));
         } else {
             $class[] = 'large-' . (12 / $totalNumber);
 
