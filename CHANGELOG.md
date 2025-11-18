@@ -1,3 +1,13 @@
+# 2.0.3
+
+## MISC
+
+- 23a41bc Add Github action for publishing to TER, change extension icon
+
+## Contributors
+
+- Sebastian Altenburg
+
 # 2.0.2
 
 ## MISC
