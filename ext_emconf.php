@@ -7,7 +7,6 @@
  * LICENSE file that was distributed with this source code.
  */
 
-declare(strict_types=1);
 $EM_CONF['universal_messenger'] = [
     'title'          => 'Netresearch: Universal Messenger',
     'description'    => 'TYPO3 extension providing a backend module to send newsletters using Universal Messenger API',
