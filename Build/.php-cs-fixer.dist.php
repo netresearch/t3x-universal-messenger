@@ -91,5 +91,7 @@ return (new PhpCsFixer\Config())
             ->exclude('config')
             ->exclude('node_modules')
             ->exclude('var')
+            // Exclude ext_emconf.php - TYPO3 does not want declare(strict_types=1) in this file
+            ->notName('ext_emconf.php')
             ->in(__DIR__ . '/../')
     );
