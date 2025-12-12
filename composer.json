@@ -20,7 +20,7 @@
         "typo3/cms-frontend": "^13.4 || ^14.0",
         "typo3/cms-extbase": "^13.4 || ^14.0",
         "typo3/cms-fluid": "^13.4 || ^14.0",
-        "typo3/cms-lowlevel": "^13.4",
+        "typo3/cms-lowlevel": "^13.4 || ^14.0",
         "nyholm/psr7": "^1.8",
         "pelago/emogrifier": "^7.2 || ^8.0",
         "netresearch/sdk-api-universal-messenger": "^1.1"
