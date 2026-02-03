@@ -267,7 +267,7 @@ abstract class AbstractBaseController extends ActionController
             $siteLanguage = $this->availableLanguages[$key] ?? null;
 
             // Skip invalid language keys
-            if (!($siteLanguage instanceof SiteLanguage)) {
+            if (!$siteLanguage instanceof SiteLanguage) {
                 continue;
             }
 

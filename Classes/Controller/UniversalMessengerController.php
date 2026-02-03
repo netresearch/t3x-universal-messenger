@@ -270,7 +270,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     public function createAction(?NewsletterChannel $newsletterChannel): ResponseInterface
     {
         // Check if the submitted request is valid
-        if (!($newsletterChannel instanceof NewsletterChannel)
+        if (!$newsletterChannel instanceof NewsletterChannel
             || !$this->request->hasArgument('send')
         ) {
             return $this->forwardFlashMessage('error.invalidRequest');

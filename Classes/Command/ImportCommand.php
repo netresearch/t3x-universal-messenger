@@ -219,7 +219,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
             ->findByChannelId($channelId);
 
         // Create new record if it not exists in the database
-        if (!($newsletterChannelDomainModel instanceof NewsletterChannelDomainModel)) {
+        if (!$newsletterChannelDomainModel instanceof NewsletterChannelDomainModel) {
             /** @var NewsletterChannelDomainModel $newsletterChannelDomainModel */
             $newsletterChannelDomainModel = GeneralUtility::makeInstance(NewsletterChannelDomainModel::class);
             $newsletterChannelDomainModel->setPid($storagePid);
