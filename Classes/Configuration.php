@@ -51,7 +51,7 @@ class Configuration
     private function getConfigurationManager(): ConfigurationManagerInterface
     {
         // We can't use constructor injection here as this will not work together with "ext_localconf.php"
-        if (!($this->configurationManager instanceof ConfigurationManagerInterface)) {
+        if (!$this->configurationManager instanceof ConfigurationManagerInterface) {
             $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
         }
 
@@ -79,7 +79,7 @@ class Configuration
     private function getExtensionConfiguration(): ExtensionConfiguration
     {
         // We can't use constructor injection here as this will not work together with "ext_localconf.php"
-        if (!($this->extensionConfiguration instanceof ExtensionConfiguration)) {
+        if (!$this->extensionConfiguration instanceof ExtensionConfiguration) {
             $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
         }
 
