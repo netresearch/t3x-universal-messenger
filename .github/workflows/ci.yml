@@ -5,6 +5,8 @@ on:
     push:
     pull_request:
 
+permissions: {}
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -15,7 +17,14 @@ jobs:
                 typo3: [ '^13' ]
                 php: [ '8.2', '8.3', '8.4' ]
 
+        permissions:
+            contents: read
         steps:
+            -   name: Harden Runner
+                uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e # v2.14.2
+                with:
+                    egress-policy: audit
+
             -   id: checkout
                 name: Checkout
                 uses: actions/checkout@v6
