@@ -12,3 +12,4 @@ jobs:
       contents: read
       security-events: write
       id-token: write
+      actions: read
