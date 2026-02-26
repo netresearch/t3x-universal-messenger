@@ -103,7 +103,7 @@ class UniversalMessengerService implements SingletonInterface
                 ]
             );
 
-            throw new DetailedServiceException('Failed to create service instance');
+            throw new DetailedServiceException('Failed to create service instance', $exception->getCode(), $exception);
         }
     }
 }
