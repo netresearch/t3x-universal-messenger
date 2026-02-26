@@ -1,91 +1,16 @@
-# Adapted from https://github.com/TYPO3GmbH/blog/blob/master/.github/workflows/ci.yml
 name: CI
-
 on:
-    push:
-    pull_request:
-
+  push:
+  pull_request:
 permissions: {}
-
 jobs:
-    build:
-        runs-on: ubuntu-latest
-
-        strategy:
-            fail-fast: false
-            matrix:
-                typo3: [ '^13' ]
-                php: [ '8.2', '8.3', '8.4' ]
-
-        permissions:
-            contents: read
-        steps:
-            -   name: Harden Runner
-                uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
-                with:
-                    egress-policy: audit
-
-            -   id: checkout
-                name: Checkout
-                uses: actions/checkout@v6
-
-            -   id: setup_php
-                name: Set up PHP version ${{ matrix.php }}
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    tools: composer:v2
-
-            -   name: Validate composer.json and composer.lock
-                run: composer validate
-
-            -   id: composer-cache-vars
-                name: Composer Cache Vars
-                run: |
-                    echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-                    echo "timestamp=$(date +"%s")" >> $GITHUB_OUTPUT
-
-            -   id: composer-cache-dependencies
-                name: Cache Composer dependencies
-                uses: actions/cache@v5
-                with:
-                    path: ${{ steps.composer-cache-vars.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ matrix.typo3 }}-${{ steps.composer-cache-vars.outputs.timestamp }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-${{ matrix.php }}-${{ matrix.typo3 }}-
-                        ${{ runner.os }}-composer-${{ matrix.php }}-
-                        ${{ runner.os }}-composer-
-
-            -   id: install
-                name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
-                run: |
-                    composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress --no-update
-                    composer require typo3/cms-backend:${{ matrix.typo3 }} --no-progress --no-update
-                    composer require typo3/cms-extbase:${{ matrix.typo3 }} --no-progress --no-update
-                    composer require typo3/cms-fluid:${{ matrix.typo3 }} --no-progress --no-update
-                    composer install
-                    git checkout composer.json
-
-            -   id: lint
-                name: Lint
-                if: ${{ always() && steps.install.conclusion == 'success' }}
-                run: |
-                    composer ci:test:php:lint
-
-            -   id: cgl
-                name: CGL
-                if: ${{ always() && steps.install.conclusion == 'success' }}
-                run: |
-                    composer ci:cgl -- --dry-run --config Build/.php-cs-fixer.dist.php
-
-            -   id: phpstan
-                name: PHPStan
-                if: ${{ always() && steps.install.conclusion == 'success' }}
-                run: |
-                    composer ci:test:php:phpstan -- --error-format=github
-
-            -   id: rector
-                name: Rector
-                if: ${{ always() && steps.install.conclusion == 'success' }}
-                run: |
-                    composer ci:test:php:rector
+  ci:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/ci.yml@main
+    permissions:
+      contents: read
+    with:
+      php-versions: '["8.2", "8.3", "8.4"]'
+      typo3-versions: '["^13.4", "^14.0"]'
+      run-rector: true
+      run-unit-tests: false
+      typo3-packages: '["typo3/cms-core", "typo3/cms-backend", "typo3/cms-extbase", "typo3/cms-fluid"]'
