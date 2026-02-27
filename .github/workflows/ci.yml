@@ -9,7 +9,7 @@ jobs:
     permissions:
       contents: read
     with:
-      php-versions: '["8.2", "8.3", "8.4"]'
+      php-versions: '["8.2", "8.3", "8.4", "8.5"]'
       typo3-versions: '["^13.4"]'
       run-unit-tests: false
       typo3-packages: '["typo3/cms-core", "typo3/cms-backend", "typo3/cms-extbase", "typo3/cms-fluid"]'
