@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -27,11 +27,11 @@ call_user_func(static function (): void {
 
     ExtensionManagementUtility::addTCAcolumns(
         'be_groups',
-        $columns
+        $columns,
     );
 
     ExtensionManagementUtility::addToAllTCAtypes(
         'be_groups',
-        '--div--;LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:common.universalMessenger,universal_messenger_channels'
+        '--div--;LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:common.universalMessenger,universal_messenger_channels',
     );
 });

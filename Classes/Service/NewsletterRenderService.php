@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -30,7 +30,8 @@ use TYPO3\CMS\Core\View\ViewInterface;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class NewsletterRenderService implements SingletonInterface
 {
@@ -95,7 +96,7 @@ class NewsletterRenderService implements SingletonInterface
                 ->getRouter()
                 ->generateUri(
                     $pageId,
-                    $arguments
+                    $arguments,
                 );
         } catch (SiteNotFoundException) {
             return null;
@@ -131,7 +132,7 @@ class NewsletterRenderService implements SingletonInterface
 
         $content = $this->renderNewsletterContainer(
             $serverRequest,
-            $this->renderByPageId($serverRequest, $pageId, $languageId)
+            $this->renderByPageId($serverRequest, $pageId, $languageId),
         );
 
         return $this->clearUpContent($content);
@@ -226,7 +227,7 @@ class NewsletterRenderService implements SingletonInterface
             [
                 'type'      => self::VIEW_TYPE_NUMBER,
                 '_language' => $languageId,
-            ]
+            ],
         );
 
         if (!$this->isUrlValid($url)) {
@@ -235,7 +236,7 @@ class NewsletterRenderService implements SingletonInterface
 
         return $this->renderFluidView(
             $serverRequest,
-            $this->getContentFromUrl($url)
+            $this->getContentFromUrl($url),
         );
     }
 
@@ -306,7 +307,7 @@ class NewsletterRenderService implements SingletonInterface
                     'Cache-Control' => 'no-cache',
                     'User-Agent'    => 'TYPO3',
                 ],
-            ]
+            ],
         );
 
         if ($response->getStatusCode() !== 200) {

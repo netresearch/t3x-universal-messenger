@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -28,7 +28,8 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class UniversalMessengerService implements SingletonInterface
 {
@@ -65,7 +66,7 @@ class UniversalMessengerService implements SingletonInterface
         $this->universalMessenger = new UniversalMessenger(
             $this->logger,
             $webserviceConfiguration->getApiBaseUrl(),
-            $webserviceConfiguration->getApiKey()
+            $webserviceConfiguration->getApiKey(),
         );
     }
 
@@ -100,7 +101,7 @@ class UniversalMessengerService implements SingletonInterface
                 $exception->getMessage(),
                 [
                     'exception' => $exception,
-                ]
+                ],
             );
 
             throw new DetailedServiceException('Failed to create service instance', $exception->getCode(), $exception);

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -23,7 +23,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 abstract class AbstractHtmlViewHelper extends AbstractViewHelper
 {
@@ -63,7 +64,7 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
     {
         $templateRootPaths   = [];
         $templateRootPaths[] = GeneralUtility::getFileAbsFileName(
-            'EXT:universal_messenger/Resources/Private/Templates/ViewHelpers/'
+            'EXT:universal_messenger/Resources/Private/Templates/ViewHelpers/',
         );
 
         if ($this->configuration->hasTypoScriptSetting('view/templateRootPaths')) {

@@ -32,8 +32,7 @@
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "ssch/typo3-rector": "^3.0",
-        "netresearch/typo3-ci-workflows": "^1.0"
+        "ssch/typo3-rector": "^3.0"
     },
     "suggest": {
         "typo3/cms-scheduler": "Allows you to run CLI scripts as a task within TYPO3"

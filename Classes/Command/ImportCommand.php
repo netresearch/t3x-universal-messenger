@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -21,6 +21,9 @@ use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository
 use Netresearch\UniversalMessenger\Repository\NewsletterRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+
+use function sprintf;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,14 +34,13 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
-use function sprintf;
-
 /**
  * Class ImportCommand.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ImportCommand extends Command implements LoggerAwareInterface
 {
@@ -159,7 +161,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
                 // Newsletter channel
                 $newsletterChannelDomainModel = $this->hydrateNewsletterChannel(
                     $newsletterChannel,
-                    $storagePid
+                    $storagePid,
                 );
 
                 // Add the new entity and persist it
@@ -228,12 +230,12 @@ class ImportCommand extends Command implements LoggerAwareInterface
 
         $title = $this->getUpdatedValue(
             $newsletterChannelDomainModel->getTitle(),
-            $this->cleanChannelTitle($newsletterChannel->title)
+            $this->cleanChannelTitle($newsletterChannel->title),
         );
 
         $description = $this->getUpdatedValue(
             $newsletterChannelDomainModel->getDescription(),
-            $this->cleanChannelTitle($newsletterChannel->description)
+            $this->cleanChannelTitle($newsletterChannel->description),
         );
 
         $newsletterChannelDomainModel
@@ -284,8 +286,8 @@ class ImportCommand extends Command implements LoggerAwareInterface
                     $this->getLiveChannelSuffix(),
                 ],
                 '',
-                $channelId
-            )
+                $channelId,
+            ),
         );
     }
 
@@ -305,8 +307,8 @@ class ImportCommand extends Command implements LoggerAwareInterface
                     '(LIVEVersand)',
                 ],
                 '',
-                $channelTitle
-            )
+                $channelTitle,
+            ),
         );
     }
 
@@ -380,15 +382,15 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $this->symfonyStyle->writeln(
             sprintf(
                 '<error>%s</error>',
-                $exception->getMessage()
-            )
+                $exception->getMessage(),
+            ),
         );
 
         $this->logger?->error(
             $exception->getMessage(),
             [
                 'exception' => $exception,
-            ]
+            ],
         );
     }
 }

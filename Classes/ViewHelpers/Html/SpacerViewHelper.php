@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -19,7 +19,8 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class SpacerViewHelper extends AbstractHtmlViewHelper
 {
@@ -44,7 +45,7 @@ class SpacerViewHelper extends AbstractHtmlViewHelper
             'string',
             'The class to be assigned to the spacer table',
             false,
-            'spacer float-center'
+            'spacer float-center',
         );
 
         $this->registerArgument(
@@ -52,7 +53,7 @@ class SpacerViewHelper extends AbstractHtmlViewHelper
             'int',
             'The size of the space',
             false,
-            16
+            16,
         );
     }
 

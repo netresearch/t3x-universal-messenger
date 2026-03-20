@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -21,7 +21,8 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ControlStructureProcessor implements DataProcessorInterface
 {
@@ -43,7 +44,7 @@ class ControlStructureProcessor implements DataProcessorInterface
     ): array {
         // Pass the flex form configuration to the content element template
         $processedData['flexformConfiguration'] = $this->convertFlexFormContentToArray(
-            $processedData['data']['pi_flexform'] ?? ''
+            $processedData['data']['pi_flexform'] ?? '',
         );
 
         return $processedData;

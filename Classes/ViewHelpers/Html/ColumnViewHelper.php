@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -19,7 +19,8 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ColumnViewHelper extends AbstractHtmlViewHelper
 {
@@ -42,19 +43,19 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
         $this->registerArgument(
             'class',
             'string',
-            'The class to be assigned to the column table'
+            'The class to be assigned to the column table',
         );
 
         $this->registerArgument(
             'number',
             'int',
-            'The current number of column'
+            'The current number of column',
         );
 
         $this->registerArgument(
             'totalNumber',
             'int',
-            'The total number of columns in the row table'
+            'The total number of columns in the row table',
         );
     }
 

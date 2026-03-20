@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -23,7 +23,7 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::addTypoScript(
         'universal_messenger',
         'setup',
-        '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"'
+        '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"',
     );
 
     $configuration         = GeneralUtility::makeInstance(Configuration::class);
@@ -37,7 +37,7 @@ call_user_func(static function (): void {
     //
     // See https://forge.typo3.org/issues/106069
     ExtensionManagementUtility::addUserTSConfig(
-        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')'
+        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')',
     );
 
     // Service
@@ -55,7 +55,7 @@ call_user_func(static function (): void {
             'os'          => '',
             'exec'        => '',
             'className'   => UniversalMessengerService::class,
-        ]
+        ],
     );
 
     ExtensionUtility::configurePlugin(
