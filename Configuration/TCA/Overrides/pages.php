@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -20,7 +20,7 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::registerPageTSConfigFile(
         'universal_messenger',
         'Configuration/TsConfig/Page/Mod/WebLayout/BackendLayouts.tsconfig',
-        'Universal Messenger: Backend Layouts'
+        'Universal Messenger: Backend Layouts',
     );
 
     $configuration         = GeneralUtility::makeInstance(Configuration::class);
@@ -55,7 +55,7 @@ call_user_func(static function (): void {
                     'showitem' => $GLOBALS['TCA']['pages']['types'][PageRepository::DOKTYPE_DEFAULT]['showitem'],
                 ],
             ],
-        ]
+        ],
     );
 
     $columns = [
@@ -80,13 +80,13 @@ call_user_func(static function (): void {
 
     ExtensionManagementUtility::addTCAcolumns(
         'pages',
-        $columns
+        $columns,
     );
 
     ExtensionManagementUtility::addToAllTCAtypes(
         'pages',
         '--linebreak--, universal_messenger_channel',
         '',
-        'after:doktype'
+        'after:doktype',
     );
 });

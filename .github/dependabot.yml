@@ -10,3 +10,12 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: increase-if-necessary
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"

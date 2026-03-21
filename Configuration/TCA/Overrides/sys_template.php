@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -18,12 +18,12 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::addStaticFile(
         'universal_messenger',
         'Configuration/TypoScript/FluidContentElements/',
-        'Universal Messenger: Fluid Content Elements'
+        'Universal Messenger: Fluid Content Elements',
     );
 
     ExtensionManagementUtility::addStaticFile(
         'universal_messenger',
         'Configuration/TypoScript/ExampleNewsletter/',
-        'Universal Messenger: Example Newsletter Template'
+        'Universal Messenger: Example Newsletter Template',
     );
 });

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Controller;
 
 use Exception;
+
+use function in_array;
+
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\Model\NewsletterStatus;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
@@ -24,6 +27,9 @@ use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+
+use function sprintf;
+
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
@@ -37,15 +43,13 @@ use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 
-use function in_array;
-use function sprintf;
-
 /**
  * UniversalMessengerController.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class UniversalMessengerController extends AbstractBaseController implements LoggerAwareInterface
 {
@@ -100,7 +104,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $moduleTemplateFactory,
             $configuration,
             $newsletterChannelRepository,
-            $newsletterRenderService
+            $newsletterRenderService,
         );
 
         $this->siteFinder           = $siteFinder;
@@ -128,7 +132,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $buttonBar->addButton(
                 $languageButton,
                 ButtonBar::BUTTON_POSITION_LEFT,
-                0
+                0,
             );
         }
 
@@ -141,7 +145,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         ) {
             return $this->forwardFlashMessage(
                 'error.pageNotAllowed',
-                ContextualFeedbackSeverity::INFO
+                ContextualFeedbackSeverity::INFO,
             );
         }
 
@@ -163,7 +167,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         if (!in_array(
             $contentRecord['universal_messenger_channel'],
             $this->getNewsletterChannelPermissions(),
-            true
+            true,
         )) {
             return $this->forwardFlashMessage('error.accessNotAllowed');
         }
@@ -217,7 +221,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $localizedRecord = BackendUtility::getRecordLocalization(
             'pages',
             $this->pageId,
-            $this->currentSelectedLanguage
+            $this->currentSelectedLanguage,
         );
 
         if ($localizedRecord !== []) {
@@ -314,21 +318,21 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 ->addChannel($newsletterChannelId)
                 ->setEmailBaseAndDownloadUrl(
                     (string) $site->getBase(),
-                    (string) $site->getBase()
+                    (string) $site->getBase(),
                 )
                 ->setEmailBodyType(
                     false,
-                    true
+                    true,
                 )
                 ->setEventDetails(
                     ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE) ? $this->generateLiveEventId() : null,
                     null,
                     ($newsletterType === self::NEWSLETTER_SEND_TYPE_LIVE)
-                        && $newsletterChannel->isSkipUsedId()
+                        && $newsletterChannel->isSkipUsedId(),
                 )
                 ->setEmailAdresses(
                     $newsletterChannel->getSender() !== '' ? $newsletterChannel->getSender() : null,
-                    $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null
+                    $newsletterChannel->getReplyTo() !== '' ? $newsletterChannel->getReplyTo() : null,
                 )
                 ->setEmailSubject($pageTitle)
                 ->setHtmlBodyBaseAndDownloadUrl(null, (string) $site->getBase(), null)
@@ -336,11 +340,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 ->setHtmlBodyEncoding('UTF-8')
                 ->setHtmlBodyTracking(
                     false,
-                    false
+                    false,
                 )
                 ->setHtmlBodyContent(
                     true,
-                    $newsletterContent
+                    $newsletterContent,
                 )
                 ->addTag($newsletterChannel->getTitle())
                 ->addTag($newsletterType)
@@ -354,7 +358,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 $this->moduleTemplate->addFlashMessage(
                     $this->translate('newsletter.status.hold'),
                     $this->translate('common.universalMessenger'),
-                    ContextualFeedbackSeverity::INFO
+                    ContextualFeedbackSeverity::INFO,
                 );
             }
         } catch (Exception $exception) {
@@ -362,7 +366,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 $exception->getMessage(),
                 [
                     'exception' => $exception,
-                ]
+                ],
             );
 
             return $this->forwardFlashMessage('error.exceptionDuringCreate');
@@ -401,7 +405,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                     'newsletter.status.finished.plural',
                     [
                         $newsletterStatus->contacted,
-                    ]
+                    ],
                 );
             }
 
@@ -411,7 +415,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $this->moduleTemplate->addFlashMessage(
             $message,
             $this->translate('common.universalMessenger'),
-            $severity
+            $severity,
         );
     }
 
@@ -431,7 +435,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 $exception->getMessage(),
                 [
                     'exception' => $exception,
-                ]
+                ],
             );
         }
 
@@ -497,8 +501,8 @@ class UniversalMessengerController extends AbstractBaseController implements Log
                 self::NEWSLETTER_SEND_TYPE_LIVE,
                 $this->siteFinder->getSiteByPageId($this->pageId)->getIdentifier(),
                 $language?->getLocale()->getLanguageCode() ?? 'en',
-                $this->pageId
-            )
+                $this->pageId,
+            ),
         );
     }
 }

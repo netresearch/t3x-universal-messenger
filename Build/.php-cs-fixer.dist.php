@@ -1,97 +1,98 @@
 <?php
 
-/**
- * This file represents the configuration for Code Sniffing PSR-2-related
- * automatic checks of coding guidelines
- * Install @fabpot's great php-cs-fixer tool via
- *
- *  $ composer global require friendsofphp/php-cs-fixer
- *
- * And then simply run
- *
- *  $ php-cs-fixer fix
- *
- * For more information read:
- *  http://www.php-fig.org/psr/psr-2/
- *  http://cs.sensiolabs.org
- */
+declare(strict_types=1);
 
-if (PHP_SAPI !== 'cli') {
-    die('This script supports command line usage only. Please check your command.');
-}
+$header = <<<'EOF'
+    This file is part of the package netresearch/universal-messenger.
 
-$header = <<<EOF
-This file is part of the package netresearch/universal-messenger.
+    For the full copyright and license information, please read the
+    LICENSE file that was distributed with this source code.
+    EOF;
 
-For the full copyright and license information, please read the
-LICENSE file that was distributed with this source code.
-EOF;
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . '/..')
+    ->exclude(['.Build', '.build', 'config', 'node_modules', 'var'])
+    ->notPath('ext_emconf.php');
 
-return (new PhpCsFixer\Config())
+$config = new PhpCsFixer\Config();
+$config
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PSR12'                          => true,
-        '@PER-CS2x0'                      => true,
-        '@Symfony'                        => true,
+        // Base rulesets
+        '@Symfony'         => true,
+        '@PER-CS3x0'       => true,
 
-        // Additional custom rules
-        'declare_strict_types'            => true,
-        'concat_space'                    => [
-            'spacing' => 'one',
+        // Strict typing
+        'declare_strict_types' => true,
+
+        // Spacing
+        'concat_space' => ['spacing' => 'one'],
+
+        // Docblocks
+        'phpdoc_to_comment'          => false,
+        'no_superfluous_phpdoc_tags' => false,
+        'phpdoc_separation'          => [
+            'groups' => [['author', 'license', 'link']],
         ],
-        'header_comment'                  => [
-            'header'       => $header,
-            'comment_type' => 'PHPDoc',
-            'location'     => 'after_open',
-            'separate'     => 'both',
-        ],
-        'phpdoc_to_comment'               => false,
-        'phpdoc_no_alias_tag'             => false,
-        'no_superfluous_phpdoc_tags'      => false,
-        'phpdoc_separation'               => [
-            'groups' => [
-                [
-                    'author',
-                    'license',
-                    'link',
-                ],
-            ],
-        ],
-        'no_alias_functions'              => true,
-        'whitespace_after_comma_in_array' => [
-            'ensure_single_space' => true,
-        ],
-        'single_line_throw'               => false,
-        'self_accessor'                   => false,
-        'global_namespace_import'         => [
-            'import_classes'   => true,
-            'import_constants' => true,
-            'import_functions' => true,
-        ],
-        'function_declaration'            => [
-            'closure_function_spacing' => 'one',
-            'closure_fn_spacing'       => 'one',
-        ],
-        'binary_operator_spaces'          => [
+
+        // Aliases
+        'no_alias_functions' => true,
+
+        // Alignment
+        'binary_operator_spaces' => [
             'operators' => [
                 '='  => 'align_single_space_minimal',
                 '=>' => 'align_single_space_minimal',
             ],
         ],
-        'yoda_style'                      => [
+
+        // No Yoda
+        'yoda_style' => [
             'equal'                => false,
             'identical'            => false,
             'less_and_greater'     => false,
             'always_move_variable' => false,
         ],
+
+        // Imports
+        'global_namespace_import' => [
+            'import_classes'   => true,
+            'import_constants' => true,
+            'import_functions' => true,
+        ],
+        'no_unused_imports' => true,
+        'ordered_imports'   => ['sort_algorithm' => 'alpha'],
+
+        // Function declarations
+        'function_declaration' => [
+            'closure_function_spacing' => 'one',
+            'closure_fn_spacing'       => 'one',
+        ],
+
+        // Modern syntax
+        'trailing_comma_in_multiline' => [
+            'elements' => ['arrays', 'arguments', 'parameters'],
+        ],
+
+        // Whitespace
+        'whitespace_after_comma_in_array' => ['ensure_single_space' => true],
+
+        // Style preferences
+        'single_line_throw' => false,
+        'self_accessor'     => false,
+
+        // Header
+        'header_comment' => [
+            'header'       => $header,
+            'comment_type' => 'comment',
+            'location'     => 'after_open',
+            'separate'     => 'both',
+        ],
     ])
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->exclude('.build')
-            ->exclude('config')
-            ->exclude('node_modules')
-            ->exclude('var')
-            // Exclude ext_emconf.php - TYPO3 does not want declare(strict_types=1) in this file
-            ->notName('ext_emconf.php')
-            ->in(__DIR__ . '/../')
-    );
+    ->setFinder($finder);
+
+if (method_exists($config, 'setUnsupportedPhpVersionAllowed')) {
+    $config->setUnsupportedPhpVersionAllowed(true);
+}
+
+return $config;

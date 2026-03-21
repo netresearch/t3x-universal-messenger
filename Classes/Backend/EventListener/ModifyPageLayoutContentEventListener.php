@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -28,7 +28,8 @@ use TYPO3\CMS\Core\Localization\LanguageService;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 final readonly class ModifyPageLayoutContentEventListener
 {
@@ -94,28 +95,28 @@ final readonly class ModifyPageLayoutContentEventListener
                 [
                     'id'       => $pageId,
                     'language' => $moduleData?->get('language') ?? 0,
-                ]
+                ],
             );
 
         $linkButton = $buttonBar->makeLinkButton()
             ->setHref($uri)
             ->setTitle(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:openInUniversalMessenger'
-                )
+                    'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:openInUniversalMessenger',
+                ),
             )
             ->setIcon(
                 $this->iconFactory->getIcon(
                     'actions-file-view',
-                    IconSize::SMALL
-                )
+                    IconSize::SMALL,
+                ),
             )
             ->setShowLabelText(true);
 
         $buttonBar->addButton(
             $linkButton,
             ButtonBar::BUTTON_POSITION_LEFT,
-            3
+            3,
         );
     }
 

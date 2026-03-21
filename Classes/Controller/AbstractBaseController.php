@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -10,6 +10,8 @@
 declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
+
+use function count;
 
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
@@ -36,14 +38,13 @@ use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
-use function count;
-
 /**
  * AbstractBaseController.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 abstract class AbstractBaseController extends ActionController
 {
@@ -158,7 +159,7 @@ abstract class AbstractBaseController extends ActionController
         return $this->site?->getAvailableLanguages(
             $this->getBackendUserAuthentication(),
             false,
-            $this->pageId
+            $this->pageId,
         ) ?? [];
     }
 
@@ -191,7 +192,7 @@ abstract class AbstractBaseController extends ActionController
     {
         $pageRecord = BackendUtility::readPageAccess(
             $this->pageId,
-            $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW)
+            $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW),
         );
 
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
@@ -201,9 +202,9 @@ abstract class AbstractBaseController extends ActionController
             $this->translate(
                 'mlang_tabs_tab',
                 null,
-                'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf'
+                'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf',
             ),
-            $pageRecord['title'] ?? ''
+            $pageRecord['title'] ?? '',
         );
 
         if ($pageRecord !== false) {
@@ -230,7 +231,7 @@ abstract class AbstractBaseController extends ActionController
             0 => isset($this->availableLanguages[0])
                 ? $this->availableLanguages[0]->getTitle()
                 : $this->getLanguageService()->sL(
-                    'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:m_default'
+                    'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:m_default',
                 ),
         ];
 
@@ -258,8 +259,8 @@ abstract class AbstractBaseController extends ActionController
         $languageDropDownButton = $buttonbar->makeDropDownButton()
             ->setLabel(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.language'
-                )
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.language',
+                ),
             )
             ->setShowLabelText(true);
 
@@ -283,8 +284,8 @@ abstract class AbstractBaseController extends ActionController
                             [
                                 'id'       => $this->pageId,
                                 'language' => $siteLanguage->getLanguageId(),
-                            ]
-                        )
+                            ],
+                        ),
                 )
                 ->setLabel($siteLanguage->getTitle());
 
@@ -309,7 +310,7 @@ abstract class AbstractBaseController extends ActionController
         $this->moduleTemplate->addFlashMessage(
             $this->translate($key),
             $this->translate('common.universalMessenger'),
-            $contextualFeedbackSeverity
+            $contextualFeedbackSeverity,
         );
 
         return new ForwardResponse('error');
@@ -368,11 +369,11 @@ abstract class AbstractBaseController extends ActionController
         return LocalizationUtility::translate(
             $languageFile . ':' . $key,
             null,
-            $arguments
+            $arguments,
         ) ?? LocalizationUtility::translate(
             $languageFile . ':error.missingTranslation',
             null,
-            $arguments
+            $arguments,
         ) . ' ' . $key;
     }
 }

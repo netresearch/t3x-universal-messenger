@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -73,7 +73,7 @@ return [
                         0,
                         1,
                         1,
-                        2038
+                        2038,
                     ),
                 ],
                 'behaviour' => [

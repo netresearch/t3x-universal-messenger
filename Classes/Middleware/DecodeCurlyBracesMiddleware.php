@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -24,7 +24,8 @@ use TYPO3\CMS\Core\Routing\PageArguments;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class DecodeCurlyBracesMiddleware implements MiddlewareInterface
 {
@@ -71,7 +72,7 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
         return (string) preg_replace_callback(
             '/' . urlencode('{') . '.*' . urlencode('}') . '/',
             static fn (array $matches): string => urldecode($matches[0]),
-            $content
+            $content,
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the package netresearch/universal-messenger.
  *
  * For the full copyright and license information, please read the
@@ -20,7 +20,7 @@ call_user_func(static function (): void {
         'tt_content',
         'CType',
         'universal_messenger',
-        'LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_group.universalmessenger'
+        'LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_group.universalmessenger',
     );
 
     // Add content element
@@ -32,7 +32,7 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::registerPageTSConfigFile(
         'universal_messenger',
         'Configuration/TsConfig/Page/ContentElement/Element/ControlStructure.tsconfig',
-        'Universal Messenger Content Element: Control Structure'
+        'Universal Messenger Content Element: Control Structure',
     );
 
     // Add a content element to the selector list
@@ -44,7 +44,7 @@ call_user_func(static function (): void {
             'value' => 'control_structure',
             'icon'  => 'content-universalmessenger-controlstructure',
             'group' => 'universal_messenger',
-        ]
+        ],
     );
 
     ArrayUtility::mergeRecursiveWithOverrule(
@@ -82,13 +82,13 @@ call_user_func(static function (): void {
                     ],
                 ],
             ],
-        ]
+        ],
     );
 
     // Add flexForms for content element configuration
     ExtensionManagementUtility::addPiFlexFormValue(
         '*',
         'FILE:EXT:universal_messenger/Configuration/FlexForms/ControlStructure.xml',
-        'control_structure'
+        'control_structure',
     );
 });
