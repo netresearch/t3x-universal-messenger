@@ -30,15 +30,19 @@ call_user_func(static function (): void {
     $newsletterPageDokType = $configuration->getNewsletterPageDokType();
 
     // We need to add the following user TypoScript config to all users, so that the new
-    // page type is displayed in the wizard
+    // page type is displayed in the wizard.
+    //
+    // ExtensionManagementUtility::addUserTSConfig() was removed in TYPO3 v13, so we append
+    // to $GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] directly. This is the
+    // supported way to register dynamic user TSconfig in TYPO3 v13+.
     //
     // In TYPO3 v14, the dynamic configuration must be rebuilt. Currently, you cannot access
     // configured constants.typoscript in the user.tsconfig.
     //
     // See https://forge.typo3.org/issues/106069
-    ExtensionManagementUtility::addUserTSConfig(
-        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')',
-    );
+    $GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] = ($GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] ?? '')
+        . LF
+        . 'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')';
 
     // Service
     ExtensionManagementUtility::addService(
