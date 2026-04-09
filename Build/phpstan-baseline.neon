@@ -41,12 +41,3 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
-
-		-
-			message: '''
-				#^Call to deprecated method addUserTSConfig\(\) of class TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility\:
-				since TYPO3 v13\.0, will be removed in TYPO3 v14\.0\.$#
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: ../ext_localconf.php
