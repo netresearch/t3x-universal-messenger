@@ -15,8 +15,8 @@ jobs:
       id-token: write
       attestations: write
     with:
-      archive-prefix: universal-messenger
-      package-name: netresearch/universal-messenger
-      extension-key: universal_messenger
+      archive-prefix: 'universal-messenger'
+      package-name: 'netresearch/universal-messenger'
+      extension-key: 'universal_messenger'
     secrets:
       TYPO3_TER_ACCESS_TOKEN: ${{ secrets.TYPO3_TER_ACCESS_TOKEN }}
