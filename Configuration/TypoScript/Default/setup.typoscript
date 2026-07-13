@@ -2,3 +2,4 @@
 @import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/PluginConfiguration.typoscript'
 @import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/PageConfiguration.typoscript'
 @import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/ContentElementsConfiguration.typoscript'
+@import 'EXT:universal_messenger/Configuration/TypoScript/Default/UniversalMessenger/ContentConfiguration.typoscript'
