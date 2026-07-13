@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
     <file target-language="de" datatype="plaintext" original="messages">
         <header/>
@@ -25,7 +25,6 @@
             <trans-unit id="config.expert.liveChannelSuffix">
                 <target>Live-Newsletter-Kanal Suffix: Tragen Sie hier den Suffix für die LIVE-Newsletter-Kanäle ein.</target>
             </trans-unit>
-
             <!-- common -->
             <trans-unit id="common.universalMessenger">
                 <target>Universal Messenger</target>
@@ -54,7 +53,6 @@
             <trans-unit id="common.sendNewsletterLiveButtonConfirm">
                 <target>Bestätigen</target>
             </trans-unit>
-
             <!-- errors -->
             <trans-unit id="error.missingTranslation">
                 <target>Fehlende Übersetzung für:</target>
@@ -80,7 +78,6 @@
             <trans-unit id="error.pageHidden">
                 <target>Bitte wählen Sie eine nicht deaktivierte Seite aus.</target>
             </trans-unit>
-
             <!-- status -->
             <trans-unit id="newsletter.status.hold">
                 <target>Der Newsletter wurde an den Universal Messenger übergeben und wird verarbeitet.</target>
@@ -100,7 +97,6 @@
             <trans-unit id="newsletter.status.finished.plural">
                 <target>Der Newsletterversand ist abgeschlossen: Es wurden %d Benutzer kontaktiert.</target>
             </trans-unit>
-
             <!-- be_groups -->
             <trans-unit id="be_groups.universal_messenger_channels">
                 <target>Newsletter-Kanäle</target>
@@ -108,7 +104,6 @@
             <trans-unit id="be_groups.universal_messenger_channels.description">
                 <target>Wählen Sie hier die Newsletter-Kanäle, für welche diese Benutzergruppe Newsletter versenden darf.</target>
             </trans-unit>
-
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">
                 <target>Newsletter-Kanäle</target>
@@ -116,7 +111,6 @@
             <trans-unit id="be_users.universal_messenger_channels.description">
                 <target>Wählen Sie hier die Newsletter-Kanäle, für welche dieser Benutzer Newsletter versenden darf.</target>
             </trans-unit>
-
             <!-- pages -->
             <trans-unit id="pages.page_type_newsletter">
                 <target>Newsletter</target>
@@ -130,7 +124,6 @@
             <trans-unit id="pages.tx_universalmessenger_domain_model_newsletterchannel.0">
                 <target>Bitte wählen Sie einen Kanal</target>
             </trans-unit>
-
             <!-- tx_universalmessenger_domain_model_newsletterchannel -->
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel">
                 <target>Newsletter-Kanal</target>

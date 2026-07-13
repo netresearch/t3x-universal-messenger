@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
     <file source-language="en" datatype="plaintext" original="messages">
         <header/>
@@ -12,7 +12,6 @@
             <trans-unit id="mlang_labels_tabdescr">
                 <source>A module for sending TYPO3 generated newsletters using Universal Messenger.</source>
             </trans-unit>
-
             <!-- Labels -->
             <trans-unit id="openInUniversalMessenger">
                 <source>Open in Universal Messenger</source>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
     <file source-language="en" datatype="plaintext" original="messages">
         <header/>
@@ -25,7 +25,6 @@
             <trans-unit id="config.expert.liveChannelSuffix">
                 <source>Live newsletter channel suffix: Enter the suffix for the LIVE newsletter channels here.</source>
             </trans-unit>
-
             <!-- common -->
             <trans-unit id="common.universalMessenger">
                 <source>Universal Messenger</source>
@@ -54,7 +53,6 @@
             <trans-unit id="common.sendNewsletterLiveButtonConfirm">
                 <source>Confirm</source>
             </trans-unit>
-
             <!-- errors -->
             <trans-unit id="error.missingTranslation">
                 <source>Missing translation for:</source>
@@ -80,7 +78,6 @@
             <trans-unit id="error.pageHidden">
                 <source>Please select a non disabled page.</source>
             </trans-unit>
-
             <!-- status -->
             <trans-unit id="newsletter.status.hold">
                 <source>The newsletter has been sent to Universal Messenger and is being processed.</source>
@@ -100,7 +97,6 @@
             <trans-unit id="newsletter.status.finished.plural">
                 <source>The newsletter has been sent out: %d users have been contacted.</source>
             </trans-unit>
-
             <!-- be_groups -->
             <trans-unit id="be_groups.universal_messenger_channels">
                 <source>Newsletter channels</source>
@@ -108,7 +104,6 @@
             <trans-unit id="be_groups.universal_messenger_channels.description">
                 <source>Select the newsletter channels for which this user group is allowed to send newsletters.</source>
             </trans-unit>
-
             <!-- be_users -->
             <trans-unit id="be_users.universal_messenger_channels">
                 <source>Newsletter channels</source>
@@ -116,7 +111,6 @@
             <trans-unit id="be_users.universal_messenger_channels.description">
                 <source>Select the newsletter channels for which this user is allowed to send newsletters.</source>
             </trans-unit>
-
             <!-- pages -->
             <trans-unit id="pages.page_type_newsletter">
                 <source>Newsletter</source>
@@ -130,7 +124,6 @@
             <trans-unit id="pages.tx_universalmessenger_domain_model_newsletterchannel.0">
                 <source>Please select a channel</source>
             </trans-unit>
-
             <!-- tx_universalmessenger_domain_model_newsletterchannel -->
             <trans-unit id="tx_universalmessenger_domain_model_newsletterchannel">
                 <source>Newsletter channel</source>

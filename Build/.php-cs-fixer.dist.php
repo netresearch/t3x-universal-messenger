@@ -11,7 +11,7 @@ $header = <<<'EOF'
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/..')
-    ->exclude(['.Build', '.build', 'config', 'node_modules', 'var'])
+    ->exclude(['.Build', '.build', 'config', 'node_modules', 'packages', 'var'])
     ->notPath('ext_emconf.php');
 
 $config = new PhpCsFixer\Config();
