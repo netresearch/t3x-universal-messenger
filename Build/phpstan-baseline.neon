@@ -59,12 +59,3 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
-
-		-
-			message: '''
-				#^Call to deprecated method addPiFlexFormValue\(\) of class TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility\:
-				Will be removed in TYPO3 v15$#
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: ../Configuration/TCA/Overrides/tt_content.php
