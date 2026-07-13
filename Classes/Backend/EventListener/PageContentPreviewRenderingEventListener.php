@@ -58,7 +58,7 @@ final readonly class PageContentPreviewRenderingEventListener
         }
 
         $flexformData = $this->flexFormService
-            ->convertFlexFormContentToArray($record->get('pi_flexform') ?? '');
+            ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
 
         $replacementBodyText = $flexformData['settings']['replacementBodyText'] ?? '';
 
