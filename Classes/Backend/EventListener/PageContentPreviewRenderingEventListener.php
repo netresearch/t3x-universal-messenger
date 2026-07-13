@@ -51,12 +51,14 @@ final readonly class PageContentPreviewRenderingEventListener
             return;
         }
 
-        if ($event->getRecord()['CType'] !== 'control_structure') {
+        $record = $event->getRecord();
+
+        if ($record->getRecordType() !== 'control_structure') {
             return;
         }
 
         $flexformData = $this->flexFormService
-            ->convertFlexFormContentToArray($event->getRecord()['pi_flexform'] ?? '');
+            ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
 
         $replacementBodyText = $flexformData['settings']['replacementBodyText'] ?? '';
 
@@ -69,7 +71,7 @@ final readonly class PageContentPreviewRenderingEventListener
             <strong>{$this->translate('content_element.control_structure.bodytext')}</strong>
         </div>
         <div>
-            {$event->getRecord()['bodytext']}
+            {$record->get('bodytext')}
         </div>
     </div>
     <div>
