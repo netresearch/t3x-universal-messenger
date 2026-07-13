@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Backend\EventListener;
 
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
-use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -26,18 +26,18 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 final readonly class PageContentPreviewRenderingEventListener
 {
     /**
-     * @var FlexFormService
+     * @var FlexFormTools
      */
-    private FlexFormService $flexFormService;
+    private FlexFormTools $flexFormTools;
 
     /**
      * Constructor.
      *
-     * @param FlexFormService $flexFormService
+     * @param FlexFormTools $flexFormTools
      */
-    public function __construct(FlexFormService $flexFormService)
+    public function __construct(FlexFormTools $flexFormTools)
     {
-        $this->flexFormService = $flexFormService;
+        $this->flexFormTools = $flexFormTools;
     }
 
     /**
@@ -57,7 +57,7 @@ final readonly class PageContentPreviewRenderingEventListener
             return;
         }
 
-        $flexformData = $this->flexFormService
+        $flexformData = $this->flexFormTools
             ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
 
         $replacementBodyText = $flexformData['settings']['replacementBodyText'] ?? '';
