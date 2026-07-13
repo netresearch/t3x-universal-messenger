@@ -1,0 +1,19 @@
+# Package-internal dynamic content renderer.
+#
+# The newsletter templates render the page content elements via this path instead
+# of the sitepackage convention "lib.dynamicContent" (which is not provided by the
+# TYPO3 core / fluid_styled_content), so the newsletter preview works without a
+# specific sitepackage.
+lib.universalMessengerContent = CONTENT
+lib.universalMessengerContent {
+    table = tt_content
+    select {
+        orderBy = sorting
+        where = {#colPos}=###colPos###
+        markers {
+            colPos.field = colPos
+            colPos.intval = 1
+        }
+        pidInList.field = pageUid
+    }
+}

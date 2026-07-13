@@ -20,8 +20,8 @@
                             <f:format.raw>{content}</f:format.raw>
                         </f:then>
                         <f:else>
-                            <f:cObject typoscriptObjectPath="lib.dynamicContent"
-                                       data="{pageUid: '{data.uid}', colPos: '0', slide: '{theme.pagelayout.{pagelayout}.colPos.0.slide}'}"/>
+                            <f:cObject typoscriptObjectPath="lib.universalMessengerContent"
+                                       data="{pageUid: data.uid, colPos: '0'}"/>
                         </f:else>
                     </f:if>
                     </um:html.column>
