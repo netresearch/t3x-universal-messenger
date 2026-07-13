@@ -27,6 +27,7 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/../Classes',
         __DIR__ . '/../Configuration',
         __DIR__ . '/../Resources',
+        __DIR__ . '/../Tests',
         __DIR__ . '/../ext_*.php',
     ]);
 

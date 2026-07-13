@@ -28,13 +28,13 @@
     "require-dev": {
         "a9f/typo3-fractor": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.65",
-        "saschaegerer/phpstan-typo3": "^2.0 || ^3.0",
         "overtrue/phplint": "^9.5",
+        "phpat/phpat": "^0.12",
         "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
-        "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpat/phpat": "^0.12",
+        "saschaegerer/phpstan-typo3": "^2.0 || ^3.0",
         "ssch/typo3-rector": "^3.0",
         "typo3/testing-framework": "^9.0"
     },
