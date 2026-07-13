@@ -70,7 +70,8 @@ class InlineCssMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        $stream = $requestHandler->handle($serverRequest)->getBody();
+        // Extract the content
+        $stream = $response->getBody();
         $stream->rewind();
 
         $content   = $stream->getContents();
