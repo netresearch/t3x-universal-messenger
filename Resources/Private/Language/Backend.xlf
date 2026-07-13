@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
     <file source-language="en" datatype="plaintext" original="messages">
         <header/>
@@ -12,7 +12,6 @@
             <trans-unit id="content_element.control_structure.description">
                 <source>The control structures allow for very flexible personalization, for which you can evaluate any attribute.</source>
             </trans-unit>
-
             <!-- Flex form -->
             <trans-unit id="content_element.control_structure.bodytext">
                 <source>Control Structure</source>

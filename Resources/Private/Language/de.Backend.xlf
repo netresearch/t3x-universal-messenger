@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
     <file target-language="de" datatype="plaintext" original="messages">
         <header/>
@@ -12,7 +12,6 @@
             <trans-unit id="content_element.control_structure.description">
                 <target>Durch die Kontrollstrukturen ist eine sehr flexible Personalisierung möglich, bei der Sie beliebige Attribute auswerten können.</target>
             </trans-unit>
-
             <!-- Flex form -->
             <trans-unit id="content_element.control_structure.bodytext">
                 <target>Kontrollstruktur</target>
