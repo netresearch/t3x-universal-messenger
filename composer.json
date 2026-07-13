@@ -26,13 +26,17 @@
         "netresearch/sdk-api-universal-messenger": "^1.1"
     },
     "require-dev": {
+        "a9f/typo3-fractor": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.65",
         "saschaegerer/phpstan-typo3": "^2.0 || ^3.0",
         "overtrue/phplint": "^9.5",
         "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "ssch/typo3-rector": "^3.0"
+        "phpat/phpat": "^0.12",
+        "ssch/typo3-rector": "^3.0",
+        "typo3/testing-framework": "^9.0"
     },
     "suggest": {
         "typo3/cms-scheduler": "Allows you to run CLI scripts as a task within TYPO3"
@@ -47,7 +51,8 @@
         "allow-plugins": {
             "typo3/cms-composer-installers": true,
             "typo3/class-alias-loader": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "a9f/fractor-extension-installer": true
         },
         "audit": {
             "ignore": {
@@ -69,6 +74,11 @@
             "Netresearch\\UniversalMessenger\\": "Classes"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Netresearch\\UniversalMessenger\\Tests\\": "Tests"
+        }
+    },
     "scripts": {
         "ci:cgl": [
             "php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
@@ -76,11 +86,20 @@
         "ci:rector": [
             "rector process --config Build/rector.php"
         ],
+        "ci:fractor": [
+            "fractor process --config Build/fractor.php"
+        ],
         "ci:test:php:cgl": [
             "@ci:cgl --dry-run"
         ],
         "ci:test:php:lint": [
             "phplint --configuration Build/.phplint.yml"
+        ],
+        "ci:test:php:unit": [
+            "phpunit --configuration Build/UnitTests.xml"
+        ],
+        "ci:test:php:functional": [
+            "phpunit --configuration Build/FunctionalTests.xml"
         ],
         "ci:test:php:phpstan": [
             "phpstan analyze --configuration Build/phpstan.neon --memory-limit=-1"
@@ -91,10 +110,15 @@
         "ci:test:php:rector": [
             "@ci:rector --dry-run"
         ],
+        "ci:test:php:fractor": [
+            "@ci:fractor --dry-run"
+        ],
         "ci:test": [
             "@ci:test:php:lint",
             "@ci:test:php:phpstan",
             "@ci:test:php:rector",
+            "@ci:test:php:fractor",
+            "@ci:test:php:unit",
             "@ci:test:php:cgl"
         ]
     }
