@@ -19,15 +19,6 @@ parameters:
 			path: ../Classes/Controller/AbstractBaseController.php
 
 		-
-			message: '''
-				#^Call to deprecated method getRecordLocalization\(\) of class TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:
-				will be removed in TYPO3 v15\.0 \- use LocalizationRepository\-\>getRecordTranslation\(\) instead\.$#
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: ../Classes/Controller/UniversalMessengerController.php
-
-		-
 			message: '#^Method Netresearch\\UniversalMessenger\\DataProcessing\\ControlStructureProcessor\:\:process\(\) has parameter \$contentObjectConfiguration with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
