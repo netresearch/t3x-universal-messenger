@@ -18,10 +18,7 @@ jobs:
     permissions:
       contents: read
     with:
-      # PHP 8.5 is intentionally excluded: the SDK dependency chain
-      # (magicsunday/jsonmapper, magicsunday/xmlmapper via
-      # netresearch/sdk-api-universal-messenger) still caps at php <8.5.0.
-      php-versions: '["8.2","8.3","8.4"]'
+      php-versions: '["8.2","8.3","8.4","8.5"]'
       typo3-versions: '["^14.0"]'
       run-functional-tests: true
       functional-test-db: 'sqlite'
