@@ -29,13 +29,6 @@ CREATE TABLE tx_universalmessenger_domain_model_newsletterchannel
 (
     uid          int(10) UNSIGNED     NOT NULL AUTO_INCREMENT,
     pid          int(10) UNSIGNED     NOT NULL DEFAULT 0,
-    tstamp       int(10) UNSIGNED     NOT NULL DEFAULT 0,
-    crdate       int(10) UNSIGNED     NOT NULL DEFAULT 0,
-    deleted      smallint(5) UNSIGNED NOT NULL DEFAULT 0,
-    hidden       smallint(5) UNSIGNED NOT NULL DEFAULT 0,
-    starttime    int(10) UNSIGNED     NOT NULL DEFAULT 0,
-    endtime      int(10) UNSIGNED     NOT NULL DEFAULT 0,
-    sorting      int(10) UNSIGNED     NOT NULL DEFAULT 0,
 
     channel_id   varchar(255)         NOT NULL,
     title        varchar(255)         NOT NULL DEFAULT '',
