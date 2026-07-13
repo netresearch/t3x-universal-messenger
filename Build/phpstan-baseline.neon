@@ -7,24 +7,6 @@ parameters:
 			path: ../Classes/Backend/EventListener/ModifyPageLayoutContentEventListener.php
 
 		-
-			message: '#^Cannot access offset ''CType'' on TYPO3\\CMS\\Core\\Domain\\RecordInterface\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: ../Classes/Backend/EventListener/PageContentPreviewRenderingEventListener.php
-
-		-
-			message: '#^Cannot access offset ''bodytext'' on TYPO3\\CMS\\Core\\Domain\\RecordInterface\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: ../Classes/Backend/EventListener/PageContentPreviewRenderingEventListener.php
-
-		-
-			message: '#^Cannot access offset ''pi_flexform'' on TYPO3\\CMS\\Core\\Domain\\RecordInterface\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: ../Classes/Backend/EventListener/PageContentPreviewRenderingEventListener.php
-
-		-
 			message: '#^Method Netresearch\\UniversalMessenger\\Command\\ImportCommand\:\:getStoragePageId\(\) should return int\<0, max\> but returns int\.$#'
 			identifier: return.type
 			count: 1
