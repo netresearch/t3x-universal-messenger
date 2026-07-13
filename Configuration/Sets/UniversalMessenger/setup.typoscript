@@ -1,0 +1,9 @@
+# TYPO3 v14 Site Set.
+#
+# Site-Set-based sites have no sys_template record, so the classic static
+# templates registered via ExtensionManagementUtility::addStaticFile() are never
+# included. Add "netresearch/universal-messenger" to the site's dependencies to
+# load the newsletter preview PAGE type (typeNum 1715682913), the plugin and the
+# content-element TypoScript. The classic static templates remain in parallel for
+# legacy (non-Site-Set) setups.
+@import 'EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript'
