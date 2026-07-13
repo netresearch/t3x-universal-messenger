@@ -13,15 +13,6 @@ parameters:
 			path: ../Classes/Command/ImportCommand.php
 
 		-
-			message: '''
-				#^Call to deprecated method getExistingPageTranslations\(\) of class TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:
-				will be removed in TYPO3 v15\.0 \- use LocalizationRepository\-\>getPageTranslations\(\) instead\.$#
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: ../Classes/Controller/AbstractBaseController.php
-
-		-
 			message: '#^Cannot access offset ''id'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

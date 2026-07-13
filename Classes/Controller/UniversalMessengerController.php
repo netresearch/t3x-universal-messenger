@@ -31,6 +31,7 @@ use Psr\Log\LoggerAwareTrait;
 
 use function sprintf;
 
+use TYPO3\CMS\Backend\Domain\Repository\Localization\LocalizationRepository;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
@@ -90,6 +91,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
      * @param ComponentFactory            $componentFactory
+     * @param LocalizationRepository      $localizationRepository
      * @param SiteFinder                  $siteFinder
      * @param EventFileRepository         $eventFileRepository
      * @param NewsletterRepository        $newsletterRepository
@@ -100,6 +102,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
         ComponentFactory $componentFactory,
+        LocalizationRepository $localizationRepository,
         SiteFinder $siteFinder,
         EventFileRepository $eventFileRepository,
         NewsletterRepository $newsletterRepository,
@@ -110,6 +113,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $newsletterChannelRepository,
             $newsletterRenderService,
             $componentFactory,
+            $localizationRepository,
         );
 
         $this->siteFinder           = $siteFinder;
