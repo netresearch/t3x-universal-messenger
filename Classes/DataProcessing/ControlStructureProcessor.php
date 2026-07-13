@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\DataProcessing;
 
-use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
@@ -51,13 +51,13 @@ class ControlStructureProcessor implements DataProcessorInterface
     }
 
     /**
-     * Returns the FlexForm service instance.
+     * Returns the FlexForm tools instance.
      *
-     * @return FlexFormService
+     * @return FlexFormTools
      */
-    private function getFlexFormService(): FlexFormService
+    private function getFlexFormTools(): FlexFormTools
     {
-        return GeneralUtility::makeInstance(FlexFormService::class);
+        return GeneralUtility::makeInstance(FlexFormTools::class);
     }
 
     /**
@@ -70,7 +70,7 @@ class ControlStructureProcessor implements DataProcessorInterface
     private function convertFlexFormContentToArray(string $flexFormContent): array
     {
         if ($flexFormContent !== '') {
-            return $this->getFlexFormService()
+            return $this->getFlexFormTools()
                 ->convertFlexFormContentToArray($flexFormContent);
         }
 
