@@ -15,7 +15,6 @@
                             <type>text</type>
                             <cols>80</cols>
                             <rows>15</rows>
-                            <eval>int,required</eval>
                             <softref>typolink_tag,email[subst],url</softref>
                             <enableRichtext>1</enableRichtext>
                         </config>
