@@ -35,11 +35,6 @@ class NewsletterChannel extends AbstractEntity
     protected ?DateTime $tstamp = null;
 
     /**
-     * @var bool
-     */
-    protected bool $deleted = false;
-
-    /**
      * @var string
      */
     protected string $channelId = '';
@@ -110,26 +105,6 @@ class NewsletterChannel extends AbstractEntity
     public function setTstamp(?DateTime $tstamp): NewsletterChannel
     {
         $this->tstamp = $tstamp;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDeleted(): bool
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * @param bool $deleted
-     *
-     * @return NewsletterChannel
-     */
-    public function setDeleted(bool $deleted): NewsletterChannel
-    {
-        $this->deleted = $deleted;
 
         return $this;
     }
