@@ -256,7 +256,13 @@ abstract class AbstractBaseController extends ActionController
             // Compile language data for pid != 0 only. The language drop-down is not shown on pid 0
             // since pid 0 can't be localized.
             // getPageTranslations() returns the translation records indexed by language id.
-            $pageTranslations = $this->localizationRepository->getPageTranslations($this->pageId);
+            // Pass the current backend user workspace to keep the workspace-aware behaviour
+            // of the removed BackendUtility::getExistingPageTranslations().
+            $pageTranslations = $this->localizationRepository->getPageTranslations(
+                $this->pageId,
+                [],
+                $this->getBackendUserAuthentication()->workspace,
+            );
 
             foreach (array_keys($pageTranslations) as $languageId) {
                 if (isset($this->availableLanguages[$languageId])) {
