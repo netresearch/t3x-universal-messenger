@@ -20,7 +20,6 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
 use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownRadio;
 use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
@@ -228,13 +227,11 @@ abstract class AbstractBaseController extends ActionController
     /**
      * Creates the language switch button of the button bar.
      *
-     * @param ButtonBar $buttonbar
-     *
      * @return ButtonInterface|null
      *
      * @throws RouteNotFoundException
      */
-    protected function makeLanguageSwitchButton(ButtonBar $buttonbar): ?ButtonInterface
+    protected function makeLanguageSwitchButton(): ?ButtonInterface
     {
         $this->languages = [
             0 => isset($this->availableLanguages[0])

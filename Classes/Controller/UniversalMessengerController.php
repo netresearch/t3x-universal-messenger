@@ -132,7 +132,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
 
         // Add language dropdown
-        if (($languageButton = $this->makeLanguageSwitchButton($buttonBar)) instanceof ButtonInterface) {
+        if (($languageButton = $this->makeLanguageSwitchButton()) instanceof ButtonInterface) {
             $buttonBar->addButton(
                 $languageButton,
                 ButtonBar::BUTTON_POSITION_LEFT,
