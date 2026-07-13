@@ -9,10 +9,8 @@
 
 declare(strict_types=1);
 
-use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\NewsletterPreviewController;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 defined('TYPO3') || exit('Access denied.');
@@ -31,24 +29,15 @@ call_user_func(static function (): void {
         false,
     );
 
-    $configuration         = GeneralUtility::makeInstance(Configuration::class);
-    $newsletterPageDokType = $configuration->getNewsletterPageDokType();
-
-    // We need to add the following user TypoScript config to all users, so that the new
-    // page type is displayed in the wizard.
+    // The newsletter page type is registered in the page-type selector via
+    // Configuration/TCA/Overrides/pages.php (addTcaSelectItem). Since TYPO3 v14.2 the page
+    // tree "new page" drag area determines the selectable doktypes automatically from the
+    // backend user's group permissions (pagetypes_select) / admin status, so no explicit
+    // user TSconfig registration is needed anymore.
     //
-    // ExtensionManagementUtility::addUserTSConfig() was removed in TYPO3 v13, so we append
-    // to $GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] directly. This is the
-    // supported way to register dynamic user TSconfig in TYPO3 v13+.
-    //
-    // In TYPO3 v14, the dynamic configuration must be rebuilt. Currently, you cannot access
-    // configured constants.typoscript in the user.tsconfig.
-    //
-    // See https://forge.typo3.org/issues/106069
-    $GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] = ($GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] ?? '')
-        . LF
-        . 'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')';
-
+    // The former "options.pageTree.doktypesToShowInNewPageDragArea" user TSconfig option was
+    // deprecated in v14.2 and will be removed in v15.0 (see TYPO3 changelog #109196); setting
+    // it now only triggers a deprecation log while yielding the same, permission-gated result.
     ExtensionUtility::configurePlugin(
         'UniversalMessenger',
         'NewsletterPreview',
