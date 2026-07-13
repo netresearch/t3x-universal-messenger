@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use function count;
 
 use Netresearch\UniversalMessenger\Configuration;
@@ -127,6 +128,7 @@ abstract class AbstractBaseController extends ActionController
         Configuration $configuration,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
+        private readonly ComponentFactory $componentFactory,
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
         $this->configuration               = $configuration;
@@ -210,7 +212,7 @@ abstract class AbstractBaseController extends ActionController
         if ($pageRecord !== false) {
             $moduleTemplate
                 ->getDocHeaderComponent()
-                ->setMetaInformation($pageRecord);
+                ->setPageBreadcrumb($pageRecord);
         }
 
         return $moduleTemplate;
@@ -221,7 +223,6 @@ abstract class AbstractBaseController extends ActionController
      *
      * @param ButtonBar $buttonbar
      *
-     * @return ButtonInterface|null
      *
      * @throws RouteNotFoundException
      */
@@ -231,7 +232,7 @@ abstract class AbstractBaseController extends ActionController
             0 => isset($this->availableLanguages[0])
                 ? $this->availableLanguages[0]->getTitle()
                 : $this->getLanguageService()->sL(
-                    'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:m_default',
+                    'backend.layout:m_default',
                 ),
         ];
 
@@ -256,10 +257,10 @@ abstract class AbstractBaseController extends ActionController
             return null;
         }
 
-        $languageDropDownButton = $buttonbar->makeDropDownButton()
+        $languageDropDownButton = $this->componentFactory->createDropDownButton()
             ->setLabel(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.language',
+                    'core.core:labels.language',
                 ),
             )
             ->setShowLabelText(true);

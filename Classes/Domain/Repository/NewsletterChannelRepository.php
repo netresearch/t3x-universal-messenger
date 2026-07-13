@@ -76,8 +76,6 @@ class NewsletterChannelRepository extends Repository
 
     /**
      * @param string $channelId
-     *
-     * @return NewsletterChannel|null
      */
     public function findByChannelId(string $channelId): ?NewsletterChannel
     {

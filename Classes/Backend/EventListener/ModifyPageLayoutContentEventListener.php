@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Backend\EventListener;
 
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use Netresearch\UniversalMessenger\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
@@ -59,6 +60,7 @@ final readonly class ModifyPageLayoutContentEventListener
         Configuration $configuration,
         IconFactory $iconFactory,
         UriBuilder $uriBuilder,
+        private ComponentFactory $componentFactory,
     ) {
         $this->configuration = $configuration;
         $this->iconFactory   = $iconFactory;
@@ -98,11 +100,11 @@ final readonly class ModifyPageLayoutContentEventListener
                 ],
             );
 
-        $linkButton = $buttonBar->makeLinkButton()
+        $linkButton = $this->componentFactory->createLinkButton()
             ->setHref($uri)
             ->setTitle(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:openInUniversalMessenger',
+                    'universal_messenger.mod_um:openInUniversalMessenger',
                 ),
             )
             ->setIcon(

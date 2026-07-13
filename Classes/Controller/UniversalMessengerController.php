@@ -34,6 +34,7 @@ use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
@@ -87,6 +88,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * @param Configuration               $configuration
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
+     * @param ComponentFactory            $componentFactory
      * @param SiteFinder                  $siteFinder
      * @param EventFileRepository         $eventFileRepository
      * @param NewsletterRepository        $newsletterRepository
@@ -96,6 +98,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         Configuration $configuration,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
+        ComponentFactory $componentFactory,
         SiteFinder $siteFinder,
         EventFileRepository $eventFileRepository,
         NewsletterRepository $newsletterRepository,
@@ -105,6 +108,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $configuration,
             $newsletterChannelRepository,
             $newsletterRenderService,
+            $componentFactory,
         );
 
         $this->siteFinder           = $siteFinder;
@@ -423,8 +427,6 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * Returns the status of a newsletter sending for the given newsletter event ID.
      *
      * @param string $newsletterEventId
-     *
-     * @return NewsletterStatus|null
      */
     private function getNewsletterStatus(string $newsletterEventId): ?NewsletterStatus
     {

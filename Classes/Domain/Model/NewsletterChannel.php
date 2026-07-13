@@ -74,9 +74,6 @@ class NewsletterChannel extends AbstractEntity
      */
     protected string $embedImages = 'none';
 
-    /**
-     * @return DateTime|null
-     */
     public function getCrdate(): ?DateTime
     {
         return $this->crdate;
@@ -94,9 +91,6 @@ class NewsletterChannel extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getTstamp(): ?DateTime
     {
         return $this->tstamp;

@@ -85,8 +85,6 @@ class NewsletterRenderService implements SingletonInterface
      *
      * @param int                $pageId
      * @param array<string, int> $arguments
-     *
-     * @return UriInterface|null
      */
     private function generatePageUri(int $pageId, array $arguments = []): ?UriInterface
     {

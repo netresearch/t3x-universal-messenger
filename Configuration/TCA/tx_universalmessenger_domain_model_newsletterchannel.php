@@ -19,11 +19,7 @@ return [
         'crdate'       => 'crdate',
         'hideTable'    => false,
         'sortby'       => 'sorting',
-        'searchFields' => 'title,description,sender,reply_to',
         'iconfile'     => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
-    ],
-    'interface' => [
-        'maxSingleDBListItems' => 50,
     ],
     'types' => [
         0 => [
@@ -40,13 +36,13 @@ return [
         'crdate' => [
             'label'  => 'crdate',
             'config' => [
-                'type' => 'datetime',
+                'type' => 'datetime', 'searchable' => false,
             ],
         ],
         'tstamp' => [
             'label'  => 'tstamp',
             'config' => [
-                'type' => 'datetime',
+                'type' => 'datetime', 'searchable' => false,
             ],
         ],
         'starttime' => [
@@ -58,6 +54,7 @@ return [
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
+                'searchable' => false,
             ],
         ],
         'endtime' => [
@@ -79,6 +76,7 @@ return [
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
+                'searchable' => false,
             ],
         ],
         'channel_id' => [
@@ -91,6 +89,7 @@ return [
                 'eval'     => 'trim',
                 'readOnly' => true,
                 'required' => true,
+                'searchable' => false,
             ],
         ],
         'title' => [
