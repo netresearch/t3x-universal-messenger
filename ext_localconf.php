@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\NewsletterPreviewController;
-use Netresearch\UniversalMessenger\Service\UniversalMessengerService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
@@ -49,24 +48,6 @@ call_user_func(static function (): void {
     $GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] = ($GLOBALS['TYPO3_CONF_VARS']['BE']['defaultUserTSconfig'] ?? '')
         . LF
         . 'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $newsletterPageDokType . ')';
-
-    // Service
-    ExtensionManagementUtility::addService(
-        'universal_messenger',
-        'universal_messenger',
-        UniversalMessengerService::class,
-        [
-            'title'       => 'Universal Messenger API service',
-            'description' => 'Universal Messenger API service',
-            'subtype'     => '',
-            'available'   => true,
-            'priority'    => 50,
-            'quality'     => 50,
-            'os'          => '',
-            'exec'        => '',
-            'className'   => UniversalMessengerService::class,
-        ],
-    );
 
     ExtensionUtility::configurePlugin(
         'UniversalMessenger',
