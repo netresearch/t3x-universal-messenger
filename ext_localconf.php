@@ -19,11 +19,17 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 defined('TYPO3') || exit('Access denied.');
 
 call_user_func(static function (): void {
-    // Add TypoScript automatically (to use it in backend modules)
+    // Register the extension's default TypoScript for classic (sys_template-based) sites
+    // via the global default TypoScript setup. Site-Set-based v14 sites load the same
+    // TypoScript through the "netresearch/universal-messenger" Site Set instead (see
+    // Configuration/Sets/UniversalMessenger), so includeInSiteSets is disabled here to
+    // avoid force-injecting it into every site-set site and loading it twice.
     ExtensionManagementUtility::addTypoScript(
         'universal_messenger',
         'setup',
         '@import "EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript"',
+        0,
+        false,
     );
 
     $configuration         = GeneralUtility::makeInstance(Configuration::class);
