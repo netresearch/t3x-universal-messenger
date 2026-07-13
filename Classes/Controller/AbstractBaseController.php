@@ -20,9 +20,9 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
 use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownRadio;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -79,6 +79,11 @@ abstract class AbstractBaseController extends ActionController
     protected NewsletterRenderService $newsletterRenderService;
 
     /**
+     * @var ComponentFactory
+     */
+    protected readonly ComponentFactory $componentFactory;
+
+    /**
      * The selected page ID.
      *
      * @var int
@@ -121,17 +126,20 @@ abstract class AbstractBaseController extends ActionController
      * @param Configuration               $configuration
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
+     * @param ComponentFactory            $componentFactory
      */
     public function __construct(
         ModuleTemplateFactory $moduleTemplateFactory,
         Configuration $configuration,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
+        ComponentFactory $componentFactory,
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
         $this->configuration               = $configuration;
         $this->newsletterChannelRepository = $newsletterChannelRepository;
         $this->newsletterRenderService     = $newsletterRenderService;
+        $this->componentFactory            = $componentFactory;
     }
 
     /**
@@ -210,7 +218,7 @@ abstract class AbstractBaseController extends ActionController
         if ($pageRecord !== false) {
             $moduleTemplate
                 ->getDocHeaderComponent()
-                ->setMetaInformation($pageRecord);
+                ->setPageBreadcrumb($pageRecord);
         }
 
         return $moduleTemplate;
@@ -219,19 +227,17 @@ abstract class AbstractBaseController extends ActionController
     /**
      * Creates the language switch button of the button bar.
      *
-     * @param ButtonBar $buttonbar
-     *
      * @return ButtonInterface|null
      *
      * @throws RouteNotFoundException
      */
-    protected function makeLanguageSwitchButton(ButtonBar $buttonbar): ?ButtonInterface
+    protected function makeLanguageSwitchButton(): ?ButtonInterface
     {
         $this->languages = [
             0 => isset($this->availableLanguages[0])
                 ? $this->availableLanguages[0]->getTitle()
                 : $this->getLanguageService()->sL(
-                    'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:m_default',
+                    'backend.layout:m_default',
                 ),
         ];
 
@@ -256,10 +262,10 @@ abstract class AbstractBaseController extends ActionController
             return null;
         }
 
-        $languageDropDownButton = $buttonbar->makeDropDownButton()
+        $languageDropDownButton = $this->componentFactory->createDropDownButton()
             ->setLabel(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.language',
+                    'core.core:labels.language',
                 ),
             )
             ->setShowLabelText(true);

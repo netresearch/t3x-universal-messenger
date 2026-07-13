@@ -61,14 +61,14 @@ call_user_func(static function (): void {
             'types' => [
                 'control_structure' => [
                     'showitem' => '
-                        --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+                        --div--;core.form.tabs:general,
                             --palette--;;general,
                             header;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header.ALT.html_formlabel,
                             bodytext;LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure.bodytext,
                             pi_flexform,
                         --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,
                             --palette--;;appearanceLinks,
-                        --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+                        --div--;core.form.tabs:access,
                             --palette--;;hidden,
                             --palette--;;access,',
 

@@ -13,7 +13,6 @@ parameters:
         - %currentWorkingDirectory%/Configuration/
         - %currentWorkingDirectory%/Resources/
         - %currentWorkingDirectory%/ext_localconf.php
-        - %currentWorkingDirectory%/ext_tables.php
 
     excludePaths:
         - %currentWorkingDirectory%/.build/*

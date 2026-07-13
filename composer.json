@@ -15,12 +15,12 @@
         "php": "^8.2",
         "ext-fileinfo": "*",
         "ext-libxml": "*",
-        "typo3/cms-core": "^13.4 || ^14.0",
-        "typo3/cms-backend": "^13.4 || ^14.0",
-        "typo3/cms-frontend": "^13.4 || ^14.0",
-        "typo3/cms-extbase": "^13.4 || ^14.0",
-        "typo3/cms-fluid": "^13.4 || ^14.0",
-        "typo3/cms-lowlevel": "^13.4 || ^14.0",
+        "typo3/cms-core": "^14.0",
+        "typo3/cms-backend": "^14.0",
+        "typo3/cms-frontend": "^14.0",
+        "typo3/cms-extbase": "^14.0",
+        "typo3/cms-fluid": "^14.0",
+        "typo3/cms-lowlevel": "^14.0",
         "nyholm/psr7": "^1.8",
         "pelago/emogrifier": "^7.2 || ^8.0",
         "netresearch/sdk-api-universal-messenger": "^1.1"
@@ -61,7 +61,7 @@
             "web-dir": ".build/public"
         },
         "branch-alias": {
-            "dev-main": "2.0.x-dev"
+            "dev-main": "3.0.x-dev"
         }
     },
     "autoload": {

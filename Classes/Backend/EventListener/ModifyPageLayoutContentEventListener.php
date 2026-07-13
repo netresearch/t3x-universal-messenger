@@ -18,6 +18,7 @@ use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
@@ -49,20 +50,28 @@ final readonly class ModifyPageLayoutContentEventListener
     private UriBuilder $uriBuilder;
 
     /**
+     * @var ComponentFactory
+     */
+    private ComponentFactory $componentFactory;
+
+    /**
      * Constructor.
      *
-     * @param Configuration $configuration
-     * @param IconFactory   $iconFactory
-     * @param UriBuilder    $uriBuilder
+     * @param Configuration    $configuration
+     * @param IconFactory      $iconFactory
+     * @param UriBuilder       $uriBuilder
+     * @param ComponentFactory $componentFactory
      */
     public function __construct(
         Configuration $configuration,
         IconFactory $iconFactory,
         UriBuilder $uriBuilder,
+        ComponentFactory $componentFactory,
     ) {
-        $this->configuration = $configuration;
-        $this->iconFactory   = $iconFactory;
-        $this->uriBuilder    = $uriBuilder;
+        $this->configuration    = $configuration;
+        $this->iconFactory      = $iconFactory;
+        $this->uriBuilder       = $uriBuilder;
+        $this->componentFactory = $componentFactory;
     }
 
     /**
@@ -98,11 +107,11 @@ final readonly class ModifyPageLayoutContentEventListener
                 ],
             );
 
-        $linkButton = $buttonBar->makeLinkButton()
+        $linkButton = $this->componentFactory->createLinkButton()
             ->setHref($uri)
             ->setTitle(
                 $this->getLanguageService()->sL(
-                    'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf:openInUniversalMessenger',
+                    'universal_messenger.mod_um:openInUniversalMessenger',
                 ),
             )
             ->setIcon(

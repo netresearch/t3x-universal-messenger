@@ -15,10 +15,10 @@ $EM_CONF['universal_messenger'] = [
     'author_email'   => 'rico.sonntag@netresearch.de',
     'author_company' => 'Netresearch DTT GmbH',
     'state'          => 'stable',
-    'version'        => '2.0.3',
+    'version'        => '3.0.0',
     'constraints'    => [
         'depends' => [
-            'typo3' => '13.4.0-13.99.99',
+            'typo3' => '14.0.0-14.99.99',
         ],
         'conflicts' => [
         ],

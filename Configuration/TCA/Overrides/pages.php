@@ -52,7 +52,9 @@ call_user_func(static function (): void {
             // Add all page standard fields and tabs to your new page type
             'types' => [
                 $newsletterPageDokType => [
-                    'showitem' => $GLOBALS['TCA']['pages']['types'][PageRepository::DOKTYPE_DEFAULT]['showitem'],
+                    // Replaces the removed PageDoktypeRegistry->add() allowedTables => '*'
+                    'allowedRecordTypes' => ['*'],
+                    'showitem'           => $GLOBALS['TCA']['pages']['types'][PageRepository::DOKTYPE_DEFAULT]['showitem'],
                 ],
             ],
         ],

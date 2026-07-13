@@ -13,17 +13,13 @@ declare(strict_types=1);
 // upon removeAll call in persistence manager.
 return [
     'ctrl' => [
-        'title'        => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
-        'label'        => 'title',
-        'tstamp'       => 'tstamp',
-        'crdate'       => 'crdate',
-        'hideTable'    => false,
-        'sortby'       => 'sorting',
-        'searchFields' => 'title,description,sender,reply_to',
-        'iconfile'     => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
-    ],
-    'interface' => [
-        'maxSingleDBListItems' => 50,
+        'title'     => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
+        'label'     => 'title',
+        'tstamp'    => 'tstamp',
+        'crdate'    => 'crdate',
+        'hideTable' => false,
+        'sortby'    => 'sorting',
+        'iconfile'  => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
     ],
     'types' => [
         0 => [
@@ -40,13 +36,15 @@ return [
         'crdate' => [
             'label'  => 'crdate',
             'config' => [
-                'type' => 'datetime',
+                'type'       => 'datetime',
+                'searchable' => false,
             ],
         ],
         'tstamp' => [
             'label'  => 'tstamp',
             'config' => [
-                'type' => 'datetime',
+                'type'       => 'datetime',
+                'searchable' => false,
             ],
         ],
         'starttime' => [
@@ -58,6 +56,7 @@ return [
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
+                'searchable' => false,
             ],
         ],
         'endtime' => [
@@ -79,6 +78,7 @@ return [
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
+                'searchable' => false,
             ],
         ],
         'channel_id' => [
@@ -86,11 +86,12 @@ return [
             'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.channel_id',
             'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.channel_id.description',
             'config'      => [
-                'type'     => 'input',
-                'size'     => 40,
-                'eval'     => 'trim',
-                'readOnly' => true,
-                'required' => true,
+                'type'       => 'input',
+                'size'       => 40,
+                'eval'       => 'trim',
+                'readOnly'   => true,
+                'required'   => true,
+                'searchable' => false,
             ],
         ],
         'title' => [
