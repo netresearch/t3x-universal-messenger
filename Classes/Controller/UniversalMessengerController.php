@@ -39,6 +39,7 @@ use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
 use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -227,14 +228,15 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      */
     private function getPageTitle(?array $pageRecord): string
     {
-        $localizedRecord = BackendUtility::getRecordLocalization(
+        $localizedRecord = $this->localizationRepository->getRecordTranslation(
             'pages',
             $this->pageId,
             $this->currentSelectedLanguage,
+            $this->getBackendUserAuthentication()->workspace,
         );
 
-        if ($localizedRecord !== []) {
-            return $localizedRecord[0]['title'] ?? '';
+        if ($localizedRecord instanceof RawRecord) {
+            return (string) ($localizedRecord->get('title') ?? '');
         }
 
         return (string) ($pageRecord['title'] ?? '');
