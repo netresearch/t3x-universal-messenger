@@ -17,6 +17,7 @@ use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Domain\Repository\Localization\LocalizationRepository;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -84,6 +85,11 @@ abstract class AbstractBaseController extends ActionController
     protected readonly ComponentFactory $componentFactory;
 
     /**
+     * @var LocalizationRepository
+     */
+    protected readonly LocalizationRepository $localizationRepository;
+
+    /**
      * The selected page ID.
      *
      * @var int
@@ -127,6 +133,7 @@ abstract class AbstractBaseController extends ActionController
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
      * @param ComponentFactory            $componentFactory
+     * @param LocalizationRepository      $localizationRepository
      */
     public function __construct(
         ModuleTemplateFactory $moduleTemplateFactory,
@@ -134,12 +141,14 @@ abstract class AbstractBaseController extends ActionController
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
         ComponentFactory $componentFactory,
+        LocalizationRepository $localizationRepository,
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
         $this->configuration               = $configuration;
         $this->newsletterChannelRepository = $newsletterChannelRepository;
         $this->newsletterRenderService     = $newsletterRenderService;
         $this->componentFactory            = $componentFactory;
+        $this->localizationRepository      = $localizationRepository;
     }
 
     /**
@@ -246,11 +255,10 @@ abstract class AbstractBaseController extends ActionController
         if ($this->pageId > 0) {
             // Compile language data for pid != 0 only. The language drop-down is not shown on pid 0
             // since pid 0 can't be localized.
-            $pageTranslations = BackendUtility::getExistingPageTranslations($this->pageId);
+            // getPageTranslations() returns the translation records indexed by language id.
+            $pageTranslations = $this->localizationRepository->getPageTranslations($this->pageId);
 
-            foreach ($pageTranslations as $pageTranslation) {
-                $languageId = $pageTranslation[$GLOBALS['TCA']['pages']['ctrl']['languageField']];
-
+            foreach (array_keys($pageTranslations) as $languageId) {
                 if (isset($this->availableLanguages[$languageId])) {
                     $this->languages[$languageId] = $this->availableLanguages[$languageId]->getTitle();
                 }
