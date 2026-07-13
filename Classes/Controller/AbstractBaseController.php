@@ -81,7 +81,7 @@ abstract class AbstractBaseController extends ActionController
     /**
      * @var ComponentFactory
      */
-    private readonly ComponentFactory $componentFactory;
+    protected readonly ComponentFactory $componentFactory;
 
     /**
      * The selected page ID.
