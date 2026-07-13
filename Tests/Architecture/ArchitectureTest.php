@@ -81,6 +81,36 @@ final class ArchitectureTest
             ->because('Console commands must not depend on controllers.');
     }
 
+    public function testRepositoriesDoNotDependOnControllers(): Rule
+    {
+        return PHPat::rule()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Repository'))
+            ->shouldNot()
+            ->dependOn()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Controller'))
+            ->because('Repositories must not depend on controllers.');
+    }
+
+    public function testDataProcessorsDoNotDependOnControllers(): Rule
+    {
+        return PHPat::rule()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\DataProcessing'))
+            ->shouldNot()
+            ->dependOn()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Controller'))
+            ->because('Data processors must not depend on controllers.');
+    }
+
+    public function testServicesDoNotDependOnRepositories(): Rule
+    {
+        return PHPat::rule()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Service'))
+            ->shouldNot()
+            ->dependOn()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Repository'))
+            ->because('Services must not depend on the infrastructure repository layer (which itself depends on services); this keeps the dependency direction acyclic.');
+    }
+
     public function testDomainDoesNotDependOnOuterLayers(): Rule
     {
         return PHPat::rule()
@@ -91,7 +121,12 @@ final class ArchitectureTest
                 Selector::inNamespace(self::NAMESPACE_ROOT . '\\Controller'),
                 Selector::inNamespace(self::NAMESPACE_ROOT . '\\Service'),
                 Selector::inNamespace(self::NAMESPACE_ROOT . '\\Middleware'),
+                Selector::inNamespace(self::NAMESPACE_ROOT . '\\Command'),
+                Selector::inNamespace(self::NAMESPACE_ROOT . '\\Backend'),
+                Selector::inNamespace(self::NAMESPACE_ROOT . '\\ViewHelpers'),
+                Selector::inNamespace(self::NAMESPACE_ROOT . '\\Repository'),
+                Selector::inNamespace(self::NAMESPACE_ROOT . '\\DataProcessing'),
             )
-            ->because('The domain layer must stay free of controller, service and middleware dependencies.');
+            ->because('The domain layer is innermost and must not depend on any outer feature layer.');
     }
 }
