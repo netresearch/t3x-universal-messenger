@@ -9,8 +9,11 @@ lib.universalMessengerContent {
     table = tt_content
     select {
         orderBy = sorting
-        where = {#colPos}={field:colPos}
-        where.insertData = 1
-        pidInList.stdWrap.override.field = pageUid
+        where = {#colPos}=###colPos###
+        markers {
+            colPos.field = colPos
+            colPos.intval = 1
+        }
+        pidInList.field = pageUid
     }
 }
