@@ -131,7 +131,7 @@ for sending via individual newsletter channels.
 > **Note (TYPO3 v14):** The newsletter page type appears in the page tree "new page"
 > drag area automatically. Administrators always see it; for non-admin editors it is
 > shown only when the `Newsletter` page type is enabled in their backend group under
-> `Access Rights → Page types`. Since TYPO3 v14.2 the drag area is derived from these
+> `Access Rights => Page types`. Since TYPO3 v14.2 the drag area is derived from these
 > group permissions — the former `options.pageTree.doktypesToShowInNewPageDragArea`
 > user TSconfig option was deprecated and is removed in v15.0. If your installation
 > still sets that option explicitly to a custom value, add the newsletter page type
