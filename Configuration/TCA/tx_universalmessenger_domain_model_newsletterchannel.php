@@ -13,13 +13,13 @@ declare(strict_types=1);
 // upon removeAll call in persistence manager.
 return [
     'ctrl' => [
-        'title'        => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
-        'label'        => 'title',
-        'tstamp'       => 'tstamp',
-        'crdate'       => 'crdate',
-        'hideTable'    => false,
-        'sortby'       => 'sorting',
-        'iconfile'     => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
+        'title'     => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
+        'label'     => 'title',
+        'tstamp'    => 'tstamp',
+        'crdate'    => 'crdate',
+        'hideTable' => false,
+        'sortby'    => 'sorting',
+        'iconfile'  => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
     ],
     'types' => [
         0 => [
@@ -36,13 +36,15 @@ return [
         'crdate' => [
             'label'  => 'crdate',
             'config' => [
-                'type' => 'datetime', 'searchable' => false,
+                'type'       => 'datetime',
+                'searchable' => false,
             ],
         ],
         'tstamp' => [
             'label'  => 'tstamp',
             'config' => [
-                'type' => 'datetime', 'searchable' => false,
+                'type'       => 'datetime',
+                'searchable' => false,
             ],
         ],
         'starttime' => [
@@ -84,11 +86,11 @@ return [
             'label'       => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.channel_id',
             'description' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel.channel_id.description',
             'config'      => [
-                'type'     => 'input',
-                'size'     => 40,
-                'eval'     => 'trim',
-                'readOnly' => true,
-                'required' => true,
+                'type'       => 'input',
+                'size'       => 40,
+                'eval'       => 'trim',
+                'readOnly'   => true,
+                'required'   => true,
                 'searchable' => false,
             ],
         ],

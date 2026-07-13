@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
-use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use function count;
 
 use Netresearch\UniversalMessenger\Configuration;
@@ -24,6 +23,7 @@ use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\Components\Buttons\ButtonInterface;
 use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownRadio;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -80,6 +80,11 @@ abstract class AbstractBaseController extends ActionController
     protected NewsletterRenderService $newsletterRenderService;
 
     /**
+     * @var ComponentFactory
+     */
+    private readonly ComponentFactory $componentFactory;
+
+    /**
      * The selected page ID.
      *
      * @var int
@@ -122,18 +127,20 @@ abstract class AbstractBaseController extends ActionController
      * @param Configuration               $configuration
      * @param NewsletterChannelRepository $newsletterChannelRepository
      * @param NewsletterRenderService     $newsletterRenderService
+     * @param ComponentFactory            $componentFactory
      */
     public function __construct(
         ModuleTemplateFactory $moduleTemplateFactory,
         Configuration $configuration,
         NewsletterChannelRepository $newsletterChannelRepository,
         NewsletterRenderService $newsletterRenderService,
-        private readonly ComponentFactory $componentFactory,
+        ComponentFactory $componentFactory,
     ) {
         $this->moduleTemplateFactory       = $moduleTemplateFactory;
         $this->configuration               = $configuration;
         $this->newsletterChannelRepository = $newsletterChannelRepository;
         $this->newsletterRenderService     = $newsletterRenderService;
+        $this->componentFactory            = $componentFactory;
     }
 
     /**
@@ -223,6 +230,7 @@ abstract class AbstractBaseController extends ActionController
      *
      * @param ButtonBar $buttonbar
      *
+     * @return ButtonInterface|null
      *
      * @throws RouteNotFoundException
      */

@@ -91,6 +91,8 @@ class Configuration
      * Returns an extension setting by a given path.
      *
      * @param string $path Path to get the config for
+     *
+     * @return string|null
      */
     public function getExtensionSetting(string $path): ?string
     {

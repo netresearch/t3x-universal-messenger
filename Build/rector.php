@@ -14,6 +14,7 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\LevelSetList;
@@ -60,6 +61,7 @@ return static function (RectorConfig $rectorConfig): void {
         ClassPropertyAssignToConstructorPromotionRector::class,
         RemoveUselessParamTagRector::class,
         RemoveUselessReturnTagRector::class,
+        RemoveUselessUnionReturnDocblockRector::class,
         RemoveUselessVarTagRector::class,
         RemoveUnusedPrivateMethodParameterRector::class,
 

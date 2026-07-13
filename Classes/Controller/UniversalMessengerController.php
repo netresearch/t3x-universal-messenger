@@ -427,6 +427,8 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * Returns the status of a newsletter sending for the given newsletter event ID.
      *
      * @param string $newsletterEventId
+     *
+     * @return NewsletterStatus|null
      */
     private function getNewsletterStatus(string $newsletterEventId): ?NewsletterStatus
     {

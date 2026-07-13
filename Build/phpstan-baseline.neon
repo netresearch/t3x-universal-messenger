@@ -7,16 +7,52 @@ parameters:
 			path: ../Classes/Backend/EventListener/ModifyPageLayoutContentEventListener.php
 
 		-
+			message: '#^Cannot access offset ''CType'' on TYPO3\\CMS\\Core\\Domain\\RecordInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Backend/EventListener/PageContentPreviewRenderingEventListener.php
+
+		-
+			message: '#^Cannot access offset ''bodytext'' on TYPO3\\CMS\\Core\\Domain\\RecordInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Backend/EventListener/PageContentPreviewRenderingEventListener.php
+
+		-
+			message: '#^Cannot access offset ''pi_flexform'' on TYPO3\\CMS\\Core\\Domain\\RecordInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Backend/EventListener/PageContentPreviewRenderingEventListener.php
+
+		-
 			message: '#^Method Netresearch\\UniversalMessenger\\Command\\ImportCommand\:\:getStoragePageId\(\) should return int\<0, max\> but returns int\.$#'
 			identifier: return.type
 			count: 1
 			path: ../Classes/Command/ImportCommand.php
 
 		-
+			message: '''
+				#^Call to deprecated method getExistingPageTranslations\(\) of class TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:
+				will be removed in TYPO3 v15\.0 \- use LocalizationRepository\-\>getPageTranslations\(\) instead\.$#
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: ../Classes/Controller/AbstractBaseController.php
+
+		-
 			message: '#^Cannot access offset ''id'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../Classes/Controller/AbstractBaseController.php
+
+		-
+			message: '''
+				#^Call to deprecated method getRecordLocalization\(\) of class TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:
+				will be removed in TYPO3 v15\.0 \- use LocalizationRepository\-\>getRecordTranslation\(\) instead\.$#
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: ../Classes/Controller/UniversalMessengerController.php
 
 		-
 			message: '#^Method Netresearch\\UniversalMessenger\\DataProcessing\\ControlStructureProcessor\:\:process\(\) has parameter \$contentObjectConfiguration with no value type specified in iterable type array\.$#'
@@ -41,3 +77,12 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/DataProcessing/ControlStructureProcessor.php
+
+		-
+			message: '''
+				#^Call to deprecated method addPiFlexFormValue\(\) of class TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility\:
+				Will be removed in TYPO3 v15$#
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: ../Configuration/TCA/Overrides/tt_content.php

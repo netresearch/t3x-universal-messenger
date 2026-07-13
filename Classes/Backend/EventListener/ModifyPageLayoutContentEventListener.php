@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Backend\EventListener;
 
-use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use Netresearch\UniversalMessenger\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
@@ -19,6 +18,7 @@ use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
@@ -50,21 +50,28 @@ final readonly class ModifyPageLayoutContentEventListener
     private UriBuilder $uriBuilder;
 
     /**
+     * @var ComponentFactory
+     */
+    private ComponentFactory $componentFactory;
+
+    /**
      * Constructor.
      *
-     * @param Configuration $configuration
-     * @param IconFactory   $iconFactory
-     * @param UriBuilder    $uriBuilder
+     * @param Configuration    $configuration
+     * @param IconFactory      $iconFactory
+     * @param UriBuilder       $uriBuilder
+     * @param ComponentFactory $componentFactory
      */
     public function __construct(
         Configuration $configuration,
         IconFactory $iconFactory,
         UriBuilder $uriBuilder,
-        private ComponentFactory $componentFactory,
+        ComponentFactory $componentFactory,
     ) {
-        $this->configuration = $configuration;
-        $this->iconFactory   = $iconFactory;
-        $this->uriBuilder    = $uriBuilder;
+        $this->configuration    = $configuration;
+        $this->iconFactory      = $iconFactory;
+        $this->uriBuilder       = $uriBuilder;
+        $this->componentFactory = $componentFactory;
     }
 
     /**
