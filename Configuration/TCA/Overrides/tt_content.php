@@ -79,16 +79,16 @@ call_user_func(static function (): void {
                                 'enableRichtext' => true,
                             ],
                         ],
+                        'pi_flexform' => [
+                            'config' => [
+                                // v14: the flex pointer-field mechanism (addPiFlexFormValue) was
+                                // removed (#107047); register the data structure directly here.
+                                'ds' => 'FILE:EXT:universal_messenger/Configuration/FlexForms/ControlStructure.xml',
+                            ],
+                        ],
                     ],
                 ],
             ],
         ],
-    );
-
-    // Add flexForms for content element configuration
-    ExtensionManagementUtility::addPiFlexFormValue(
-        '*',
-        'FILE:EXT:universal_messenger/Configuration/FlexForms/ControlStructure.xml',
-        'control_structure',
     );
 });
