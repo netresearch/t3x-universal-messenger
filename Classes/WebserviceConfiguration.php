@@ -29,11 +29,18 @@ class WebserviceConfiguration
     private readonly string $apiBaseUrl;
 
     /**
-     * The API key.
+     * The public API key (basic auth username).
      *
      * @var string
      */
     private readonly string $apiKey;
+
+    /**
+     * The secret API key (basic auth password).
+     *
+     * @var string
+     */
+    private readonly string $apiSecret;
 
     /**
      * WebserviceConfiguration constructor.
@@ -43,6 +50,7 @@ class WebserviceConfiguration
     ) {
         $this->apiBaseUrl = $configuration->getExtensionSetting('apiUrl') ?? '';
         $this->apiKey     = $configuration->getExtensionSetting('apiKey') ?? '';
+        $this->apiSecret  = $configuration->getExtensionSetting('apiSecret') ?? '';
     }
 
     /**
@@ -59,5 +67,13 @@ class WebserviceConfiguration
     public function getApiKey(): string
     {
         return $this->apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiSecret(): string
+    {
+        return $this->apiSecret;
     }
 }

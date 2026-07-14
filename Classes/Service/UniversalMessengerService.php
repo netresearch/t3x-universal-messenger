@@ -67,6 +67,7 @@ class UniversalMessengerService implements SingletonInterface
             $this->logger,
             $webserviceConfiguration->getApiBaseUrl(),
             $webserviceConfiguration->getApiKey(),
+            $webserviceConfiguration->getApiSecret(),
         );
     }
 

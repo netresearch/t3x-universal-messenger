@@ -52,16 +52,21 @@ global structure `TYPO3_CONF_VARS` under `EXTENSIONS` and `universal_messenger` 
 $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] = array_merge(
     $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger'] ?? [],
     [
-        'apiUrl' => 'YOUR-API-URL',
-        'apiKey' => 'YOUR-API-KEY',
+        'apiUrl'    => 'YOUR-API-URL',
+        'apiKey'    => 'YOUR-API-KEY',
+        'apiSecret' => 'YOUR-API-SECRET',
     ]
 );
 ```
 
-| Field  | Description                                                                                                                        |
-|:-------|:-----------------------------------------------------------------------------------------------------------------------------------|
-| apiUrl | Your general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p |
-| apiKey | Your Universal Messenger API key                                                                                                   |
+The webservice authenticates via HTTP basic authentication. Create an API key in the Universal Messenger
+backend; it consists of a public key (used as the username) and a secret key (used as the password).
+
+| Field     | Description                                                                                                                        |
+|:----------|:-----------------------------------------------------------------------------------------------------------------------------------|
+| apiUrl    | Your general Universal Messenger API URL, which is the basis of all requests, e.g. https://your-domain.td.universal-messenger.de/p |
+| apiKey    | The public key of your Universal Messenger API key (basic auth username)                                                           |
+| apiSecret | The secret key of your Universal Messenger API key (basic auth password)                                                           |
 
 
 ### Extension configuration
