@@ -8,6 +8,15 @@
 # Classic (sys_template-based) sites receive the same TypoScript via
 # ExtensionManagementUtility::addTypoScript() in ext_localconf.php; that call passes
 # includeInSiteSets = false, so this Set is the single, opt-in source for site-set
-# sites and the TypoScript is not loaded twice. The addStaticFile() templates (Fluid
-# content elements, example newsletter) remain classic-only.
+# sites and the TypoScript is not loaded twice.
 @import 'EXT:universal_messenger/Configuration/TypoScript/Default/setup.typoscript'
+
+# The Fluid content-elements rendering (newsletter view typeNum 1716283827) and the
+# newsletter container template (view.templatePathAndFilename) are both required for
+# the newsletter to render at all - the backend preview and the send process depend on
+# them. On classic sites they are provided as selectable static templates via
+# addStaticFile(); on site-set sites they must be imported here so the newsletter works
+# out of the box. Integrators override view.templatePathAndFilename with their own
+# newsletter template when they need a different layout.
+@import 'EXT:universal_messenger/Configuration/TypoScript/FluidContentElements/setup.typoscript'
+@import 'EXT:universal_messenger/Configuration/TypoScript/ExampleNewsletter/setup.typoscript'
