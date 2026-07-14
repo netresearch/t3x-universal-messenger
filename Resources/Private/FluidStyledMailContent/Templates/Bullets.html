@@ -1,0 +1,7 @@
+<f:comment><!-- Bullet list: the lines are pre-split into {bullets} by the SplitProcessor. --></f:comment>
+<f:render partial="Header" arguments="{_all}" />
+<f:if condition="{bullets}">
+    <ul>
+        <f:for each="{bullets}" as="bullet"><li>{bullet}</li></f:for>
+    </ul>
+</f:if>
