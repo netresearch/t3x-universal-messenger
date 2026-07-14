@@ -1,0 +1,4 @@
+<f:comment><!-- Text & media: header, body text and the attached media. --></f:comment>
+<f:render partial="Header" arguments="{_all}" />
+<f:if condition="{data.bodytext}"><f:format.raw>{data.bodytext}</f:format.raw></f:if>
+<f:render partial="Media" arguments="{_all}" />

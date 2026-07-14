@@ -1,0 +1,9 @@
+<f:comment><!-- Mail-safe media rendering: absolute image URLs, no external CSS. --></f:comment>
+<f:for each="{files}" as="file">
+    <div style="margin:0 0 8px 0;">
+        <f:image image="{file}" absolute="1" alt="{f:if(condition: file.alternative, then: file.alternative, else: file.title)}" />
+        <f:if condition="{file.description}">
+            <div style="font-size:12px;color:#666666;">{file.description}</div>
+        </f:if>
+    </div>
+</f:for>

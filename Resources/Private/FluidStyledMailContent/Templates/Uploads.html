@@ -1,0 +1,9 @@
+<f:comment><!-- File uploads: header plus a plain list of download links. --></f:comment>
+<f:render partial="Header" arguments="{_all}" />
+<f:if condition="{files}">
+    <ul>
+        <f:for each="{files}" as="file">
+            <li><a href="{f:uri.image(image: file, absolute: 1)}">{f:if(condition: file.title, then: file.title, else: file.name)}</a></li>
+        </f:for>
+    </ul>
+</f:if>

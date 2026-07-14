@@ -1,0 +1,7 @@
+<f:comment><!--
+    Generic fallback for any content type without a dedicated mail template.
+    Renders the header and the raw body text so the newsletter never fails to
+    render, regardless of the content type or the site's theme.
+--></f:comment>
+<f:render partial="Header" arguments="{_all}" />
+<f:if condition="{data.bodytext}"><f:format.raw>{data.bodytext}</f:format.raw></f:if>

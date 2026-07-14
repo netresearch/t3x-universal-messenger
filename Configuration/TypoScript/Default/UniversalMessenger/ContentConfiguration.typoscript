@@ -17,3 +17,17 @@ lib.universalMessengerContent {
         pidInList.field = pageUid
     }
 }
+
+# True lowest-priority fallback content templates.
+#
+# A newsletter must render even without a full sitepackage: a minimal theme (e.g.
+# typo3/theme-camino) does not provide a Fluid template for every content type (e.g.
+# plain HTML). The extension's own mail-safe templates are registered at a NEGATIVE
+# index so they sit BELOW every theme's own paths (bootstrap_package uses index 0,
+# theme_camino index 10). The theme therefore always wins when it provides a template;
+# only content types no theme provides fall back to these. Unconditional, so it does not
+# depend on the configurable newsletter page type and works in the standard page
+# rendering (web view) as well as in the newsletter/send rendering.
+lib.contentElement.templateRootPaths.-10 = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Templates/
+lib.contentElement.partialRootPaths.-10  = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Partials/
+lib.contentElement.layoutRootPaths.-10   = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Layouts/
