@@ -75,6 +75,9 @@
             <trans-unit id="error.missingChannelConfiguration">
                 <source>Please select a valid newsletter channel in the page properties.</source>
             </trans-unit>
+            <trans-unit id="error.missingTypoScriptConfiguration">
+                <source>The Universal Messenger TypoScript configuration is not loaded. Please assign the "Universal Messenger" site set to this site (or include the extension's static TypoScript template).</source>
+            </trans-unit>
             <trans-unit id="error.pageHidden">
                 <source>Please select a non disabled page.</source>
             </trans-unit>

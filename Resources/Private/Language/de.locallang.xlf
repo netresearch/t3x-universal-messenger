@@ -75,6 +75,9 @@
             <trans-unit id="error.missingChannelConfiguration">
                 <target>Bitte wählen Sie einen gültigen Newsletter-Kanal in den Seiteneigenschaften aus.</target>
             </trans-unit>
+            <trans-unit id="error.missingTypoScriptConfiguration">
+                <target>Die TypoScript-Konfiguration von Universal Messenger ist nicht geladen. Bitte weisen Sie der Site das Site-Set „Universal Messenger“ zu (oder binden Sie die statische TypoScript-Vorlage der Erweiterung ein).</target>
+            </trans-unit>
             <trans-unit id="error.pageHidden">
                 <target>Bitte wählen Sie eine nicht deaktivierte Seite aus.</target>
             </trans-unit>
