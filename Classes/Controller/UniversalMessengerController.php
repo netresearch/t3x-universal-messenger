@@ -46,6 +46,7 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
+use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
 /**
  * UniversalMessengerController.
@@ -214,7 +215,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $this->view->assign('previewUrl', $newsletterUrl);
         $this->view->assign('newsletterChannel', $newsletterChannel);
 
-        $this->moduleTemplate->assign('content', $this->view->render());
+        // The module content is rendered through the Extbase view, whose template paths
+        // come from the extension TypoScript (module.tx_universalmessenger.view). When that
+        // TypoScript is not loaded — e.g. the "netresearch/universal-messenger" site set is
+        // not assigned to the current site — the view falls back to the Extbase default path
+        // and cannot resolve its template. Catch that case and show an actionable message
+        // instead of letting the raw Fluid exception surface to the editor.
+        try {
+            $renderedContent = $this->view->render();
+        } catch (InvalidTemplateResourceException) {
+            return $this->forwardFlashMessage('error.missingTypoScriptConfiguration');
+        }
+
+        $this->moduleTemplate->assign('content', $renderedContent);
 
         return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
     }
