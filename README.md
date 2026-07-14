@@ -68,7 +68,7 @@ backend; it consists of a public key (used as the username) and a secret key (us
 | apiKey    | The public key of your Universal Messenger API key (basic auth username)                                                           |
 | apiSecret | The secret key of your Universal Messenger API key (basic auth password)                                                           |
 
-> **Server compatibility:** the Universal Messenger REST API is not versioned on the client side — the
+> **Server compatibility:** The Universal Messenger REST API is not versioned on the client side — the
 > authentication scheme depends on the Universal Messenger server version. API-key basic authentication
 > requires a Universal Messenger server **after 7.40**. Older servers use the `umopen`/`cmsbs.open` token
 > and require the `2.x` line of this extension (and of the underlying
