@@ -70,9 +70,9 @@ backend; it consists of a public key (used as the username) and a secret key (us
 
 > **Server compatibility:** The Universal Messenger REST API is not versioned on the client side — the
 > authentication scheme depends on the Universal Messenger server version. API-key basic authentication
-> requires a Universal Messenger server **after 7.40**. Older servers use the `umopen`/`cmsbs.open` token
-> and require the `2.x` line of this extension (and of the underlying
-> [SDK](https://github.com/netresearch/sdk-api-universal-messenger)).
+> requires a Universal Messenger server **7.56.0 or later**. The `umopen`/`cmsbs.open` token is deprecated
+> since UM 7.41 and works only transitionally; older servers use it and require the `2.x` line of this
+> extension (and of the underlying [SDK](https://github.com/netresearch/sdk-api-universal-messenger)).
 
 
 ### Extension configuration
