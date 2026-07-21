@@ -50,27 +50,33 @@
                     </button>
                 </f:form>
 
-                <f:form action="create" method="post" class="d-inline float-end">
+                <f:form action="create" method="post" class="d-inline float-end" id="universal-messenger-send-live">
                     <f:form.hidden name="newsletterChannel" value="{newsletterChannel.uid}" />
                     <f:form.hidden name="send" value="live" />
                     <f:if condition="{disableLiveButton}">
                         <f:then>
-                            <button type="submit" class="btn btn-danger btn-lg" disabled="disabled">
+                            <button type="button" class="btn btn-danger btn-lg" disabled="disabled">
                                 <f:translate key="common.sendNewsletterLive" />
                             </button>
                         </f:then>
                         <f:else>
                             <!--
-                                The core modal trigger submits the owning form once the
-                                editor confirms, so the dialog keeps working without any
-                                custom JavaScript. Note "content" — v14 dropped support
-                                for the legacy "bs-content" attribute and would otherwise
-                                fall back to a generic confirmation text.
+                                Deliberately type="button" and not type="submit": a submit
+                                button would send the newsletter straight away should the
+                                backend JavaScript be missing or broken, skipping the
+                                confirmation entirely. As a plain button it does nothing
+                                without JavaScript, and the core modal trigger submits the
+                                form named in "target-form" once the editor confirms — so
+                                the irreversible action always fails closed.
+
+                                Note "content": v14 dropped the legacy "bs-content"
+                                attribute and would otherwise show a generic text instead
+                                of the warning naming the channel.
                             -->
                             <button
-                                    type="submit"
+                                    type="button"
                                     class="btn btn-danger btn-lg t3js-modal-trigger"
-                                    data="{severity: 'error', title: '{f:translate(key: \'common.sendNewsletterLive\')}', content: '{f:translate(key: \'common.sendNewsletterLiveDialogContent\', arguments: {0: newsletterChannel.title})}', button-close-text: '{f:translate(key: \'common.sendNewsletterLiveButtonCancel\')}', button-ok-text: '{f:translate(key: \'common.sendNewsletterLiveButtonConfirm\')}'}"
+                                    data="{severity: 'error', title: '{f:translate(key: \'common.sendNewsletterLive\')}', content: '{f:translate(key: \'common.sendNewsletterLiveDialogContent\', arguments: {0: newsletterChannel.title})}', button-close-text: '{f:translate(key: \'common.sendNewsletterLiveButtonCancel\')}', button-ok-text: '{f:translate(key: \'common.sendNewsletterLiveButtonConfirm\')}', target-form: 'universal-messenger-send-live'}"
                             >
                                 <f:translate key="common.sendNewsletterLive" />
                             </button>
