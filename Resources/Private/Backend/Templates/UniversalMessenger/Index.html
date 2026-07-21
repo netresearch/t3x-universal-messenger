@@ -73,10 +73,22 @@
                                 attribute and would otherwise show a generic text instead
                                 of the warning naming the channel.
                             -->
+                            <!--
+                                The attributes are spelled out one by one on purpose: the
+                                array form data="{...}" is an argument of Fluid ViewHelpers
+                                such as f:link.action and is not evaluated on a plain HTML
+                                element, which would leave the button without its dialog
+                                texts and without the target form.
+                            -->
                             <button
                                     type="button"
                                     class="btn btn-danger btn-lg t3js-modal-trigger"
-                                    data="{severity: 'error', title: '{f:translate(key: \'common.sendNewsletterLive\')}', content: '{f:translate(key: \'common.sendNewsletterLiveDialogContent\', arguments: {0: newsletterChannel.title})}', button-close-text: '{f:translate(key: \'common.sendNewsletterLiveButtonCancel\')}', button-ok-text: '{f:translate(key: \'common.sendNewsletterLiveButtonConfirm\')}', target-form: 'universal-messenger-send-live'}"
+                                    data-severity="error"
+                                    data-title="{f:translate(key: 'common.sendNewsletterLive')}"
+                                    data-content="{f:translate(key: 'common.sendNewsletterLiveDialogContent', arguments: {0: newsletterChannel.title})}"
+                                    data-button-close-text="{f:translate(key: 'common.sendNewsletterLiveButtonCancel')}"
+                                    data-button-ok-text="{f:translate(key: 'common.sendNewsletterLiveButtonConfirm')}"
+                                    data-target-form="universal-messenger-send-live"
                             >
                                 <f:translate key="common.sendNewsletterLive" />
                             </button>
