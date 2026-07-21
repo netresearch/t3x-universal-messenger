@@ -297,6 +297,15 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      */
     public function createAction(?NewsletterChannel $newsletterChannel): ResponseInterface
     {
+        // Sending is irreversible and must never be reachable by navigation alone.
+        // A GET carrying the send parameters can be bookmarked and reloaded, and —
+        // worst of all — TYPO3 replays such a pending action after the editor logs
+        // in again, which would fire a live send without ever asking. Only an
+        // explicitly submitted form may reach the webservice.
+        if ($this->request->getMethod() !== 'POST') {
+            return $this->forwardFlashMessage('error.sendNotConfirmed');
+        }
+
         // Check if the submitted request is valid
         if (!$newsletterChannel instanceof NewsletterChannel
             || !$this->request->hasArgument('send')

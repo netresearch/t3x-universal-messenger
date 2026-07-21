@@ -35,22 +35,54 @@
                 <h3 class="panel-title"><f:translate key="common.newsletterSend" /></h3>
             </div>
             <div class="panel-body">
-                <f:link.action
-                        class="btn btn-success btn-lg"
-                        action="create"
-                        additionalParams="{newsletterChannel: newsletterChannel, send: 'test'}"
-                >
-                    <f:translate key="common.sendNewsletterTest" />
-                </f:link.action>
+                <!--
+                    Both sends are submitted forms, never links. A link would put the
+                    send parameters into a URL that can be bookmarked, reloaded and —
+                    worst of all — replayed by TYPO3 after the editor logs in again,
+                    firing an irreversible live send without asking. The controller
+                    rejects anything that is not a POST.
+                -->
+                <f:form action="create" method="post" class="d-inline">
+                    <f:form.hidden name="newsletterChannel" value="{newsletterChannel.uid}" />
+                    <f:form.hidden name="send" value="test" />
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <f:translate key="common.sendNewsletterTest" />
+                    </button>
+                </f:form>
 
-                <f:link.action
-                        class="btn btn-danger btn-lg float-end t3js-modal-trigger{f:if(condition: disableLiveButton, then: ' disabled')}"
-                        action="create"
-                        additionalParams="{newsletterChannel: newsletterChannel, send: 'live'}"
-                        data="{severity: 'error', title: '{f:translate(key: \'common.sendNewsletterLive\')}', bs-content: '{f:translate(key: \'common.sendNewsletterLiveDialogContent\', arguments: {0: newsletterChannel.title})}', button-close-text: '{f:translate(key: \'common.sendNewsletterLiveButtonCancel\')}', button-ok-text: '{f:translate(key: \'common.sendNewsletterLiveButtonConfirm\')}'}"
-                >
-                    <f:translate key="common.sendNewsletterLive" />
-                </f:link.action>
+                <f:form action="create" method="post" class="d-inline float-end" id="universal-messenger-send-live">
+                    <f:form.hidden name="newsletterChannel" value="{newsletterChannel.uid}" />
+                    <f:form.hidden name="send" value="live" />
+                    <f:if condition="{disableLiveButton}">
+                        <f:then>
+                            <button type="button" class="btn btn-danger btn-lg" disabled="disabled">
+                                <f:translate key="common.sendNewsletterLive" />
+                            </button>
+                        </f:then>
+                        <f:else>
+                            <!--
+                                Deliberately type="button" and not type="submit": a submit
+                                button would send the newsletter straight away should the
+                                backend JavaScript be missing or broken, skipping the
+                                confirmation entirely. As a plain button it does nothing
+                                without JavaScript, and the core modal trigger submits the
+                                form named in "target-form" once the editor confirms — so
+                                the irreversible action always fails closed.
+
+                                Note "content": v14 dropped the legacy "bs-content"
+                                attribute and would otherwise show a generic text instead
+                                of the warning naming the channel.
+                            -->
+                            <button
+                                    type="button"
+                                    class="btn btn-danger btn-lg t3js-modal-trigger"
+                                    data="{severity: 'error', title: '{f:translate(key: \'common.sendNewsletterLive\')}', content: '{f:translate(key: \'common.sendNewsletterLiveDialogContent\', arguments: {0: newsletterChannel.title})}', button-close-text: '{f:translate(key: \'common.sendNewsletterLiveButtonCancel\')}', button-ok-text: '{f:translate(key: \'common.sendNewsletterLiveButtonConfirm\')}', target-form: 'universal-messenger-send-live'}"
+                            >
+                                <f:translate key="common.sendNewsletterLive" />
+                            </button>
+                        </f:else>
+                    </f:if>
+                </f:form>
             </div>
         </div>
     </f:section>

@@ -69,6 +69,9 @@
             <trans-unit id="error.invalidRequest">
                 <target>Die übermittelte Anfrage ist ungültig.</target>
             </trans-unit>
+            <trans-unit id="error.sendNotConfirmed">
+                <target>Der Newsletter wurde nicht versendet. Zur Sicherheit muss ein Versand unmittelbar in diesem Modul bestätigt werden — er wird nie automatisch nachgeholt, etwa nach einer erneuten Anmeldung. Bitte wählen Sie den Kanal aus und bestätigen Sie den Versand erneut.</target>
+            </trans-unit>
             <trans-unit id="error.exceptionDuringCreate">
                 <target>Bei der Generierung des Universal Messenger Newsletter-Event-Requests ist ein Fehler aufgetreten.</target>
             </trans-unit>

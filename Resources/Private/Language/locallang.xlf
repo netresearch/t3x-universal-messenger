@@ -69,6 +69,9 @@
             <trans-unit id="error.invalidRequest">
                 <source>The submitted request is invalid.</source>
             </trans-unit>
+            <trans-unit id="error.sendNotConfirmed">
+                <source>The newsletter was not sent. For safety, a send has to be confirmed directly in this module — it is never carried out automatically, for instance after logging in again. Please select the channel and confirm the send once more.</source>
+            </trans-unit>
             <trans-unit id="error.exceptionDuringCreate">
                 <source>An error occurred while generating the Universal Messenger newsletter event request.</source>
             </trans-unit>
