@@ -1,3 +1,31 @@
+# 3.0.1
+
+## FIXES
+
+- 21b66f5 Never send a newsletter from a replayable request (#93) — a send was
+  triggered by a plain GET carrying the channel and the send type. Such a URL can
+  be bookmarked and reloaded, and TYPO3 replays it after the editor logs in again,
+  so clicking *live send* into an expired session and then logging in fired an
+  irreversible send without asking. Sending now requires a submitted form.
+- 7d0e87b Spell out the live button data attributes individually (#95) — the modal
+  configuration was written in the Fluid ViewHelper array form, which a plain HTML
+  button does not evaluate, leaving the confirmation dialog without its channel
+  specific warning and without the form to submit.
+- b712440 Let the controller reject a missing channel instead of Extbase (#98) — a
+  request without the channel died with a RequiredArgumentMissingException before
+  the guard could answer, because Extbase maps and validates arguments before it
+  calls the action and treats an argument without a default value as required.
+- 8d8c1cb Correct the basic auth server requirement to UM 7.56.0 (#86)
+
+## MISC
+
+- fa4e875 Skip the docs.typo3.org verification until documentation exists (#91)
+- b712440 Cover the argument classification through the real Extbase chain (#98)
+
+## Contributors
+
+- Rico Sonntag
+
 # 3.0.0
 
 ## BREAKING
