@@ -1,3 +1,46 @@
+# 3.0.0
+
+## BREAKING
+
+- 3f61e32 Raise the extension to TYPO3 v14 and drop support for v13 (#62)
+- 27c049c Adopt SDK v3 HTTP basic authentication (#82) — the Universal Messenger REST API
+  no longer accepts the deprecated `umopen`/`open` token. Configure an API key in the
+  Universal Messenger backend and fill both the new `apiSecret` setting (secret key)
+  and the existing `apiKey` setting (public key). Requires a Universal Messenger
+  server 7.56.0 or later.
+
+## FEATURES
+
+- 17587f7 Add a TYPO3 v14 Site Set for site-set-based sites (#67)
+- 17add34 Render newsletter content without a full sitepackage (#80)
+- b2fa147 Render newsletter content via a package-internal CONTENT path (#74)
+- 9ff59aa Complete the dev tooling — Fractor, PHPUnit tests, PHPat (#76)
+
+## FIXES
+
+- 4601d88 Show a clear message when the module TypoScript is missing (#78)
+- 0e18cc5 Do not run the request chain twice in InlineCssMiddleware (#70)
+- 88f91be Replace the deprecated getRecordLocalization with LocalizationRepository (#69)
+- 5f5eedc Replace the deprecated getExistingPageTranslations with LocalizationRepository (#68)
+- db2294a Build an absolute newsletter preview URL for relative site bases (#65)
+- 089a326 Register the control_structure FlexForm via columnsOverrides (#64)
+- 22a7a70 Use the Record API in the preview listener (#63)
+- b946f9f Remove the invalid eval=int from the RTE FlexForm field (#66)
+- 8b721e2 Drop the deprecated doktypesToShowInNewPageDragArea registration (#75)
+- 3c121c5 Replace the removed addUserTSConfig() with the defaultUserTSconfig global (#38)
+
+## MISC
+
+- 7c8163f Use FlexFormTools instead of the deprecated FlexFormService alias (#71)
+- 6bc5dc7 Drop auto-managed system columns from ext_tables.sql (#73)
+- 4bb69fd Remove the dead classic addService() registration (#72)
+- 8d8c1cb Document the server requirement for basic authentication, UM 7.56.0 (#84, #86)
+- 5d936ae Adopt the netresearch/.github typo3-extension CI template
+
+## Contributors
+
+- Rico Sonntag
+
 # 2.0.3
 
 ## MISC
