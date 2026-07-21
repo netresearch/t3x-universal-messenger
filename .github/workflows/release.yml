@@ -18,5 +18,10 @@ jobs:
       archive-prefix: 'universal-messenger'
       package-name: 'netresearch/universal-messenger'
       extension-key: 'universal_messenger'
+      # Documentation/ holds only screenshots — no guides.xml, no RST — so
+      # docs.typo3.org never renders this extension (the URL 404s) and the
+      # verification waits for a render run that never appears. Remove this
+      # once real documentation exists: see issue #90.
+      skip-docs: true
     secrets:
       TYPO3_TER_ACCESS_TOKEN: ${{ secrets.TYPO3_TER_ACCESS_TOKEN }}
