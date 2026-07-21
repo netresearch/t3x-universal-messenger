@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionProperty;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -72,6 +73,25 @@ final class UniversalMessengerControllerTest extends UnitTestCase
             $subject->forwardedFlashMessages,
             'A non-POST send request must be answered with the "not confirmed" message.',
         );
+    }
+
+    #[Test]
+    public function theChannelArgumentIsOptionalSoTheGuardRunsFirst(): void
+    {
+        // Extbase maps and validates action arguments *before* it calls the
+        // action method. An argument counts as required unless it carries a
+        // default value — being nullable is not enough. Without the default,
+        // a request lacking the channel died with a RequiredArgumentMissing-
+        // Exception before the POST guard above could reject it cleanly.
+        $parameter = (new ReflectionMethod(UniversalMessengerController::class, 'createAction'))
+            ->getParameters()[0];
+
+        self::assertTrue(
+            $parameter->isDefaultValueAvailable(),
+            'createAction() must declare a default for the channel, otherwise Extbase throws'
+            . ' before the controller can reject the request.',
+        );
+        self::assertNull($parameter->getDefaultValue());
     }
 
     /**

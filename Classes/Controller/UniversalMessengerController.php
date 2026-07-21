@@ -295,7 +295,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      *
      * @return ResponseInterface
      */
-    public function createAction(?NewsletterChannel $newsletterChannel): ResponseInterface
+    public function createAction(?NewsletterChannel $newsletterChannel = null): ResponseInterface
     {
         // Sending is irreversible and must never be reachable by navigation alone.
         // A GET carrying the send parameters can be bookmarked and reloaded, and —
