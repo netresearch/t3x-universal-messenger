@@ -14,7 +14,7 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\TYPO313\v0\MigrateAddUserTSConfigToUserTsConfigFileRector;
 
-$configure = require __DIR__ . '/../.build/vendor/netresearch/typo3-ci-workflows/config/rector/rector.php';
+$configure = require_once __DIR__ . '/../.build/vendor/netresearch/typo3-ci-workflows/config/rector/rector.php';
 
 return static function (RectorConfig $rectorConfig) use ($configure): void {
     // Shared org base config: code-quality sets, rule skips, phpstan-rector.neon
