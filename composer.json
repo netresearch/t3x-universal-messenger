@@ -55,7 +55,8 @@
             "php-http/discovery": true,
             "a9f/fractor-extension-installer": true,
             "infection/extension-installer": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "captainhook/hook-installer": true
         },
         "audit": {
             "ignore": {
