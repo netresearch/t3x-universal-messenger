@@ -33,7 +33,7 @@ PHP code of the `universal_messenger` TYPO3 v14 extension: a backend module (Ext
 
 <!-- AGENTS-GENERATED:START setup -->
 ## Setup & environment
-- Install dev tools: `composer install` (binaries in `.build/bin/`, vendors in `.build/vendor/`)
+- Install dev tools: `composer install` (binaries in `.Build/bin/`, vendors in `.Build/vendor/`)
 - PHP: ^8.2 · TYPO3: ^14.0 (core, backend, frontend, extbase, fluid, lowlevel)
 - Services are autowired/autoconfigured via `Configuration/Services.yaml`; `Domain/Model/*` is excluded from DI
 <!-- AGENTS-GENERATED:END setup -->
@@ -115,7 +115,7 @@ Layer rules (enforced by PHPat, see `../docs/ARCHITECTURE.md`): nothing depends 
 ## When stuck
 - TYPO3 Core API: https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/
 - TCA Reference: https://docs.typo3.org/m/typo3/reference-tca/main/en-us/
-- SDK source: `.build/vendor/netresearch/sdk-api-universal-messenger/` (after `composer install`)
+- SDK source: `.Build/vendor/netresearch/sdk-api-universal-messenger/` (after `composer install`)
 - Check `../docs/ARCHITECTURE.md` for the component map and layer rules
 - Review root AGENTS.md for project-wide conventions
 <!-- AGENTS-GENERATED:END help -->

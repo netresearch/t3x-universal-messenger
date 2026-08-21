@@ -32,8 +32,8 @@
         "typo3/cms-scheduler": "Allows you to run CLI scripts as a task within TYPO3"
     },
     "config": {
-        "bin-dir": ".build/bin",
-        "vendor-dir": ".build/vendor",
+        "bin-dir": ".Build/bin",
+        "vendor-dir": ".Build/vendor",
         "discard-changes": true,
         "sort-packages": true,
         "optimize-autoloader": true,
@@ -57,7 +57,7 @@
     "extra": {
         "typo3/cms": {
             "extension-key": "universal_messenger",
-            "web-dir": ".build/public"
+            "web-dir": ".Build/public"
         },
         "branch-alias": {
             "dev-main": "3.0.x-dev"
@@ -75,7 +75,7 @@
     },
     "scripts": {
         "ci:cgl": [
-            "php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .build/.php-cs-fixer.cache"
+            "php-cs-fixer fix --config Build/.php-cs-fixer.dist.php --diff --verbose --cache-file .Build/.php-cs-fixer.cache"
         ],
         "ci:rector": [
             "rector process --config Build/rector.php"
@@ -90,7 +90,7 @@
             "phplint --configuration Build/.phplint.yml"
         ],
         "ci:test:php:unit": [
-            "phpunit --configuration Build/UnitTests.xml"
+            "phpunit --configuration Build/phpunit.xml"
         ],
         "ci:test:php:functional": [
             "phpunit --configuration Build/FunctionalTests.xml"
