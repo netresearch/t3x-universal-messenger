@@ -9,7 +9,7 @@
 TYPO3 v14 backend extension (`universal_messenger`) for sending newsletters through the Universal Messenger API via `netresearch/sdk-api-universal-messenger`. Extension version: see `ext_emconf.php`.
 
 ## Commands
-> Source: composer.json scripts + Makefile (verified 2026-08-19). Run `composer install` first — binaries land in `.build/bin/` (composer `bin-dir`), vendors in `.build/vendor/`.
+> Source: composer.json scripts + Makefile (verified 2026-08-19). Run `composer install` first — binaries land in `.Build/bin/` (composer `bin-dir`), vendors in `.Build/vendor/`.
 
 <!-- AGENTS-GENERATED:START commands -->
 | Task | Command |
@@ -105,7 +105,7 @@ Architecture: component map and dependency rules in `docs/ARCHITECTURE.md` — t
 
 ### Never Do
 - Commit secrets, credentials, or sensitive data
-- Modify `.build/` or other generated files
+- Modify `.Build/` or other generated files
 - Push directly to `main` — open a PR
 - Merge a PR before all review threads are resolved
 - Squash commits during merge or rebase unless the user explicitly asked

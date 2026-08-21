@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.2/phpunit.xsd"
-         bootstrap="../.build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
-         cacheDirectory="../.build/.phpunit.cache"
+         bootstrap="../.Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
+         cacheDirectory="../.Build/.phpunit.cache"
          executionOrder="depends,defects"
          beStrictAboutOutputDuringTests="true"
          failOnRisky="true"
@@ -11,7 +11,7 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="universal_messenger">
+        <testsuite name="unit">
             <directory>../Tests/Unit</directory>
         </testsuite>
     </testsuites>
@@ -20,7 +20,7 @@
         <env name="TYPO3_CONTEXT" value="Testing"/>
     </php>
     <logging>
-        <junit outputFile="../.build/phpunit-report.xml"/>
+        <junit outputFile="../.Build/phpunit-report.xml"/>
     </logging>
     <source restrictNotices="true"
             restrictWarnings="true"
