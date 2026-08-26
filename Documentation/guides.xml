@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides xmlns="https://www.phpdoc.org/guides"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://www.phpdoc.org/guides vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+        links-are-relative="true"
+        default-code-language="php"
+>
+    <extension class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+               project-home="https://extensions.typo3.org/extension/universal_messenger/"
+               project-repository="https://github.com/netresearch/t3x-universal-messenger"
+               project-issues="https://github.com/netresearch/t3x-universal-messenger/issues"
+               edit-on-github="netresearch/t3x-universal-messenger"
+               edit-on-github-branch="main"
+               typo3-core-preferred="14.3"
+               interlink-shortcode="universal_messenger"
+    />
+    <project title="Universal Messenger"
+             version="3.0"
+             release="3.0.1"
+             copyright="2024-2026 by Netresearch DTT GmbH"/>
+</guides>

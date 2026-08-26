@@ -1,0 +1,9 @@
+..  This file contains global includes for all documentation files.
+
+..  |extension_key| replace:: universal_messenger
+..  |extension_name| replace:: Universal Messenger
+..  |vendor| replace:: Netresearch DTT GmbH
+
+..  _netresearch-website: https://www.netresearch.de/
+..  _github-repo: https://github.com/netresearch/t3x-universal-messenger
+..  _foundation-for-emails: https://get.foundation/emails.html
