@@ -1,5 +1,5 @@
 [![Latest version](https://img.shields.io/github/v/release/netresearch/universal-messenger?sort=semver)](https://github.com/netresearch/universal-messenger/releases/latest)
-[![License](https://img.shields.io/github/license/netresearch/universal-messenger)](https://github.com/netresearch/universal-messenger/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-proprietary-red)](https://github.com/netresearch/universal-messenger/blob/main/LICENSE)
 [![CI](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml/badge.svg)](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml)
 
 # Universal Messenger
