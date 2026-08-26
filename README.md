@@ -151,9 +151,18 @@ for sending via individual newsletter channels.
 
 
 ### TypoScript
-Go to the `TypoScript` page, select `Edit TypoScript Record` and then click `Edit the whole TypoScript record`. On the
-page that opens, go to the `Advanced Options` tab and add the static TypoScript
-`Universal Messenger: Fluid Content Elements` to the list of selected TypoScript configurations.
+The extension's default TypoScript (the newsletter preview page type, the plugin and the content element
+configuration) is loaded automatically, no manual "include static template" step is required for it:
+
+- On classic (`sys_template` based) sites it is registered globally via `ExtensionManagementUtility::addTypoScript()`.
+- On Site Set based sites, add `netresearch/universal-messenger` to the site's Set dependencies in
+  `config/sites/<site-identifier>/config.yaml`.
+
+A second static template, `Universal Messenger: Fluid Content Elements`, provides the actual Fluid rendering of the
+newsletter content and is **required** for newsletters to work, it is not loaded automatically. On classic sites,
+go to the `TypoScript` page, select `Edit TypoScript Record` and then click `Edit the whole TypoScript record`. On the
+page that opens, go to the `Advanced Options` tab and add it to the list of selected TypoScript configurations. On
+Site Set based sites it is already imported by the `netresearch/universal-messenger` Set.
 
 When creating a newsletter, the CSS is finally read from an external CSS file and the information is added as
 inline style attributes to the respective HTML elements.
