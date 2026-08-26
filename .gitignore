@@ -22,3 +22,6 @@ packages/
 .phplint.cache
 .phpunit.result.cache
 var/
+
+# Documentation rendering output
+Documentation-GENERATED-temp/
