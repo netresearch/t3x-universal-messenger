@@ -15,11 +15,11 @@ use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 return [
     'extension-netresearch-module' => [
         'provider' => SvgIconProvider::class,
-        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg',
+        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Extension.svg',
     ],
     'extension-netresearch-universal-messenger' => [
         'provider' => BitmapIconProvider::class,
-        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
+        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.png',
     ],
     'universal-messenger-dok-type-newsletter' => [
         'provider' => SvgIconProvider::class,
