@@ -1,3 +1,17 @@
+# 3.0.2
+
+## FIXES
+
+- d014ad9 Register the module icons against the files that exist. The icon
+  registration still pointed at Extension.png and Module.svg, but those files
+  had been renamed to Module.png and Extension.svg. Both sources resolved to
+  nothing, so the Universal Messenger module and its Netresearch group showed
+  no icon in the backend module menu on TYPO3 v13 and v14.
+
+## Contributors
+
+- Rico Sonntag
+
 # 3.0.1
 
 ## FIXES
