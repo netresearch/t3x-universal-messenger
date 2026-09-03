@@ -108,10 +108,9 @@ class InlineCssMiddleware implements MiddlewareInterface
             return $content;
         }
 
-        $files      = array_reverse($inlineCssFiles);
         $cssContent = '';
 
-        foreach ($files as $path) {
+        foreach ($inlineCssFiles as $path) {
             $file = GeneralUtility::getFileAbsFileName($path);
 
             if (file_exists($file)) {
