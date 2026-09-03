@@ -183,6 +183,15 @@ plugin.tx_universalmessenger {
 module.tx_universalmessenger < plugin.tx_universalmessenger
 ```
 
+> **Note:** Some HTML elements used by the bundled Fluid partials are not reset by the shipped
+> `ZurbFoundation.css`, nor by browser default stylesheets. For example, `Textpic.html`/`Media.html`
+> render images inside `<figure>`, and browsers apply a default `margin` to it (Chrome:
+> `margin: 1em 40px`) that Foundation for Emails never resets, since its own image component is
+> class-based (`.thumbnail`) rather than built on `<figure>`. This shrinks the image's content box
+> and can make a `width: 100%` image rule look "too narrow" compared to the surrounding text column.
+> If you hit this, add your own reset (e.g. `figure { margin: 0; }`) to your own `inlineCssFiles`
+> entry, other elements may need the same treatment depending on your design.
+
 
 #### Example backend layout
 Go to the `TypoScript` page, select `Edit TypoScript Record` and then click `Edit the whole TypoScript record`. On the
@@ -220,6 +229,14 @@ Each newsletter channel can also be configured with additional settings (a new i
 
 These settings are sent to the Universal Messenger API when the newsletter page is submitted.
 
+> **Note:** If "Embed images" is set to `all`, Universal Messenger downloads the images from your
+> TYPO3 instance's public URLs to embed them into the newsletter. This only works if those URLs
+> are covered by the `cmsbs.contentDownloader.urlAllowList` configured on the Universal Messenger
+> server side. Ask your Universal Messenger contact to add your domain to the allow list before
+> using `all`, otherwise the newsletter dispatch fails with an `EventException: Ressource(n)
+> fehlen in "html body"` error. `byPath` only rewrites the image URLs to relative links and is not
+> affected by this restriction.
+
 
 ### Creating newsletters
 To create a new newsletter, simply create a new page in the TYPO3 backend. To do this, use the new shortcut
@@ -255,6 +272,24 @@ web view, for examp le, and personalization is not available.
 ![Content Element: Control Structure](Documentation/CE-ControlStructure.png)
 
 Both the control structure and the alternative can be formatted using the RTE editor and thus adapted to the layout of the newsletter.
+
+Since `tt_content.control_structure` is registered as a standalone `FLUIDTEMPLATE` object, it bypasses whatever
+wrapping a site theme applies to other content types. If you need to wrap its website-rendered output (but not the
+mail rendering) in your own site-level TypoScript, scope the override using the classic `stdWrap.if` / `data = GP:...`
+pattern, **not** a TypoScript condition with ExpressionLanguage array access on `request.getQueryParams()`:
+
+```typo3_typoscript
+# Safe: "GP:type" returns an empty string, never a PHP warning, when the "type" GET parameter is absent
+tt_content.control_structure.stdWrap.wrap = <div class="component"><div class="component__content">|</div></div>
+tt_content.control_structure.stdWrap.wrap.if.value.data = GP:type
+tt_content.control_structure.stdWrap.wrap.if.equals = 1715682913
+tt_content.control_structure.stdWrap.wrap.if.negate = 1
+```
+
+A condition such as `[request.getQueryParams()["type"] != 1715682913]` crashes with an HTTP 500 whenever the `type`
+GET parameter is absent, i.e. on every plain page view without a newsletter render type: Symfony ExpressionLanguage's
+array-access node has no null-coalescing equivalent to PHP's `??`, so the resulting `E_WARNING: Undefined array key`
+is escalated by TYPO3's default `SYS.exceptionalErrors` configuration into a fatal, uncaught exception.
 
 
 ### View helpers
