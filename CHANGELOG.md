@@ -1,3 +1,26 @@
+# 3.0.3
+
+## FIXES
+
+- f1f520e Apply inlineCssFiles in the configured key order (#122). array_reverse()
+  inverted the documented precedence of multiple configured inlineCssFiles entries,
+  so with equal-specificity `!important` rules on both sides, Foundation's own CSS
+  could silently win over a project's own override instead of the other way round.
+  This is a behavioral change: an integrator whose override currently works
+  *because of* the reversal will see cascade order flip to match the documented
+  key-order semantics.
+
+## MISC
+
+- c00e098 Update vendored ZurbFoundation.css to Foundation for Emails 2.5.1 (#123)
+- e5bff0d Document the figure margin reset and the TypoScript ExpressionLanguage
+  array-access pitfall (#124)
+- a787042 Note the urlAllowList requirement for embed_images
+
+## Contributors
+
+- Rico Sonntag
+
 # 3.0.2
 
 ## FIXES
