@@ -329,6 +329,14 @@ A language switcher will appear above the preview if there are multiple versions
 Below the preview there are two buttons for testing the sending and for the final LIVE sending. The actual LIVE sending
 must be confirmed again in a dialog.
 
+> **Note:** Once a newsletter page has been sent LIVE, the module keeps showing a status banner ("The newsletter has
+> been sent out: ...") every time it is opened for that page and language, not just once right after sending. This is
+> not a stale flash message, the module derives a deterministic event ID from the site, page and language, and
+> queries Universal Messenger for that exact ID's status on every request. Once that ID has been sent, its status
+> stays "finished" in Universal Messenger, so the banner keeps reappearing. This is the visible counterpart of the
+> "Skip used ID" channel setting, which cancels a resend of an already-used event ID, the banner is a reminder that
+> this newsletter/language combination has already gone out, not a report of a send that just happened.
+
 
 ## Development
 ### Testing
