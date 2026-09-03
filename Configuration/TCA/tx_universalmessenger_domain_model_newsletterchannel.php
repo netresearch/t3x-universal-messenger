@@ -19,7 +19,7 @@ return [
         'crdate'    => 'crdate',
         'hideTable' => false,
         'sortby'    => 'sorting',
-        'iconfile'  => 'EXT:universal_messenger/Resources/Public/Icons/Extension.png',
+        'iconfile'  => 'EXT:universal_messenger/Resources/Public/Icons/Extension.svg',
     ],
     'types' => [
         0 => [
