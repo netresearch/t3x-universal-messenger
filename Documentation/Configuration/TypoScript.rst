@@ -59,6 +59,21 @@ On Site Set based sites, the same TypoScript is already imported by the
     The backend module preview uses ``module.tx_universalmessenger``, keep
     it in sync with the frontend plugin setup as shown above.
 
+    ..  note::
+        Some HTML elements used by the bundled Fluid partials are not
+        reset by the shipped ``ZurbFoundation.css``, nor by browser
+        default stylesheets. For example, the ``Textpic``/``Media``
+        partials render images inside ``<figure>``, and browsers apply a
+        default margin to it (Chrome: ``margin: 1em 40px``) that
+        Foundation for Emails never resets, since its own image
+        component is class-based (``.thumbnail``) rather than built on
+        ``<figure>``. This shrinks the image's content box and can make
+        a ``width: 100%`` image rule look "too narrow" compared to the
+        surrounding text column. If you hit this, add your own reset
+        (for example ``figure { margin: 0; }``) to your own
+        ``inlineCssFiles`` entry, other elements may need the same
+        treatment depending on your design.
+
 ..  _configuration-typoscript-example-newsletter:
 
 Example newsletter template
