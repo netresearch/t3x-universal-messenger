@@ -19,6 +19,7 @@ use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel as NewsletterChannelDomainModel;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Repository\NewsletterRepository;
+use Netresearch\UniversalMessenger\Service\ChannelDeduplicationService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -70,6 +71,11 @@ class ImportCommand extends Command implements LoggerAwareInterface
      * @var Configuration
      */
     private Configuration $configuration;
+
+    /**
+     * @var ChannelDeduplicationService
+     */
+    private ChannelDeduplicationService $channelDeduplicationService;
 
     /**
      * Configures the command.
@@ -130,6 +136,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $this->newsletterChannelRepository = GeneralUtility::makeInstance(NewsletterChannelRepository::class);
         $this->newsletterRepository        = GeneralUtility::makeInstance(NewsletterRepository::class);
         $this->configuration               = GeneralUtility::makeInstance(Configuration::class);
+        $this->channelDeduplicationService = GeneralUtility::makeInstance(ChannelDeduplicationService::class);
     }
 
     /**
@@ -147,20 +154,34 @@ class ImportCommand extends Command implements LoggerAwareInterface
             return self::FAILURE;
         }
 
+        // Group the raw channels by their suffix-stripped channel ID, so multiple
+        // test/live variants of the same logical channel are handled together instead
+        // of silently overwriting each other's title/description on every match.
+        $groupedChannels = $this->channelDeduplicationService->groupByStrippedId(
+            iterator_to_array($newsletterChannelCollection),
+            [
+                $this->getTestChannelSuffix(),
+                $this->getLiveChannelSuffix(),
+            ],
+        );
+
         $this->symfonyStyle->text('Perform import');
         $this->symfonyStyle->newLine();
-        $this->symfonyStyle->progressStart($newsletterChannelCollection->count());
+        $this->symfonyStyle->progressStart(count($groupedChannels));
 
         // List of newsletter channels imported
         $channelIds = [];
 
-        foreach ($newsletterChannelCollection as $newsletterChannel) {
-            $channelIds[] = $this->stripChannelSuffix($newsletterChannel->id);
+        foreach ($groupedChannels as $channelId => $candidateChannels) {
+            $channelIds[] = $channelId;
+
+            $this->warnOnAmbiguousChannelGroup($channelId, $candidateChannels);
 
             try {
                 // Newsletter channel
                 $newsletterChannelDomainModel = $this->hydrateNewsletterChannel(
-                    $newsletterChannel,
+                    $channelId,
+                    $this->channelDeduplicationService->selectCanonicalChannel($channelId, $candidateChannels),
                     $storagePid,
                 );
 
@@ -206,17 +227,17 @@ class ImportCommand extends Command implements LoggerAwareInterface
     /**
      * Hydrate a newsletter channel record with the given Universal Messenger webservice response.
      *
+     * @param string            $channelId
      * @param NewsletterChannel $newsletterChannel
      * @param int<0, max>       $storagePid
      *
      * @return NewsletterChannelDomainModel
      */
     private function hydrateNewsletterChannel(
+        string $channelId,
         NewsletterChannel $newsletterChannel,
         int $storagePid,
     ): NewsletterChannelDomainModel {
-        $channelId = $this->stripChannelSuffix($newsletterChannel->id);
-
         $newsletterChannelDomainModel = $this->newsletterChannelRepository
             ->findByChannelId($channelId);
 
@@ -271,24 +292,37 @@ class ImportCommand extends Command implements LoggerAwareInterface
     }
 
     /**
-     * Removes the configured channel suffixes from the given channel ID.
+     * Logs a warning if a stripped channel ID maps to more than one distinct raw
+     * Universal Messenger channel, so an integrator can notice an unintended naming
+     * collision instead of the metadata being silently merged.
      *
-     * @param string $channelId
+     * @param string              $channelId
+     * @param NewsletterChannel[] $candidateChannels
      *
-     * @return string
+     * @return void
      */
-    private function stripChannelSuffix(string $channelId): string
+    private function warnOnAmbiguousChannelGroup(string $channelId, array $candidateChannels): void
     {
-        return trim(
-            str_ireplace(
-                [
-                    $this->getTestChannelSuffix(),
-                    $this->getLiveChannelSuffix(),
-                ],
-                '',
-                $channelId,
-            ),
+        if (!$this->channelDeduplicationService->isAmbiguousGroup($candidateChannels)) {
+            return;
+        }
+
+        $rawChannelIds = array_map(
+            static fn (NewsletterChannel $candidateChannel): string => $candidateChannel->id,
+            $candidateChannels,
         );
+
+        $message = sprintf(
+            'Multiple Universal Messenger channels (%s) map to the same channel ID "%s" after stripping the'
+                . ' configured test/live suffix. Using the channel matching "%s" (or the alphabetically first one,'
+                . ' if none matches exactly) as the source of title/description, the others are ignored.',
+            implode(', ', $rawChannelIds),
+            $channelId,
+            $channelId,
+        );
+
+        $this->symfonyStyle->warning($message);
+        $this->logger?->warning($message);
     }
 
     /**
