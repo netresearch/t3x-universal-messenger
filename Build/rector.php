@@ -13,6 +13,7 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\TYPO313\v0\MigrateAddUserTSConfigToUserTsConfigFileRector;
+use Ssch\TYPO3Rector\TYPO313\v4\MigratePluginContentElementAndPluginSubtypesRector;
 
 $configure = require_once __DIR__ . '/../.Build/vendor/netresearch/typo3-ci-workflows/config/rector/rector.php';
 
@@ -42,5 +43,12 @@ return static function (RectorConfig $rectorConfig) use ($configure): void {
         __DIR__ . '/../ext_*.sql',
         RemoveUselessUnionReturnDocblockRector::class,
         MigrateAddUserTSConfigToUserTsConfigFileRector::class,
+        // False positive: this rule assumes an omitted $pluginType argument on
+        // ExtensionUtility::configurePlugin() still means the pre-14 "list_type"
+        // default and generates an AbstractListTypeToCTypeUpdate stub for it. Since
+        // TYPO3 v14 the omitted default already resolves to CType (core changed
+        // ExtensionUtility::configurePlugin()'s default), and this extension has no
+        // TYPO3 < 14 history, so there is no legacy list_type content to migrate.
+        MigratePluginContentElementAndPluginSubtypesRector::class,
     ]);
 };
