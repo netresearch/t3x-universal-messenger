@@ -93,6 +93,23 @@ final class ChannelDeduplicationServiceTest extends UnitTestCase
     }
 
     #[Test]
+    public function groupByStrippedIdOnlyStripsASuffixMatchingTheEndOfTheChannelId(): void
+    {
+        $subject = new ChannelDeduplicationService();
+
+        // "newsletter_Test_archive" contains "_Test" in the middle, not at the end,
+        // stripping it there would incorrectly collide it with "newsletter_archive".
+        $channels = [
+            $this->createChannel('newsletter_archive', 'Archiv'),
+            $this->createChannel('newsletter_Test_archive', 'Archiv (Test)'),
+        ];
+
+        $grouped = $subject->groupByStrippedId($channels, ['_Test', '_Live']);
+
+        self::assertSame(['newsletter_archive', 'newsletter_Test_archive'], array_keys($grouped));
+    }
+
+    #[Test]
     public function isAmbiguousGroupIsFalseForASingleChannel(): void
     {
         $subject = new ChannelDeduplicationService();

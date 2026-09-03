@@ -27,7 +27,10 @@ use TYPO3\CMS\Core\SingletonInterface;
 class ChannelDeduplicationService implements SingletonInterface
 {
     /**
-     * Removes the given suffixes from a channel ID.
+     * Removes the given suffixes from a channel ID, but only if a suffix matches the
+     * very end of the ID. A plain str_ireplace() would also strip a suffix occurring
+     * in the middle of a channel ID (e.g. "newsletter_Test_archive"), incorrectly
+     * colliding it with an unrelated channel (e.g. "newsletter_archive").
      *
      * @param string   $channelId
      * @param string[] $suffixes
@@ -36,7 +39,32 @@ class ChannelDeduplicationService implements SingletonInterface
      */
     public function stripSuffixes(string $channelId, array $suffixes): string
     {
-        return trim(str_ireplace($suffixes, '', $channelId));
+        foreach ($suffixes as $suffix) {
+            if ($this->endsWithCaseInsensitive($channelId, $suffix)) {
+                return trim(substr($channelId, 0, -strlen($suffix)));
+            }
+        }
+
+        return trim($channelId);
+    }
+
+    /**
+     * Returns TRUE if $haystack ends with $needle, ignoring case. Always FALSE for an
+     * empty $needle, so an empty configured suffix never matches (and thus never
+     * strips) every channel ID.
+     *
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return bool
+     */
+    private function endsWithCaseInsensitive(string $haystack, string $needle): bool
+    {
+        if ($needle === '') {
+            return false;
+        }
+
+        return strtolower(substr($haystack, -strlen($needle))) === strtolower($needle);
     }
 
     /**
