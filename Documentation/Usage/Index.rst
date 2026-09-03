@@ -36,6 +36,17 @@ Embed images                       none              Behavior for embedding imag
 These settings are sent to the Universal Messenger API together with the
 newsletter content.
 
+..  note::
+    If "Embed images" is set to ``all``, Universal Messenger downloads
+    the images from your TYPO3 instance's public URLs to embed them into
+    the newsletter. This only works if those URLs are covered by the
+    ``cmsbs.contentDownloader.urlAllowList`` configured on the Universal
+    Messenger server side. Ask your Universal Messenger contact to add
+    your domain to the allow list before using ``all``, otherwise the
+    newsletter dispatch fails with an ``EventException: Ressource(n)
+    fehlen in "html body"`` error. ``byPath`` only rewrites the image
+    URLs to relative links and is not affected by this restriction.
+
 ..  _usage-importing-channels:
 
 Importing newsletter channels
