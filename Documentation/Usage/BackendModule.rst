@@ -23,6 +23,14 @@ newsletter is shown exactly as it would be transferred to Universal
 Messenger and sent. A language switcher appears above the preview when
 the newsletter exists in multiple languages.
 
+..  note::
+    The language switcher only appears if the newsletter **page itself** has
+    been localized (for example via the page tree context menu or the
+    language column in the :guilabel:`Page` module), translating individual
+    content elements alone is not sufficient. This mirrors TYPO3 core's own
+    page-translation detection and applies regardless of how many languages
+    are configured for the site.
+
 ..  figure:: /Module-Step2.png
     :alt: Backend module showing a newsletter preview with a language
         switcher above it

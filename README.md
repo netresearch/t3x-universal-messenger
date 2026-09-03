@@ -319,6 +319,11 @@ Universal Messenger and sent.
 
 A language switcher will appear above the preview if there are multiple versions of a newsletter in different languages.
 
+> **Note:** The language switcher only appears if the newsletter **page itself** has been localized (e.g. via the page
+> tree context menu or the language column in the `Page` module), translating individual content elements alone is
+> not sufficient. This mirrors TYPO3 core's own page-translation detection and applies regardless of how many
+> languages are configured for the site.
+
 ![Newsletter preview](Documentation/Module-Step2.png)
 
 Below the preview there are two buttons for testing the sending and for the final LIVE sending. The actual LIVE sending
