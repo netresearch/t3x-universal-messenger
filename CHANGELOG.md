@@ -1,3 +1,46 @@
+# 3.0.4
+
+## FIXES
+
+- dbda321, fa67157 Stop the TEST and LIVE dispatch buttons from mirroring
+  each other's hidden "send" value (#136, #137). Both buttons submit a
+  hidden field named "send", and Fluid's `f:form.hidden` defaults
+  `respectSubmittedDataValue` to `true`. Since `createAction()` returns a
+  `ForwardResponse` to "index" after every dispatch, Extbase treats the
+  next render the same as a validation-error redisplay and silently
+  replaces each hidden field with whatever was last submitted for an
+  argument of the same name. In practice, clicking TEST right after a LIVE
+  dispatch (without a full page reload in between) silently resent a LIVE
+  newsletter, and vice versa.
+- ce2fa4b, 3e72581 Stop merging unrelated newsletter channels that happen to
+  share a `_Test`/`_Live`-suffixed name (#130, #133). The import command
+  stripped the configured suffix and matched channels by the stripped ID, so
+  two distinct channels whose raw IDs collided after stripping (e.g. a
+  literal channel named "newsletter_Test_archive" and another named
+  "newsletter_archive") had their title/description merged into a single,
+  non-deterministically chosen record.
+- 81f4ae0 Point the newsletter channel record's `iconfile` at the file that
+  exists (#134). It still referenced `Extension.png`, which no longer
+  existed after an earlier icon swap (`Extension.png` → `Module.png`,
+  `Module.svg` → `Extension.svg`), so the record-identity icon 404'd in
+  the edit view.
+
+## MISC
+
+- 8454fa2 Document that the backend module's language switcher only appears
+  once the newsletter page itself has been localized, not merely its content
+  elements (#131, #132).
+- 5ef473e Document that the persistent "newsletter has been sent" status
+  banner reflects the deterministic, per-site/page/language LIVE event ID and
+  the "Skip used ID" mechanism, not a stale flash message (#135).
+- 876a076 Skip a Rector rule (`MigratePluginContentElementAndPluginSubtypesRector`)
+  that generated a false-positive `AbstractListTypeToCTypeUpdate` upgrade
+  wizard stub for this extension's TYPO3-v14-only plugin registration (#138).
+
+## Contributors
+
+- Rico Sonntag
+
 # 3.0.3
 
 ## FIXES
