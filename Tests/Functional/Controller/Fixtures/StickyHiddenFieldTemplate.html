@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" data-namespace-typo3-fluid="true" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers">
+<head>
+    <title>StickyHiddenFieldTest fixture</title>
+</head>
+<body>
+<f:form action="dummy" method="post">
+    <f:form.hidden name="protectedField" value="protected-literal" respectSubmittedDataValue="false" />
+    <f:form.hidden name="stickyField" value="sticky-literal" />
+</f:form>
+</body>
+</html>

@@ -42,9 +42,21 @@
                     firing an irreversible live send without asking. The controller
                     rejects anything that is not a POST.
                 -->
+                <!--
+                    respectSubmittedDataValue="false" on both "send" hidden fields is
+                    required, not cosmetic: it defaults to TRUE in Fluid's
+                    HiddenViewHelper, and createAction() returns a ForwardResponse to
+                    "index", which Extbase treats the same as a validation-error
+                    redisplay (it sets an "original request" on the follow-up request).
+                    Without this, the *other* form's hidden "send" value is silently
+                    replaced by whatever was just submitted, because both forms use the
+                    same argument name "send" — so the TEST button can end up
+                    submitting "live" (or vice versa) right after the other button was
+                    used, despite this file hard-coding "test"/"live" as literals.
+                -->
                 <f:form action="create" method="post" class="d-inline">
                     <f:form.hidden name="newsletterChannel" value="{newsletterChannel.uid}" />
-                    <f:form.hidden name="send" value="test" />
+                    <f:form.hidden name="send" value="test" respectSubmittedDataValue="false" />
                     <button type="submit" class="btn btn-success btn-lg">
                         <f:translate key="common.sendNewsletterTest" />
                     </button>
@@ -52,7 +64,7 @@
 
                 <f:form action="create" method="post" class="d-inline float-end" id="universal-messenger-send-live">
                     <f:form.hidden name="newsletterChannel" value="{newsletterChannel.uid}" />
-                    <f:form.hidden name="send" value="live" />
+                    <f:form.hidden name="send" value="live" respectSubmittedDataValue="false" />
                     <f:if condition="{disableLiveButton}">
                         <f:then>
                             <button type="button" class="btn btn-danger btn-lg" disabled="disabled">
