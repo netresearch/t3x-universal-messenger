@@ -12,7 +12,7 @@ import { loginToBackend, gotoUniversalMessengerModule, getModuleFrame } from './
  * with this page. Extbase's __trustedProperties only signs which property
  * names a POST may set, not their values, so tampering the hidden
  * "newsletterChannel" field's VALUE from 101 to 102 does not invalidate the
- * request signature — this is the exact shape of the reported IDOR.
+ * request signature. This is the exact shape of the reported IDOR.
  */
 test.describe('Universal Messenger - GH-139 IDOR regression', () => {
     test('rejects a submitted channel that does not match the page\'s own channel', async ({ page }) => {
@@ -59,18 +59,27 @@ test.describe('Universal Messenger - GH-139 IDOR regression', () => {
 
         // Submit the page's OWN channel unmodified, through the exact same
         // path as the tamper test. Without this control, a guard collapsed
-        // to "always reject" would still pass that test — this proves the
+        // to "always reject" would still pass that test. This proves the
         // guard actually discriminates rather than rejecting everything.
         await testForm.evaluate((form: HTMLFormElement) => form.submit());
         await page.waitForLoadState('networkidle');
 
         // The E2E fixture's apiUrl is unreachable, so a legitimate request
-        // may still fail further down (a different alert, once it reaches
-        // the webservice call) — the assertion is specifically that the
-        // guard's own access-denied message never appears, not that no
-        // alert appears at all.
+        // proceeds past the guard and still fails further down, once it
+        // reaches the webservice call, with a DIFFERENT alert. First confirm
+        // processing actually continued at all (a positive anchor: without
+        // it, a regression that silently swallows the request before any
+        // flash message renders would leave the locator matching zero
+        // elements and the negative assertion below would pass vacuously),
+        // then confirm the guard's own access-denied message specifically
+        // never appears.
+        const resultAlert = moduleFrame.locator('.alert-danger, .alert-error');
         await expect(
-            moduleFrame.locator('.alert-danger, .alert-error'),
+            resultAlert,
+            'processing must continue past the guard and produce some result',
+        ).toBeVisible();
+        await expect(
+            resultAlert,
             'the guard must not reject the page\'s own, correctly-permitted channel',
         ).not.toContainText('You or your user group do not have the necessary rights to send this newsletter.');
     });

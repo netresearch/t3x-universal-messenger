@@ -152,10 +152,31 @@ final class InlineCssMiddlewareTest extends TestCase
 
         $request = (new ServerRequest())->withAttribute(
             'routing',
-            new PageArguments(1, (string) (Constants::NEWSLETTER_PREVIEW_TYPENUM + 1), []),
+            new PageArguments(
+                1,
+                (string) (Constants::NEWSLETTER_PREVIEW_TYPENUM + 1),
+                [],
+            ),
         );
 
-        $response = $subject->process($request, $this->createRequestHandlerReturning('<p>Hello</p>'));
+        $response = $subject->process(
+            $request,
+            $this->createRequestHandlerReturning('<p>Hello</p>'),
+        );
+
+        self::assertSame('<p>Hello</p>', (string) $response->getBody());
+    }
+
+    /** A request without a "routing" attribute at all (e.g. outside the frontend routing pipeline) must not be touched, distinct from the wrong-page-type case above. */
+    #[Test]
+    public function leavesContentUnchangedWhenTheRoutingAttributeIsMissing(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([$this->fixturePath()]));
+
+        $response = $subject->process(
+            new ServerRequest(),
+            $this->createRequestHandlerReturning('<p>Hello</p>'),
+        );
 
         self::assertSame('<p>Hello</p>', (string) $response->getBody());
     }
@@ -187,7 +208,11 @@ final class InlineCssMiddlewareTest extends TestCase
     {
         return (new ServerRequest())->withAttribute(
             'routing',
-            new PageArguments(1, (string) Constants::NEWSLETTER_PREVIEW_TYPENUM, []),
+            new PageArguments(
+                1,
+                (string) Constants::NEWSLETTER_PREVIEW_TYPENUM,
+                [],
+            ),
         );
     }
 

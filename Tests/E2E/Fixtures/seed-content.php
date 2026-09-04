@@ -48,8 +48,8 @@ $pdo->exec(
 echo "Newsletter page (uid=10) created\n";
 
 // Grant the admin backend user permission for BOTH channels: the page's own
-// one, and the unrelated one. This is the fixture, not the vulnerability —
-// the point is that "permitted for channel X in general" must not be enough
+// one, and the unrelated one. This is the fixture, not the vulnerability.
+// The point is that "permitted for channel X in general" must not be enough
 // to dispatch through a page configured for a different channel.
 $pdo
     ->prepare("UPDATE be_users SET universal_messenger_channels = ? WHERE username = 'admin'")
