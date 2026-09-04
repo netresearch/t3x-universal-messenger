@@ -29,5 +29,5 @@ lib.universalMessengerContent {
 # depend on the configurable newsletter page type and works in the standard page
 # rendering (web view) as well as in the newsletter/send rendering.
 lib.contentElement.templateRootPaths.-10 = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Templates/
-lib.contentElement.partialRootPaths.-10  = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Partials/
-lib.contentElement.layoutRootPaths.-10   = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Layouts/
+lib.contentElement.partialRootPaths.-10 = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Partials/
+lib.contentElement.layoutRootPaths.-10 = EXT:universal_messenger/Resources/Private/FluidStyledMailContent/Layouts/
