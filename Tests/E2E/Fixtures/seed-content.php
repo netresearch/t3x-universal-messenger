@@ -41,10 +41,12 @@ echo "Newsletter channel records created\n";
 
 // Newsletter page (doktype 20), child of the root page, configured for the
 // "own" channel. Visible, not hidden or deleted.
-$pdo->exec(
-    "INSERT IGNORE INTO pages (uid, pid, title, slug, doktype, universal_messenger_channel, hidden, deleted, tstamp, crdate)
-     VALUES (10, 1, 'Newsletter', '/newsletter', 20, " . CHANNEL_OWN_UID . ", 0, 0, $now, $now)",
-);
+$pdo
+    ->prepare(
+        'INSERT IGNORE INTO pages (uid, pid, title, slug, doktype, universal_messenger_channel, hidden, deleted, tstamp, crdate)
+         VALUES (10, 1, \'Newsletter\', \'/newsletter\', 20, ?, 0, 0, ?, ?)',
+    )
+    ->execute([CHANNEL_OWN_UID, $now, $now]);
 echo "Newsletter page (uid=10) created\n";
 
 // Grant the admin backend user permission for BOTH channels: the page's own
