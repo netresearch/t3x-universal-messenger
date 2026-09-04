@@ -16,14 +16,8 @@ use Netresearch\UniversalMessenger\Constants;
 use Netresearch\UniversalMessenger\Middleware\InlineCssMiddleware;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
 
 /**
@@ -41,7 +35,7 @@ use TYPO3\CMS\Core\Routing\PageArguments;
  * @see    https://www.netresearch.de
  */
 #[CoversClass(InlineCssMiddleware::class)]
-final class InlineCssMiddlewareTest extends TestCase
+final class InlineCssMiddlewareTest extends AbstractMiddlewareAcceptanceTestCase
 {
     /** Real fixture, real Emogrifier: the "color: red" declaration must end up as an inline style attribute on the matching element. */
     #[Test]
@@ -225,33 +219,5 @@ final class InlineCssMiddlewareTest extends TestCase
             ->willReturn($inlineCssFiles);
 
         return $configuration;
-    }
-
-    /** Builds a request routed to the newsletter preview page type, the only page type the middleware acts on. */
-    private function createPreviewRequest(): ServerRequestInterface
-    {
-        return (new ServerRequest())->withAttribute(
-            'routing',
-            new PageArguments(
-                1,
-                (string) Constants::NEWSLETTER_PREVIEW_TYPENUM,
-                [],
-            ),
-        );
-    }
-
-    /** Stands in for "the rest of the middleware stack": returns a fixed body regardless of the incoming request. */
-    private function createRequestHandlerReturning(string $body): RequestHandlerInterface
-    {
-        return new class ($body) implements RequestHandlerInterface {
-            public function __construct(private readonly string $body) {}
-
-            public function handle(ServerRequestInterface $request): ResponseInterface
-            {
-                return (new Response())->withBody(
-                    (new StreamFactory())->createStream($this->body),
-                );
-            }
-        };
     }
 }

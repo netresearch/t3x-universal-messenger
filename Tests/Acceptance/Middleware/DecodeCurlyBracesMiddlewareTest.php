@@ -15,13 +15,7 @@ use Netresearch\UniversalMessenger\Constants;
 use Netresearch\UniversalMessenger\Middleware\DecodeCurlyBracesMiddleware;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
 
 /**
@@ -41,7 +35,7 @@ use TYPO3\CMS\Core\Routing\PageArguments;
  * @see    https://www.netresearch.de
  */
 #[CoversClass(DecodeCurlyBracesMiddleware::class)]
-final class DecodeCurlyBracesMiddlewareTest extends TestCase
+final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptanceTestCase
 {
     /** Emogrifier's DOMDocument handling percent-encodes curly braces in URLs (RFC 1738); this middleware must decode them back so UM placeholders survive. */
     #[Test]
@@ -120,33 +114,5 @@ final class DecodeCurlyBracesMiddlewareTest extends TestCase
             '<a href="?x=%7Bfoo%7D">Link</a>',
             (string) $response->getBody(),
         );
-    }
-
-    /** Builds a request routed to the newsletter preview page type, the only page type the middleware acts on. */
-    private function createPreviewRequest(): ServerRequestInterface
-    {
-        return (new ServerRequest())->withAttribute(
-            'routing',
-            new PageArguments(
-                1,
-                (string) Constants::NEWSLETTER_PREVIEW_TYPENUM,
-                [],
-            ),
-        );
-    }
-
-    /** Stands in for "the rest of the middleware stack": returns a fixed body regardless of the incoming request. */
-    private function createRequestHandlerReturning(string $body): RequestHandlerInterface
-    {
-        return new class ($body) implements RequestHandlerInterface {
-            public function __construct(private readonly string $body) {}
-
-            public function handle(ServerRequestInterface $request): ResponseInterface
-            {
-                return (new Response())->withBody(
-                    (new StreamFactory())->createStream($this->body),
-                );
-            }
-        };
     }
 }
