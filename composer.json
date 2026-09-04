@@ -90,7 +90,10 @@
             "phplint --configuration Build/.phplint.yml"
         ],
         "ci:test:php:unit": [
-            "phpunit --configuration Build/phpunit.xml"
+            "phpunit --configuration Build/UnitTests.xml"
+        ],
+        "ci:test:php:acceptance": [
+            "phpunit --configuration Build/AcceptanceTests.xml"
         ],
         "ci:test:php:functional": [
             "phpunit --configuration Build/FunctionalTests.xml"
@@ -113,6 +116,7 @@
             "@ci:test:php:rector",
             "@ci:test:php:fractor",
             "@ci:test:php:unit",
+            "@ci:test:php:acceptance",
             "@ci:test:php:cgl"
         ]
     }
