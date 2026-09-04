@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
+use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveParentDelegatingClassMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\TYPO313\v0\MigrateAddUserTSConfigToUserTsConfigFileRector;
@@ -50,5 +52,17 @@ return static function (RectorConfig $rectorConfig) use ($configure): void {
         // ExtensionUtility::configurePlugin()'s default), and this extension has no
         // TYPO3 < 14 history, so there is no legacy list_type content to migrate.
         MigratePluginContentElementAndPluginSubtypesRector::class,
+        // False positive (both rules): they can't tell a delegating override apart
+        // from one that exists solely to widen the parent method's visibility.
+        // TestableUniversalMessengerController::getChannelAuthorizationFailure()
+        // widens the parent's protected method to public so unit tests can call it
+        // directly (the file's own established pattern); the identical-looking body
+        // is not dead code, and the visibility difference is the whole point.
+        RemoveParentDelegatingClassMethodRector::class => [
+            __DIR__ . '/../Tests/Unit/Controller/TestableUniversalMessengerController.php',
+        ],
+        MakeInheritedMethodVisibilitySameAsParentRector::class => [
+            __DIR__ . '/../Tests/Unit/Controller/TestableUniversalMessengerController.php',
+        ],
     ]);
 };
