@@ -529,6 +529,27 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         );
     }
 
+    /**
+     * Pins the (int) cast on the page's doktype. BackendUtility::getRecord()
+     * returns raw DB column values, which arrive as a numeric string on some
+     * platforms/drivers. Without the cast, a strict !== comparison against the
+     * configured int doktype would treat a legitimate newsletter page as a
+     * mismatch and reject it with error.pageNotAllowed.
+     */
+    #[Test]
+    public function authorizationSucceedsWhenThePagesDoktypeIsANumericString(): void
+    {
+        $subject = $this->createGuardSubject(permittedChannelUids: [self::CONFIGURED_CHANNEL_UID]);
+
+        $pageRecord = $this->validNewsletterPageRecord([
+            'doktype' => (string) self::NEWSLETTER_PAGE_DOKTYPE,
+        ]);
+
+        self::assertNull(
+            $subject->getChannelAuthorizationFailure($pageRecord, self::CONFIGURED_CHANNEL_UID),
+        );
+    }
+
     /** getNewsletterChannelPermissions() merges be_groups permissions into be_users ones; exercise that merge, not just the user-record path every other test above uses. */
     #[Test]
     public function authorizationSucceedsWhenThePermissionComesFromABackendGroupRatherThanTheUserRecord(): void

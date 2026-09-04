@@ -276,7 +276,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     protected function getChannelAuthorizationFailure(?array $pageRecord, int $channelUid): ?string
     {
         if (($pageRecord === null)
-            || ($pageRecord['doktype'] !== $this->configuration->getNewsletterPageDokType())
+            || ((int) $pageRecord['doktype'] !== $this->configuration->getNewsletterPageDokType())
         ) {
             return 'error.pageNotAllowed';
         }
