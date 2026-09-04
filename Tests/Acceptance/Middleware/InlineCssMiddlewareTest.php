@@ -76,6 +76,74 @@ final class InlineCssMiddlewareTest extends TestCase
         self::assertSame('<p>Hello</p>', (string) $response->getBody());
     }
 
+    /** An explicitly configured but empty file list is a second, independently-checked way to reach the same early return as null (a realistic TypoScript misconfiguration, not just the unset case). */
+    #[Test]
+    public function leavesContentUnchangedWhenTheConfiguredCssFileListIsEmpty(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('<p>Hello</p>'),
+        );
+
+        self::assertSame('<p>Hello</p>', (string) $response->getBody());
+    }
+
+    /** An empty response body with CSS files configured must not throw: CssInliner::fromHtml('') rejects empty input, so the middleware's own empty-content guard is load-bearing, not defensive dead code. */
+    #[Test]
+    public function leavesAnEmptyBodyEmptyEvenWithCssFilesConfigured(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([$this->fixturePath()]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning(''),
+        );
+
+        self::assertSame('', (string) $response->getBody());
+    }
+
+    /** A configured CSS file that does not exist on disk must be silently skipped (file_exists() guards the read), not fail the whole request. */
+    #[Test]
+    public function silentlySkipsAConfiguredCssFileThatDoesNotExist(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([
+            Environment::getProjectPath() . '/Tests/Acceptance/Fixtures/InlineCssMiddleware/does-not-exist.css',
+        ]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('<p>Hello</p>'),
+        );
+
+        // No CSS was actually loaded, so inlining runs with empty CSS: the
+        // content is normalized (wrapped into a full document) but carries
+        // no inline styles, proving the missing file was skipped rather
+        // than raising an error.
+        self::assertStringNotContainsString('style=', (string) $response->getBody());
+        self::assertStringContainsString('<p>Hello</p>', (string) $response->getBody());
+    }
+
+    /** Pins the two HtmlPruner post-processing steps the docblock claims are covered: removing display:none elements and stripping classes made redundant by inlining. The single-rule "color: red" fixture used above cannot distinguish either from a no-op. */
+    #[Test]
+    public function removesDisplayNoneElementsAndRedundantClassesAfterInlining(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([$this->pruningFixturePath()]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('<div class="hidden">Hidden</div><p class="foo">Visible</p>'),
+        );
+
+        self::assertSame(
+            '<!DOCTYPE html>' . "\n"
+            . '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>'
+            . '<body><p style="color: blue;">Visible</p></body></html>' . "\n",
+            (string) $response->getBody(),
+        );
+    }
+
     /** Only the newsletter preview page type may be rewritten; every other page type's response must pass through untouched, even with CSS files configured. */
     #[Test]
     public function leavesContentUnchangedForAnyOtherPageType(): void
@@ -95,6 +163,11 @@ final class InlineCssMiddlewareTest extends TestCase
     private function fixturePath(): string
     {
         return Environment::getProjectPath() . '/Tests/Acceptance/Fixtures/InlineCssMiddleware/style.css';
+    }
+
+    private function pruningFixturePath(): string
+    {
+        return Environment::getProjectPath() . '/Tests/Acceptance/Fixtures/InlineCssMiddleware/pruning.css';
     }
 
     /**
