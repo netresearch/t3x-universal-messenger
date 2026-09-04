@@ -181,11 +181,13 @@ final class InlineCssMiddlewareTest extends TestCase
         self::assertSame('<p>Hello</p>', (string) $response->getBody());
     }
 
+    /** Path to the fixture with a single "color: red" rule, used by the base inlining test. */
     private function fixturePath(): string
     {
         return Environment::getProjectPath() . '/Tests/Acceptance/Fixtures/InlineCssMiddleware/style.css';
     }
 
+    /** Path to the fixture pinning the two HtmlPruner steps: a display:none rule and a class made redundant by inlining. */
     private function pruningFixturePath(): string
     {
         return Environment::getProjectPath() . '/Tests/Acceptance/Fixtures/InlineCssMiddleware/pruning.css';
@@ -204,6 +206,7 @@ final class InlineCssMiddlewareTest extends TestCase
         return $configuration;
     }
 
+    /** Builds a request routed to the newsletter preview page type, the only page type the middleware acts on. */
     private function createPreviewRequest(): ServerRequestInterface
     {
         return (new ServerRequest())->withAttribute(
@@ -216,6 +219,7 @@ final class InlineCssMiddlewareTest extends TestCase
         );
     }
 
+    /** Stands in for "the rest of the middleware stack": returns a fixed body regardless of the incoming request. */
     private function createRequestHandlerReturning(string $body): RequestHandlerInterface
     {
         return new class ($body) implements RequestHandlerInterface {

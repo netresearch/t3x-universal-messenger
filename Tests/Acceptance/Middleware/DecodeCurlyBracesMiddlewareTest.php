@@ -122,6 +122,7 @@ final class DecodeCurlyBracesMiddlewareTest extends TestCase
         );
     }
 
+    /** Builds a request routed to the newsletter preview page type, the only page type the middleware acts on. */
     private function createPreviewRequest(): ServerRequestInterface
     {
         return (new ServerRequest())->withAttribute(
@@ -134,6 +135,7 @@ final class DecodeCurlyBracesMiddlewareTest extends TestCase
         );
     }
 
+    /** Stands in for "the rest of the middleware stack": returns a fixed body regardless of the incoming request. */
     private function createRequestHandlerReturning(string $body): RequestHandlerInterface
     {
         return new class ($body) implements RequestHandlerInterface {
