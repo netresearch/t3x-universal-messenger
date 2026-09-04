@@ -130,8 +130,14 @@ final class InlineCssMiddlewareTest extends TestCase
         // content is normalized (wrapped into a full document) but carries
         // no inline styles, proving the missing file was skipped rather
         // than raising an error.
-        self::assertStringNotContainsString('style=', (string) $response->getBody());
-        self::assertStringContainsString('<p>Hello</p>', (string) $response->getBody());
+        self::assertStringNotContainsString(
+            'style=',
+            (string) $response->getBody(),
+        );
+        self::assertStringContainsString(
+            '<p>Hello</p>',
+            (string) $response->getBody(),
+        );
     }
 
     /** Pins the two HtmlPruner post-processing steps the docblock claims are covered: removing display:none elements and stripping classes made redundant by inlining. The single-rule "color: red" fixture used above cannot distinguish either from a no-op. */
