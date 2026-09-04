@@ -24,7 +24,7 @@ test.describe('Universal Messenger - GH-139 IDOR regression', () => {
         // The test-send form: hidden inputs "newsletterChannel" (the page's
         // own channel, 101) and "send" (value "test").
         const testForm = moduleFrame.locator('form').filter({
-            has: page.locator('input[name="send"][value="test"]'),
+            has: moduleFrame.locator('input[name="send"][value="test"]'),
         });
         await expect(testForm, 'test-send form not found in the module').toHaveCount(1);
 
@@ -53,7 +53,7 @@ test.describe('Universal Messenger - GH-139 IDOR regression', () => {
         const moduleFrame = getModuleFrame(page);
 
         const testForm = moduleFrame.locator('form').filter({
-            has: page.locator('input[name="send"][value="test"]'),
+            has: moduleFrame.locator('input[name="send"][value="test"]'),
         });
         await expect(testForm.locator('input[name="newsletterChannel"]')).toHaveValue('101');
 
