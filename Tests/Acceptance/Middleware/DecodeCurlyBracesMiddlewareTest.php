@@ -126,7 +126,11 @@ final class DecodeCurlyBracesMiddlewareTest extends TestCase
     {
         return (new ServerRequest())->withAttribute(
             'routing',
-            new PageArguments(1, (string) Constants::NEWSLETTER_PREVIEW_TYPENUM, []),
+            new PageArguments(
+                1,
+                (string) Constants::NEWSLETTER_PREVIEW_TYPENUM,
+                [],
+            ),
         );
     }
 
