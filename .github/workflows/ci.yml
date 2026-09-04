@@ -21,8 +21,23 @@ jobs:
       php-versions: '["8.2","8.3","8.4","8.5"]'
       typo3-versions: '["^14.0"]'
       run-functional-tests: true
+      run-acceptance-tests: true
       functional-test-db: 'sqlite'
       upload-coverage: true
       coverage-tool: 'xdebug'
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  # E2E (Playwright) backend-module regression tests. Single TYPO3 14 target,
+  # no setup-variants matrix (this extension needs no fluid_styled_content /
+  # sitepackage combinations). setup-script owns provisioning via
+  # Build/Scripts/runTests.conf's e2e_provision_* hooks, so the same fixtures
+  # run locally (./Build/Scripts/runTests.sh -s e2e) and in CI.
+  e2e:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/e2e.yml@main
+    permissions:
+      contents: read
+    with:
+      setup-script: 'Build/Scripts/ci-e2e.sh'
+      artifact-path: 'Tests/E2E/playwright-report/'
+      timeout-minutes: 20
