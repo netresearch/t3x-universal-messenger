@@ -147,40 +147,25 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             );
         }
 
-        /** @var array<string, int|string|null>|null $contentRecord */
-        $contentRecord = BackendUtility::getRecord('pages', $this->pageId);
+        $contentRecord = $this->getPageRecord();
+        $channelUid    = (int) ($contentRecord['universal_messenger_channel'] ?? 0);
 
-        // Check if the selected page matches our newsletter page type
-        if (($contentRecord === null)
-            || ($contentRecord['doktype'] !== $this->configuration->getNewsletterPageDokType())
-        ) {
+        // Check if the selected page matches our newsletter page type, is visible,
+        // has a configured channel and the current backend user is permitted to
+        // use it. Kept after the doc-header UI above (unlike createAction()'s
+        // otherwise-identical guard): the language switcher must stay available
+        // on the rejection view too, e.g. a page hidden in the current language
+        // may be reachable after switching to another one.
+        $authorizationFailure = $this->getChannelAuthorizationFailure(
+            $contentRecord,
+            $channelUid,
+        );
+
+        if ($authorizationFailure !== null) {
             return $this->forwardFlashMessage(
-                'error.pageNotAllowed',
-                ContextualFeedbackSeverity::INFO,
+                $authorizationFailure,
+                $this->getAuthorizationFailureSeverity($authorizationFailure),
             );
-        }
-
-        // Check if the page is hidden
-        if (!isset($contentRecord['hidden'])
-            || ($contentRecord['hidden'] >= 1)
-        ) {
-            return $this->forwardFlashMessage('error.pageHidden');
-        }
-
-        // Check if the page has required newsletter channel configuration or just the default value
-        if (!isset($contentRecord['universal_messenger_channel'])
-            || ($contentRecord['universal_messenger_channel'] <= 0)
-        ) {
-            return $this->forwardFlashMessage('error.missingChannelConfiguration');
-        }
-
-        // Check if backend user is allowed to access this newsletter
-        if (!in_array(
-            $contentRecord['universal_messenger_channel'],
-            $this->getNewsletterChannelPermissions(),
-            true,
-        )) {
-            return $this->forwardFlashMessage('error.accessNotAllowed');
         }
 
         $newsletterUrl = $this->getNewsletterUrl($this->pageId);
@@ -193,7 +178,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         // Check if a newsletter status is available
         $newsletterEventId = $this->generateLiveEventId();
         $newsletterChannel = $this->newsletterChannelRepository
-            ->findByUid($contentRecord['universal_messenger_channel']);
+            ->findByUid($channelUid);
 
         $newsletterStatus = $this->getNewsletterStatus($newsletterEventId);
 
@@ -256,6 +241,89 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     }
 
     /**
+     * Returns the raw pages record of the currently selected page.
+     *
+     * Wrapped so it can be doubled in tests without a database.
+     *
+     * @return array<string, int|string|null>|null
+     */
+    protected function getPageRecord(): ?array
+    {
+        /** @var array<string, int|string|null>|null $pageRecord */
+        $pageRecord = BackendUtility::getRecord('pages', $this->pageId);
+
+        return $pageRecord;
+    }
+
+    /**
+     * Determines why $channelUid may not be used to dispatch a send from
+     * $pageRecord, or returns NULL when it may.
+     *
+     * The single source of truth for the newsletter module's authorization
+     * rule: the page must match the configured newsletter doktype, must not
+     * be hidden, must have a configured channel matching $channelUid, and the
+     * current backend user must be permitted to use that channel. Both
+     * indexAction() (deciding whether to render the send form) and
+     * createAction() (deciding whether to actually dispatch) go through this
+     * one method, so the two can never drift apart and silently reopen an
+     * authorization gap between "what is offered" and "what is accepted."
+     *
+     * @param array<string, int|string|null>|null $pageRecord
+     * @param int                                 $channelUid
+     *
+     * @return string|null The flash message key naming the failure reason, or NULL when authorized
+     */
+    protected function getChannelAuthorizationFailure(?array $pageRecord, int $channelUid): ?string
+    {
+        if (($pageRecord === null)
+            || ($pageRecord['doktype'] !== $this->configuration->getNewsletterPageDokType())
+        ) {
+            return 'error.pageNotAllowed';
+        }
+
+        if (!isset($pageRecord['hidden'])
+            || ($pageRecord['hidden'] >= 1)
+        ) {
+            return 'error.pageHidden';
+        }
+
+        if (!isset($pageRecord['universal_messenger_channel'])
+            || ((int) $pageRecord['universal_messenger_channel'] <= 0)
+        ) {
+            return 'error.missingChannelConfiguration';
+        }
+
+        if (((int) $pageRecord['universal_messenger_channel'] !== $channelUid)
+            || !in_array(
+                $channelUid,
+                $this->getNewsletterChannelPermissions(),
+                true,
+            )
+        ) {
+            return 'error.accessNotAllowed';
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the flash message severity for an authorization-failure reason
+     * from getChannelAuthorizationFailure(). Only a missing/wrong-doktype page
+     * is informational, everything else (hidden, unconfigured, unauthorized) is
+     * an error the editor needs to act on.
+     *
+     * @param string $authorizationFailure
+     *
+     * @return ContextualFeedbackSeverity
+     */
+    protected function getAuthorizationFailureSeverity(string $authorizationFailure): ContextualFeedbackSeverity
+    {
+        return ($authorizationFailure === 'error.pageNotAllowed')
+            ? ContextualFeedbackSeverity::INFO
+            : ContextualFeedbackSeverity::ERROR;
+    }
+
+    /**
      * Returns an array of newsletter channel permissions. The newsletter channel permissions from BE Groups
      * are also taken into consideration and are merged into User permissions.
      *
@@ -313,6 +381,23 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.invalidRequest');
         }
 
+        $contentRecord = $this->getPageRecord();
+
+        // The channel above is populated straight from the submitted "newsletterChannel"
+        // hidden field, i.e. Extbase resolves it to any NewsletterChannel record by UID.
+        // Re-run the same authorization rule indexAction() uses before rendering the
+        // send form, this time against the submitted channel, before touching any
+        // collaborator that talks to the webservice. Every possible reason collapses
+        // into one generic message: unlike indexAction()'s trusted, already-rendered
+        // view, this is the path a crafted POST reaches, and leaking which specific
+        // check failed would help an attacker probe the guard.
+        if ($this->getChannelAuthorizationFailure(
+            $contentRecord,
+            (int) $newsletterChannel->getUid(),
+        ) !== null) {
+            return $this->forwardFlashMessage('error.accessNotAllowed');
+        }
+
         try {
             $newsletterUrl = $this->getNewsletterUrl($this->pageId, false);
 
@@ -323,7 +408,6 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
             $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($newsletterUrl);
-            $contentRecord       = BackendUtility::getRecord('pages', $this->pageId);
             $newsletterType      = strtoupper((string) $this->request->getArgument('send'));
             $newsletterChannelId = $newsletterChannel->getChannelId();
 
