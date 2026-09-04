@@ -1,3 +1,28 @@
+# 3.0.5
+
+## SECURITY
+
+- 8da8732 Close an IDOR in the newsletter dispatch action (GH-139, #162).
+  `createAction()` never validated the submitted `newsletterChannel` hidden
+  field against the page's configured channel or the backend user's
+  permitted channels, unlike `indexAction()`, which already did. Any
+  authenticated backend user could submit a channel UID belonging to a
+  different page/customer and trigger a live send through it. The shared
+  authorization guard is now enforced before `createAction()` dispatches to
+  the webservice, and every specific rejection reason collapses into a
+  generic error message to avoid oracle-style probing.
+
+## MISC
+
+- 1b7922a Add a PHPUnit-based Acceptance test tier and a real-browser
+  Playwright E2E suite (#165), including a regression test that reproduces
+  the GH-139 fix above by tampering the hidden channel field in a real
+  browser session.
+
+## Contributors
+
+- Rico Sonntag
+
 # 3.0.4
 
 ## FIXES
