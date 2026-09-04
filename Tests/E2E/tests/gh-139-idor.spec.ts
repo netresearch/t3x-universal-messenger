@@ -57,11 +57,21 @@ test.describe('Universal Messenger - GH-139 IDOR regression', () => {
         });
         await expect(testForm.locator('input[name="newsletterChannel"]')).toHaveValue('101');
 
-        // Without this control, a guard collapsed to "always reject" would
-        // still pass the test above.
+        // Submit the page's OWN channel unmodified, through the exact same
+        // path as the tamper test. Without this control, a guard collapsed
+        // to "always reject" would still pass that test — this proves the
+        // guard actually discriminates rather than rejecting everything.
+        await testForm.evaluate((form: HTMLFormElement) => form.submit());
+        await page.waitForLoadState('networkidle');
+
+        // The E2E fixture's apiUrl is unreachable, so a legitimate request
+        // may still fail further down (a different alert, once it reaches
+        // the webservice call) — the assertion is specifically that the
+        // guard's own access-denied message never appears, not that no
+        // alert appears at all.
         await expect(
             moduleFrame.locator('.alert-danger, .alert-error'),
-            'no rejection message must be present before any submission',
-        ).toHaveCount(0);
+            'the guard must not reject the page\'s own, correctly-permitted channel',
+        ).not.toContainText('You or your user group do not have the necessary rights to send this newsletter.');
     });
 });

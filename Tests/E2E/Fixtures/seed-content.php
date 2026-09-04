@@ -34,6 +34,7 @@ $insertChannel = $pdo->prepare(
      VALUES (?, 1, ?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE channel_id = VALUES(channel_id), title = VALUES(title)',
 );
+
 $insertChannel->execute([CHANNEL_OWN_UID, $now, $now, 'e2e_own', 'E2E Own Channel', 'sender@example.invalid', 'reply@example.invalid']);
 $insertChannel->execute([CHANNEL_OTHER_UID, $now, $now, 'e2e_other', 'E2E Other Channel', 'sender@example.invalid', 'reply@example.invalid']);
 echo "Newsletter channel records created\n";
