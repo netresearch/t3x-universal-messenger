@@ -90,7 +90,7 @@
             "phplint --configuration Build/.phplint.yml"
         ],
         "ci:test:php:unit": [
-            "phpunit --configuration Build/phpunit.xml"
+            "phpunit --configuration Build/UnitTests.xml"
         ],
         "ci:test:php:functional": [
             "phpunit --configuration Build/FunctionalTests.xml"

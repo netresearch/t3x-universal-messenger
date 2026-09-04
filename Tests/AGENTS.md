@@ -10,7 +10,7 @@ Test suites of the `universal_messenger` extension: PHPUnit unit and functional 
 <!-- AGENTS-GENERATED:START setup -->
 ## Setup
 - `composer install` first — PHPUnit and the TYPO3 testing framework land in `.Build/` (composer `vendor-dir`/`bin-dir`)
-- PHPUnit configs live in `Build/phpunit.xml` and `Build/FunctionalTests.xml` (not in `Tests/`)
+- PHPUnit configs live in `Build/UnitTests.xml` and `Build/FunctionalTests.xml` (not in `Tests/`)
 - Functional tests need a database; CI runs them against SQLite (`functional-test-db: 'sqlite'` in `.github/workflows/ci.yml`)
 <!-- AGENTS-GENERATED:END setup -->
 
@@ -30,7 +30,7 @@ Test suites of the `universal_messenger` extension: PHPUnit unit and functional 
 ## Test Structure
 ```
 Tests/
-├── Unit/            # Fast, isolated unit tests (Build/phpunit.xml)
+├── Unit/            # Fast, isolated unit tests (Build/UnitTests.xml)
 ├── Functional/      # Tests with TYPO3/DB context (Build/FunctionalTests.xml)
 └── Architecture/    # PHPat rules, executed by composer ci:test:php:phpstan
 ```
@@ -43,7 +43,7 @@ Tests/
 | Unit tests | `composer ci:test:php:unit` |
 | Functional tests | `composer ci:test:php:functional` |
 | Architecture rules | `composer ci:test:php:phpstan` (PHPat runs inside PHPStan) |
-| Single file | `.Build/bin/phpunit --configuration Build/phpunit.xml Tests/Unit/Path/To/Test.php` |
+| Single file | `.Build/bin/phpunit --configuration Build/UnitTests.xml Tests/Unit/Path/To/Test.php` |
 <!-- AGENTS-GENERATED:END commands -->
 
 <!-- AGENTS-GENERATED:START patterns -->
