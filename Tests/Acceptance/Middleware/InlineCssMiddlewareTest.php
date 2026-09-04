@@ -73,7 +73,10 @@ final class InlineCssMiddlewareTest extends TestCase
             $this->createRequestHandlerReturning('<p>Hello</p>'),
         );
 
-        self::assertSame('<p>Hello</p>', (string) $response->getBody());
+        self::assertSame(
+            '<p>Hello</p>',
+            (string) $response->getBody(),
+        );
     }
 
     /** An explicitly configured but empty file list is a second, independently-checked way to reach the same early return as null (a realistic TypoScript misconfiguration, not just the unset case). */
@@ -87,7 +90,10 @@ final class InlineCssMiddlewareTest extends TestCase
             $this->createRequestHandlerReturning('<p>Hello</p>'),
         );
 
-        self::assertSame('<p>Hello</p>', (string) $response->getBody());
+        self::assertSame(
+            '<p>Hello</p>',
+            (string) $response->getBody(),
+        );
     }
 
     /** An empty response body with CSS files configured must not throw: CssInliner::fromHtml('') rejects empty input, so the middleware's own empty-content guard is load-bearing, not defensive dead code. */
@@ -101,7 +107,10 @@ final class InlineCssMiddlewareTest extends TestCase
             $this->createRequestHandlerReturning(''),
         );
 
-        self::assertSame('', (string) $response->getBody());
+        self::assertSame(
+            '',
+            (string) $response->getBody(),
+        );
     }
 
     /** A configured CSS file that does not exist on disk must be silently skipped (file_exists() guards the read), not fail the whole request. */
@@ -164,7 +173,10 @@ final class InlineCssMiddlewareTest extends TestCase
             $this->createRequestHandlerReturning('<p>Hello</p>'),
         );
 
-        self::assertSame('<p>Hello</p>', (string) $response->getBody());
+        self::assertSame(
+            '<p>Hello</p>',
+            (string) $response->getBody(),
+        );
     }
 
     /** A request without a "routing" attribute at all (e.g. outside the frontend routing pipeline) must not be touched, distinct from the wrong-page-type case above. */
@@ -178,7 +190,10 @@ final class InlineCssMiddlewareTest extends TestCase
             $this->createRequestHandlerReturning('<p>Hello</p>'),
         );
 
-        self::assertSame('<p>Hello</p>', (string) $response->getBody());
+        self::assertSame(
+            '<p>Hello</p>',
+            (string) $response->getBody(),
+        );
     }
 
     /** Path to the fixture with a single "color: red" rule, used by the base inlining test. */
