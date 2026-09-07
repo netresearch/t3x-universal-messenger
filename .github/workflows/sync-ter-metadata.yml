@@ -1,0 +1,52 @@
+name: Sync TER metadata
+
+# One-off/occasional manual trigger to push TER "external_manual" and other
+# metadata fields via `tailor ter:update`, independent of a version release.
+#
+# Needed because TER's "Extension Manual" auto-link to docs.typo3.org only
+# fires when external_manual is genuinely empty. This extension's TER entry
+# was registered long before Documentation/ existed, so the field defaulted
+# to the GitHub README and stays there forever unless explicitly overwritten,
+# see the release.yml orchestrator's own publish-to-ter job, which never
+# passes a manual-url (there is no such input on release-typo3-extension.yml
+# to forward one).
+
+on:
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  sync-ter-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.5'
+          extensions: intl, mbstring, json, zip, curl
+          tools: composer:v2
+
+      - name: Install tailor
+        run: composer global require typo3/tailor:^1 --prefer-dist --no-progress
+
+      - name: Update TER external manual link
+        env:
+          TYPO3_API_TOKEN: ${{ secrets.TYPO3_TER_ACCESS_TOKEN }}
+        run: |
+          php ~/.composer/vendor/bin/tailor ter:update \
+            --manual="https://docs.typo3.org/p/netresearch/universal-messenger/main/en-us/" \
+            universal_messenger
