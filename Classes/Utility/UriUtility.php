@@ -13,7 +13,7 @@ namespace Netresearch\UniversalMessenger\Utility;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use TypeError;
+use Throwable;
 use TYPO3\CMS\Core\Middleware\VerifyHostHeader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -109,13 +109,20 @@ final class UriUtility
                 $httpHost,
                 $serverParams,
             );
-        } catch (TypeError) {
+        } catch (Throwable) {
             // VerifyHostHeader::hostHeaderValueMatchesTrustedHostsPattern()'s default
-            // 'SERVER_NAME' pattern branch calls strtolower($serverParams['SERVER_NAME'])
-            // with no null-coalescing under strict_types. A request whose server params
-            // don't carry SERVER_NAME/SERVER_PORT (e.g. a synthetic ServerRequest built
-            // outside a real HTTP request cycle) throws instead of returning false. Fail
-            // closed: treat an incomplete server params array the same as an untrusted host.
+            // 'SERVER_NAME' pattern branch reads $serverParams['SERVER_NAME'] and
+            // $serverParams['SERVER_PORT'] with no null-coalescing (as observed on
+            // 2026-09-14 against TYPO3 v14 core, .Build/vendor/typo3/cms-core/Classes/
+            // Middleware/VerifyHostHeader.php; re-check that method if this ever needs
+            // re-deriving). A request whose server params don't carry those keys (e.g.
+            // a synthetic ServerRequest built outside a real HTTP request cycle) can
+            // throw instead of returning false, a TypeError for the missing SERVER_NAME
+            // strtolower() argument, or (under a non-default SYS/exceptionalErrors
+            // config that promotes E_WARNING) a TYPO3\CMS\Core\Error\Exception for the
+            // missing SERVER_PORT read. Catch broadly and fail closed: treat any such
+            // failure the same as an untrusted host, since @internal core code is not
+            // guaranteed to keep surfacing exactly today's exception class here.
             return false;
         }
     }

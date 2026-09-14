@@ -108,11 +108,9 @@ final class UriUtilityTest extends UnitTestCase
     /**
      * A request whose server params carry none of HTTP_HOST/SERVER_NAME/SERVER_PORT (a
      * synthetic or otherwise incomplete ServerRequest, e.g. one built by a caller outside a
-     * real HTTP request cycle) must be treated as untrusted, not crash. TYPO3 core's
-     * VerifyHostHeader::hostHeaderValueMatchesTrustedHostsPattern() calls
-     * strtolower($serverParams['SERVER_NAME']) with no null-coalescing under strict_types,
-     * so delegating to it with an empty server params array throws a TypeError instead of
-     * returning false.
+     * real HTTP request cycle) must be treated as untrusted, not crash. See
+     * UriUtility::isRequestHostTrusted() for why the underlying TYPO3 core delegation can
+     * throw here.
      */
     #[Test]
     public function keepsAHostLessUriUnresolvedWhenTheRequestHasNoServerParamsAtAll(): void

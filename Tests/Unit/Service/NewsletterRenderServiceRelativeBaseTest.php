@@ -19,7 +19,6 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\RouterInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -45,6 +44,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(NewsletterRenderService::class)]
 final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
 {
+    use NewsletterContentResponseTrait;
     use TrustedServerRequestTrait;
 
     /**
@@ -134,23 +134,13 @@ final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
         $requestFactoryStub
             ->method('request')
             ->willReturnCallback(
-                static function (string $url) use ($expectedFetchedUrl): Response {
+                function (string $url) use ($expectedFetchedUrl): Response {
                     self::assertSame(
                         $expectedFetchedUrl,
                         $url,
                     );
 
-                    $body = new Stream(
-                        'php://temp',
-                        'rw',
-                    );
-                    $body->write('newsletter content');
-                    $body->rewind();
-
-                    return new Response(
-                        $body,
-                        200,
-                    );
+                    return $this->createNewsletterContentResponse();
                 },
             );
 

@@ -17,7 +17,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -38,6 +37,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(NewsletterRenderService::class)]
 final class NewsletterRenderServiceSelfFetchTest extends UnitTestCase
 {
+    use NewsletterContentResponseTrait;
+
     /**
      * The self-fetch must disable HTTP redirect following.
      */
@@ -50,20 +51,10 @@ final class NewsletterRenderServiceSelfFetchTest extends UnitTestCase
         $requestFactoryStub
             ->method('request')
             ->willReturnCallback(
-                static function (string $url, string $method, array $options) use (&$capturedOptions): Response {
+                function (string $url, string $method, array $options) use (&$capturedOptions): Response {
                     $capturedOptions = $options;
 
-                    $body = new Stream(
-                        'php://temp',
-                        'rw',
-                    );
-                    $body->write('newsletter content');
-                    $body->rewind();
-
-                    return new Response(
-                        $body,
-                        200,
-                    );
+                    return $this->createNewsletterContentResponse();
                 },
             );
 
@@ -82,7 +73,10 @@ final class NewsletterRenderServiceSelfFetchTest extends UnitTestCase
         $subject->renderNewsletterPage('https://example.com/newsletter-page');
 
         self::assertIsArray($capturedOptions);
-        self::assertArrayHasKey('allow_redirects', $capturedOptions);
+        self::assertArrayHasKey(
+            'allow_redirects',
+            $capturedOptions,
+        );
         self::assertFalse($capturedOptions['allow_redirects']);
     }
 }

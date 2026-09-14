@@ -38,7 +38,10 @@ trait TrustedServerRequestTrait
     {
         $parts = parse_url($uri);
         self::assertIsArray($parts);
-        self::assertArrayHasKey('host', $parts);
+        self::assertArrayHasKey(
+            'host',
+            $parts,
+        );
 
         $host = $parts['host'];
         $port = isset($parts['port']) ? (string) $parts['port'] : '443';
