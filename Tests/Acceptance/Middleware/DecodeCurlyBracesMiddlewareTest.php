@@ -37,7 +37,11 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 #[CoversClass(DecodeCurlyBracesMiddleware::class)]
 final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptanceTestCase
 {
-    /** Emogrifier's DOMDocument handling percent-encodes curly braces in URLs (RFC 1738); this middleware must decode them back so UM placeholders survive. */
+    /**
+     * Emogrifier's DOMDocument handling percent-encodes curly braces in URLs
+     * (RFC 1738); this middleware must decode them back so UM placeholders
+     * survive.
+     */
     #[Test]
     public function decodesCurlyBracesOnTheNewsletterPreviewPageType(): void
     {
@@ -56,7 +60,77 @@ final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptance
         );
     }
 
-    /** The positive control: content without any encoded curly braces must pass through unchanged, proving the middleware does not corrupt ordinary content. */
+    /**
+     * A span-matching approach (regex "from the first %7B to the last %7D")
+     * would decode the unrelated %26 between two independent placeholder
+     * pairs too; a literal per-occurrence replacement must not.
+     */
+    #[Test]
+    public function decodesTwoIndependentPlaceholdersOnTheSameLineWithoutTouchingContentBetweenThem(): void
+    {
+        $subject = new DecodeCurlyBracesMiddleware();
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning(
+                'Hello %7Bname%7D, visit https://example.org/?x=1%26y=2 and see %7Bfoo%7D too.',
+            ),
+        );
+
+        self::assertSame(
+            'Hello {name}, visit https://example.org/?x=1%26y=2 and see {foo} too.',
+            (string) $response->getBody(),
+        );
+    }
+
+    /**
+     * A span-matching approach would decode everything between an unmatched
+     * %7B and the next unrelated %7D on the line; a literal per-occurrence
+     * replacement must decode only the braces themselves.
+     */
+    #[Test]
+    public function decodesAnUnmatchedBraceWithoutTouchingUnrelatedContentThatFollowsIt(): void
+    {
+        $subject = new DecodeCurlyBracesMiddleware();
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning(
+                'Hello %7Bname, visit https://example.org/?x=1%26y=2 and see foo%7D too.',
+            ),
+        );
+
+        self::assertSame(
+            'Hello {name, visit https://example.org/?x=1%26y=2 and see foo} too.',
+            (string) $response->getBody(),
+        );
+    }
+
+    /**
+     * str_ireplace() is used deliberately (not the case-sensitive
+     * str_replace()), so lowercase percent-encoding must decode too.
+     */
+    #[Test]
+    public function decodesLowercasePercentEncodedCurlyBraces(): void
+    {
+        $subject = new DecodeCurlyBracesMiddleware();
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('Hello %7bname%7d.'),
+        );
+
+        self::assertSame(
+            'Hello {name}.',
+            (string) $response->getBody(),
+        );
+    }
+
+    /**
+     * The positive control: content without any encoded curly braces must
+     * pass through unchanged, proving the middleware does not corrupt
+     * ordinary content.
+     */
     #[Test]
     public function leavesContentWithoutEncodedBracesUnchanged(): void
     {
@@ -73,7 +147,10 @@ final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptance
         );
     }
 
-    /** A request without a "routing" attribute at all (e.g. outside the frontend routing pipeline) must not be touched. */
+    /**
+     * A request without a "routing" attribute at all (e.g. outside the
+     * frontend routing pipeline) must not be touched.
+     */
     #[Test]
     public function leavesContentUnchangedWhenTheRoutingAttributeIsMissing(): void
     {
@@ -90,7 +167,10 @@ final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptance
         );
     }
 
-    /** Only the newsletter preview page type may be rewritten; every other page type's response must pass through untouched. */
+    /**
+     * Only the newsletter preview page type may be rewritten; every other
+     * page type's response must pass through untouched.
+     */
     #[Test]
     public function leavesContentUnchangedForAnyOtherPageType(): void
     {

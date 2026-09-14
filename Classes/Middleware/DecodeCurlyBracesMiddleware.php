@@ -68,10 +68,12 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
      */
     private function decodeCurlyBraces(string $content): string
     {
-        // Replaces %7B and %7D back to { and }
-        return (string) preg_replace_callback(
-            '/' . urlencode('{') . '.*' . urlencode('}') . '/',
-            static fn (array $matches): string => urldecode($matches[0]),
+        // Literal per-occurrence replacement: a regex span match (tried and
+        // reverted, see git history) can consume unrelated content between
+        // two placeholders and is subject to PCRE backtracking limits.
+        return str_ireplace(
+            [urlencode('{'), urlencode('}')],
+            ['{', '}'],
             $content,
         );
     }
