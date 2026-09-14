@@ -56,6 +56,25 @@ final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptance
         );
     }
 
+    /** A greedy regex would span from the first %7B to the last %7D on the line and decode the unrelated %26 between the two placeholders too; only the two placeholder pairs may be decoded. */
+    #[Test]
+    public function decodesTwoIndependentPlaceholdersOnTheSameLineWithoutTouchingContentBetweenThem(): void
+    {
+        $subject = new DecodeCurlyBracesMiddleware();
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning(
+                'Hello %7Bname%7D, visit https://example.org/?x=1%26y=2 and see %7Bfoo%7D too.',
+            ),
+        );
+
+        self::assertSame(
+            'Hello {name}, visit https://example.org/?x=1%26y=2 and see {foo} too.',
+            (string) $response->getBody(),
+        );
+    }
+
     /** The positive control: content without any encoded curly braces must pass through unchanged, proving the middleware does not corrupt ordinary content. */
     #[Test]
     public function leavesContentWithoutEncodedBracesUnchanged(): void

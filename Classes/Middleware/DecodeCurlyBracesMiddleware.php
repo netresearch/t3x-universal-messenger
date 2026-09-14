@@ -68,9 +68,12 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
      */
     private function decodeCurlyBraces(string $content): string
     {
-        // Replaces %7B and %7D back to { and }
+        // Replaces %7B and %7D back to { and }. The lazy quantifier stops
+        // each match at the nearest closing placeholder, so two independent
+        // placeholder pairs on the same line are decoded independently and
+        // unrelated percent-encoded content between them is left untouched.
         return (string) preg_replace_callback(
-            '/' . urlencode('{') . '.*' . urlencode('}') . '/',
+            '/' . urlencode('{') . '.*?' . urlencode('}') . '/',
             static fn (array $matches): string => urldecode($matches[0]),
             $content,
         );
