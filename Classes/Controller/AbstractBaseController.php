@@ -316,6 +316,25 @@ abstract class AbstractBaseController extends ActionController
     }
 
     /**
+     * Adds a translated flash message to the message queue.
+     *
+     * @param string                     $key
+     * @param ContextualFeedbackSeverity $contextualFeedbackSeverity
+     *
+     * @return void
+     */
+    protected function addModuleFlashMessage(
+        string $key,
+        ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
+    ): void {
+        $this->moduleTemplate->addFlashMessage(
+            $this->translate($key),
+            $this->translate('common.universalMessenger'),
+            $contextualFeedbackSeverity,
+        );
+    }
+
+    /**
      * Adds a flash message to the message queue and forward to the error action to abort further processing.
      *
      * @param string                     $key
@@ -327,9 +346,8 @@ abstract class AbstractBaseController extends ActionController
         string $key,
         ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
     ): ResponseInterface {
-        $this->moduleTemplate->addFlashMessage(
-            $this->translate($key),
-            $this->translate('common.universalMessenger'),
+        $this->addModuleFlashMessage(
+            $key,
             $contextualFeedbackSeverity,
         );
 

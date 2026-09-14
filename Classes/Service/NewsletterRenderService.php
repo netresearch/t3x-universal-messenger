@@ -41,6 +41,11 @@ class NewsletterRenderService implements SingletonInterface
     public const VIEW_TYPE_NUMBER = 1716283827;
 
     /**
+     * @var string
+     */
+    private const TEMPLATE_PATH_AND_FILENAME_SETTING = 'view/templatePathAndFilename';
+
+    /**
      * @var RequestFactory
      */
     private readonly RequestFactory $requestFactory;
@@ -132,7 +137,10 @@ class NewsletterRenderService implements SingletonInterface
 
         $content = $this->renderNewsletterContainer(
             $serverRequest,
-            $this->renderByPageId($serverRequest, $pageId, $languageId),
+            $this->renderByPageId(
+                $pageId,
+                $languageId,
+            ),
         );
 
         return $this->clearUpContent($content);
@@ -150,6 +158,27 @@ class NewsletterRenderService implements SingletonInterface
         $content = $this->getContentFromUrl($url);
 
         return $this->clearUpContent($content);
+    }
+
+    /**
+     * Whether the container template is configured, i.e. whether "view/templatePathAndFilename"
+     * resolves to a real value in the TypoScript getView() also reads its paths from.
+     *
+     * This method's only real caller, indexAction(), runs in backend context, so it reads
+     * module.tx_universalmessenger.* rather than plugin.tx_universalmessenger.* (TYPO3's
+     * BackendConfigurationManager cannot read plugin.* at all in that context). The opt-in
+     * "Example Newsletter Template" static template keeps both branches in sync via a
+     * TypoScript copy directive. An integrator overriding
+     * plugin.tx_universalmessenger.view.templatePathAndFilename without mirroring it on the
+     * module.* branch would make this check and the real frontend preview disagree.
+     *
+     * @return bool
+     */
+    public function isNewsletterContainerTemplateConfigured(): bool
+    {
+        $templatePathAndFilename = $this->configuration->getTypoScriptSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING);
+
+        return ($templatePathAndFilename !== null) && ($templatePathAndFilename !== '');
     }
 
     /**
@@ -182,7 +211,7 @@ class NewsletterRenderService implements SingletonInterface
             templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
             partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
             layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
-            templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
+            templatePathAndFilename: $this->configuration->getTypoScriptSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING),
             request                : $serverRequest,
         );
 
@@ -214,13 +243,12 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Renders the page with the given page ID.
      *
-     * @param ServerRequestInterface $serverRequest
-     * @param int                    $pageId        The page UID
-     * @param int                    $languageId    The language UID of the page
+     * @param int $pageId     The page UID
+     * @param int $languageId The language UID of the page
      *
      * @return string
      */
-    private function renderByPageId(ServerRequestInterface $serverRequest, int $pageId, int $languageId): string
+    private function renderByPageId(int $pageId, int $languageId): string
     {
         $url = (string) $this->generatePageUri(
             $pageId,
@@ -234,10 +262,7 @@ class NewsletterRenderService implements SingletonInterface
             throw new RuntimeException('Preview URL is invalid: ' . $url);
         }
 
-        return $this->renderFluidView(
-            $serverRequest,
-            $this->getContentFromUrl($url),
-        );
+        return $this->getContentFromUrl($url);
     }
 
     /**
@@ -250,41 +275,6 @@ class NewsletterRenderService implements SingletonInterface
     private function isUrlValid(string $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
-    }
-
-    /**
-     * @param ServerRequestInterface $serverRequest
-     * @param string                 $templateSource
-     *
-     * @return string
-     */
-    private function renderFluidView(ServerRequestInterface $serverRequest, string $templateSource): string
-    {
-        //        if ($templateSource !== '') {
-        //            $viewFactoryData = new ViewFactoryData(
-        //                layoutRootPaths  : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
-        //                templateRootPaths: $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
-        //                partialRootPaths : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
-        //                request          : $serverRequest,
-        //            );
-        //
-        //            /** @var FluidViewAdapter $viewAdapter */
-        //            $viewAdapter = $this->viewFactory
-        //                ->create($viewFactoryData);
-        //
-        //            $renderingContext = $viewAdapter
-        //                ->getRenderingContext();
-        //
-        // //            $renderingContext->setControllerName('NewsletterPreview');
-        // //            $renderingContext->setControllerAction('Preview');
-        //            $renderingContext->getTemplatePaths()
-        //                ->setTemplateSource($templateSource);
-        //
-        //            return $viewAdapter
-        //                ->render();
-        //        }
-
-        return $templateSource;
     }
 
     /**
