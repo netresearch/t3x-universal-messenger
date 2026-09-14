@@ -26,5 +26,9 @@ use Netresearch\UniversalMessenger\Command\ImportCommand;
  */
 final class TestableImportCommand extends ImportCommand
 {
+    /**
+     * No-ops the real bootstrap so injected test doubles on the parent's
+     * private properties are not overwritten.
+     */
     protected function bootstrap(): void {}
 }

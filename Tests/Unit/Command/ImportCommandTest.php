@@ -30,8 +30,9 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Regression test for GH-142: importing already-known newsletter channels
- * must not reset their creation date on every scheduled/CLI run.
+ * Importing an already-known newsletter channel must not reset its creation
+ * date on every scheduled/CLI run; a genuinely new channel must still get
+ * one assigned.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
@@ -57,6 +58,58 @@ final class ImportCommandTest extends UnitTestCase
             ->setCrdate($originalCrdate)
             ->setTstamp($originalCrdate);
 
+        $addedDomainModels = $this->runImport($existingDomainModel);
+
+        self::assertCount(
+            1,
+            $addedDomainModels,
+            'Exactly one grouped channel from the webservice response must be imported.',
+        );
+        self::assertSame(
+            $originalCrdate,
+            $addedDomainModels[0]->getCrdate(),
+            'The creation date of an already existing channel must not be reset on every import run.',
+        );
+        self::assertSame(
+            'New title',
+            $addedDomainModels[0]->getTitle(),
+            'The title must still be refreshed from the webservice response.',
+        );
+    }
+
+    /**
+     * A channel that does not exist yet in the database must still get a
+     * creation date assigned, so this must keep working alongside the fix
+     * that stops it from being reset on every subsequent import.
+     */
+    #[Test]
+    public function assignsACreationDateToAGenuinelyNewChannel(): void
+    {
+        $addedDomainModels = $this->runImport(null);
+
+        self::assertCount(
+            1,
+            $addedDomainModels,
+            'Exactly one grouped channel from the webservice response must be imported.',
+        );
+        self::assertInstanceOf(
+            DateTime::class,
+            $addedDomainModels[0]->getCrdate(),
+            'A genuinely new channel must be assigned a creation date.',
+        );
+    }
+
+    /**
+     * Runs the import command against a single Universal Messenger channel
+     * response, with findByChannelId() returning the given existing domain
+     * model, or null to exercise the "genuinely new channel" branch.
+     *
+     * @param NewsletterChannelDomainModel|null $existingDomainModel
+     *
+     * @return NewsletterChannelDomainModel[]
+     */
+    private function runImport(?NewsletterChannelDomainModel $existingDomainModel): array
+    {
         $rawChannel              = new SdkNewsletterChannel();
         $rawChannel->id          = 'newsletter_test';
         $rawChannel->title       = 'New title';
@@ -76,7 +129,7 @@ final class ImportCommandTest extends UnitTestCase
         $newsletterChannelRepository
             ->method('add')
             ->willReturnCallback(
-                static function (object $domainModel) use (&$addedDomainModels): void {
+                static function (NewsletterChannelDomainModel $domainModel) use (&$addedDomainModels): void {
                     $addedDomainModels[] = $domainModel;
                 },
             );
@@ -124,23 +177,7 @@ final class ImportCommandTest extends UnitTestCase
             $exitCode,
             'The import must succeed.',
         );
-        self::assertCount(
-            1,
-            $addedDomainModels,
-        );
-        self::assertInstanceOf(
-            NewsletterChannelDomainModel::class,
-            $addedDomainModels[0],
-        );
-        self::assertSame(
-            $originalCrdate,
-            $addedDomainModels[0]->getCrdate(),
-            'The creation date of an already existing channel must not be reset on every import run.',
-        );
-        self::assertSame(
-            'New title',
-            $addedDomainModels[0]->getTitle(),
-            'The title must still be refreshed from the webservice response.',
-        );
+
+        return $addedDomainModels;
     }
 }
