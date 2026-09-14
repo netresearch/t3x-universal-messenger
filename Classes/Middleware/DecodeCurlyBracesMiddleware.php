@@ -68,14 +68,9 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
      */
     private function decodeCurlyBraces(string $content): string
     {
-        // Every %7B/%7D in the response is an encoded curly brace that must
-        // be restored, not a placeholder pair to be located by matching a
-        // span between two markers. A regex-based span match is both
-        // incorrect (it corrupts unrelated percent-encoded content between
-        // two independent pairs, or between an unmatched brace and the next
-        // one) and unbounded (pathological content can exhaust PCRE's
-        // backtrack limit, silently emptying the response). A literal,
-        // per-occurrence replacement has neither problem.
+        // Literal per-occurrence replacement: a regex span match (tried and
+        // reverted, see git history) can consume unrelated content between
+        // two placeholders and is subject to PCRE backtracking limits.
         return str_ireplace(
             [urlencode('{'), urlencode('}')],
             ['{', '}'],
