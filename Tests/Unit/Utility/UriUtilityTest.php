@@ -133,7 +133,7 @@ final class UriUtilityTest extends UnitTestCase
     /**
      * A host-less URI must also stay host-less, rather than crash, when instantiating
      * TYPO3 core's VerifyHostHeader itself fails, not just when it fails once instantiated.
-     * VerifyHostHeader is marked @internal (no BC promise), and any extension may XCLASS it
+     * VerifyHostHeader is marked as internal (no BC promise), and any extension may XCLASS it
      * with an incompatible constructor; simulated here via TYPO3's XCLASS mechanism.
      */
     #[Test]
