@@ -91,7 +91,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
 
         $response = $subject->previewAction(10);
 
-        self::assertMissingTemplateResponse($response);
+        $this->assertMissingTemplateResponse($response);
     }
 
     /**
@@ -116,7 +116,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
 
         $response = $subject->previewAction(10);
 
-        self::assertMissingTemplateResponse($response);
+        $this->assertMissingTemplateResponse($response);
     }
 
     /**
@@ -131,7 +131,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
      *
      * @return void
      */
-    private static function assertMissingTemplateResponse(ResponseInterface $response): void
+    private function assertMissingTemplateResponse(ResponseInterface $response): void
     {
         self::assertSame(
             503,
