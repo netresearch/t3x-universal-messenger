@@ -26,9 +26,9 @@ trait TrustedServerRequestTrait
     /**
      * Builds a ServerRequest whose HTTP_HOST/SERVER_NAME/SERVER_PORT server params match the
      * given URI, so it passes UriUtility::resolveAbsoluteUri()'s trustedHostsPattern re-check
-     * (GH-174) under the default ('SERVER_NAME') pattern. This mirrors a real request, where
-     * TYPO3's ServerRequestFactory derives the request URI and these server params from the
-     * same, already middleware-validated Host header.
+     * (GH-174) under the default ('SERVER_NAME') pattern, mirroring a request whose Host header
+     * matches its own webserver-derived server params, as a real, already middleware-validated
+     * request's would.
      *
      * @param string $uri
      *

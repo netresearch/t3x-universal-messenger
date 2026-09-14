@@ -96,33 +96,29 @@ final class UriUtility
     {
         $trustedHostsPattern = $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] ?? '';
 
-        $verifyHostHeader = GeneralUtility::makeInstance(
-            VerifyHostHeader::class,
-            $trustedHostsPattern,
-        );
-
-        $serverParams = $serverRequest->getServerParams();
-        $httpHost     = (string) ($serverParams['HTTP_HOST'] ?? '');
-
         try {
+            $verifyHostHeader = GeneralUtility::makeInstance(
+                VerifyHostHeader::class,
+                $trustedHostsPattern,
+            );
+
+            $serverParams = $serverRequest->getServerParams();
+            $httpHost     = (string) ($serverParams['HTTP_HOST'] ?? '');
+
             return $verifyHostHeader->isAllowedHostHeaderValue(
                 $httpHost,
                 $serverParams,
             );
         } catch (Throwable) {
-            // VerifyHostHeader::hostHeaderValueMatchesTrustedHostsPattern()'s default
-            // 'SERVER_NAME' pattern branch reads $serverParams['SERVER_NAME'] and
-            // $serverParams['SERVER_PORT'] with no null-coalescing (as observed on
-            // 2026-09-14 against TYPO3 v14 core, .Build/vendor/typo3/cms-core/Classes/
-            // Middleware/VerifyHostHeader.php; re-check that method if this ever needs
-            // re-deriving). A request whose server params don't carry those keys (e.g.
-            // a synthetic ServerRequest built outside a real HTTP request cycle) can
-            // throw instead of returning false, a TypeError for the missing SERVER_NAME
-            // strtolower() argument, or (under a non-default SYS/exceptionalErrors
-            // config that promotes E_WARNING) a TYPO3\CMS\Core\Error\Exception for the
-            // missing SERVER_PORT read. Catch broadly and fail closed: treat any such
-            // failure the same as an untrusted host, since @internal core code is not
-            // guaranteed to keep surfacing exactly today's exception class here.
+            // VerifyHostHeader is marked @internal (no BC promise) and may also be XCLASSed
+            // with an incompatible constructor, so makeInstance() itself can throw, not just
+            // the delegated call: TYPO3\CMS\Core\Middleware\VerifyHostHeader::
+            // hostHeaderValueMatchesTrustedHostsPattern() reads $serverParams['SERVER_NAME']/
+            // ['SERVER_PORT'] with no null-coalescing, so a request whose server params don't
+            // carry those keys (e.g. a synthetic ServerRequest built outside a real HTTP
+            // request cycle) can throw there too. Catch broadly, since core code marked
+            // internal is not guaranteed to keep surfacing exactly today's exception class,
+            // and fail closed: treat any such failure as an untrusted host.
             return false;
         }
     }

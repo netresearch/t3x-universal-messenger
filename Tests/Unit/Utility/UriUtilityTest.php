@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Tests\Unit\Utility;
 
+use Netresearch\UniversalMessenger\Tests\Unit\Fixtures\IncompatibleVerifyHostHeaderReplacement;
 use Netresearch\UniversalMessenger\Tests\Unit\TrustedServerRequestTrait;
 use Netresearch\UniversalMessenger\Utility\UriUtility;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Middleware\VerifyHostHeader;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -125,5 +128,36 @@ final class UriUtilityTest extends UnitTestCase
                 $serverRequest,
             ),
         );
+    }
+
+    /**
+     * A host-less URI must also stay host-less, rather than crash, when instantiating
+     * TYPO3 core's VerifyHostHeader itself fails, not just when it fails once instantiated.
+     * VerifyHostHeader is marked @internal (no BC promise), and any extension may XCLASS it
+     * with an incompatible constructor; simulated here via TYPO3's XCLASS mechanism.
+     */
+    #[Test]
+    public function keepsAHostLessUriUnresolvedWhenInstantiatingVerifyHostHeaderItselfFails(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][VerifyHostHeader::class] = [
+            'className' => IncompatibleVerifyHostHeaderReplacement::class,
+        ];
+        GeneralUtility::flushInternalRuntimeCaches();
+
+        try {
+            $uri           = new Uri('/some-page?type=1716283827');
+            $serverRequest = $this->createTrustedServerRequest('https://example.com:8443/newsletter?pageId=42');
+
+            self::assertSame(
+                '/some-page?type=1716283827',
+                (string) UriUtility::resolveAbsoluteUri(
+                    $uri,
+                    $serverRequest,
+                ),
+            );
+        } finally {
+            unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][VerifyHostHeader::class]);
+            GeneralUtility::flushInternalRuntimeCaches();
+        }
     }
 }
