@@ -129,8 +129,12 @@ class ImportCommand extends Command implements LoggerAwareInterface
 
     /**
      * Bootstrap.
+     *
+     * Visibility is protected (not private) so a testable subclass can
+     * override it to inject test collaborators instead of resolving them
+     * via GeneralUtility::makeInstance().
      */
-    private function bootstrap(): void
+    protected function bootstrap(): void
     {
         $this->persistenceManager          = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
         $this->newsletterChannelRepository = GeneralUtility::makeInstance(NewsletterChannelRepository::class);
@@ -247,6 +251,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
             $newsletterChannelDomainModel = GeneralUtility::makeInstance(NewsletterChannelDomainModel::class);
             $newsletterChannelDomainModel->setPid($storagePid);
             $newsletterChannelDomainModel->setChannelId($channelId);
+            $newsletterChannelDomainModel->setCrdate(new DateTime());
         }
 
         $title = $this->getUpdatedValue(
@@ -262,7 +267,6 @@ class ImportCommand extends Command implements LoggerAwareInterface
         $newsletterChannelDomainModel
             ->setTitle($title)
             ->setDescription($description)
-            ->setCrdate(new DateTime())
             ->setTstamp(new DateTime());
 
         return $newsletterChannelDomainModel;
