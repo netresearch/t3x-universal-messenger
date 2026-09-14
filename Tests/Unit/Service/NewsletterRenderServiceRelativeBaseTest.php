@@ -13,12 +13,12 @@ namespace Netresearch\UniversalMessenger\Tests\Unit\Service;
 
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
+use Netresearch\UniversalMessenger\Tests\Unit\TrustedServerRequestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\RouterInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -44,6 +44,9 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(NewsletterRenderService::class)]
 final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
 {
+    use NewsletterContentResponseTrait;
+    use TrustedServerRequestTrait;
+
     /**
      * Router::generateUri() returning a host-less URI (the relative-base symptom) must
      * still result in the newsletter content being fetched, over an absolute URL built
@@ -64,7 +67,7 @@ final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
             'https://example.com:8443/some-page?type=1716283827&_language=0',
         );
 
-        $serverRequest = new ServerRequest('https://example.com:8443/newsletter?pageId=42');
+        $serverRequest = $this->createTrustedServerRequest('https://example.com:8443/newsletter?pageId=42');
 
         self::assertSame(
             'rendered container',
@@ -131,23 +134,13 @@ final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
         $requestFactoryStub
             ->method('request')
             ->willReturnCallback(
-                static function (string $url) use ($expectedFetchedUrl): Response {
+                function (string $url) use ($expectedFetchedUrl): Response {
                     self::assertSame(
                         $expectedFetchedUrl,
                         $url,
                     );
 
-                    $body = new Stream(
-                        'php://temp',
-                        'rw',
-                    );
-                    $body->write('newsletter content');
-                    $body->rewind();
-
-                    return new Response(
-                        $body,
-                        200,
-                    );
+                    return $this->createNewsletterContentResponse();
                 },
             );
 
