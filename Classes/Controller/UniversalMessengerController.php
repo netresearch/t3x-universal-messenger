@@ -24,6 +24,7 @@ use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository
 use Netresearch\UniversalMessenger\Repository\EventFileRepository;
 use Netresearch\UniversalMessenger\Repository\NewsletterRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
+use Netresearch\UniversalMessenger\Utility\UriUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -596,17 +597,10 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return '';
         }
 
-        // A site configured with a relative base (base: /, the TYPO3 v14 default) produces
-        // a host-less preview URI. Turn it into an absolute URL using the current backend
-        // request, so it passes URL validation and can be fetched when rendering the
-        // newsletter page for sending.
-        if ($previewUri->getHost() === '') {
-            $requestUri = $this->request->getUri();
-            $previewUri = $previewUri
-                ->withScheme($requestUri->getScheme())
-                ->withHost($requestUri->getHost())
-                ->withPort($requestUri->getPort());
-        }
+        $previewUri = UriUtility::resolveAbsoluteUri(
+            $previewUri,
+            $this->request,
+        );
 
         return (string) $previewUri;
     }

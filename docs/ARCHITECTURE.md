@@ -22,12 +22,13 @@ The extension adds a TYPO3 v14 backend module for sending newsletters through th
 | Data processing | `Classes/DataProcessing/ControlStructureProcessor.php` | FlexForm-driven data processor for the control-structure content element |
 | ViewHelpers | `Classes/ViewHelpers/` (`Condition/`, `Format/`, `Html/`) | Newsletter/mail-safe Fluid helpers (row/column/container/spacer/body) |
 | Configuration access | `Classes/Configuration.php`, `Classes/WebserviceConfiguration.php`, `Classes/Constants.php` | Typed access to extension settings (`ext_conf_template.txt`) |
+| Utility | `Classes/Utility/UriUtility.php` | Stateless helpers shared between layers (e.g. resolving a host-less PSR-7 URI to an absolute one) |
 
 ## Dependency rules (enforced by PHPat)
 
 From `Tests/Architecture/ArchitectureTest.php` — violations fail `composer ci:test:php:phpstan`:
 
-1. `ViewHelpers`, `Service`, `Backend\EventListener`, `Middleware`, `Command`, `Repository`, `DataProcessing` must **not** depend on `Controller` (controllers are the outermost layer).
+1. `ViewHelpers`, `Service`, `Backend\EventListener`, `Middleware`, `Command`, `Repository`, `DataProcessing`, `Utility` must **not** depend on `Controller` (controllers are the outermost layer).
 2. `Service` must **not** depend on `Repository` — the infrastructure repository layer depends on services, and the direction must stay acyclic.
 3. `Domain` is the innermost layer: it must **not** depend on `Controller`, `Service`, `Middleware`, `Command`, `Backend`, `ViewHelpers`, `Repository` or `DataProcessing`.
 
