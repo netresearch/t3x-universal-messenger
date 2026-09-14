@@ -195,9 +195,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $this->renderStatusMessage($newsletterStatus);
         }
 
+        // The preview iframe below embeds NewsletterPreviewController::previewAction(), see
+        // NewsletterRenderService::isNewsletterContainerTemplateConfigured() for why that can
+        // be unconfigured. Check that upfront and show a real, properly styled TYPO3 flash
+        // message instead of embedding an iframe that would only show previewAction()'s own
+        // harder-to-style fallback error response.
+        if (!$this->newsletterRenderService->isNewsletterContainerTemplateConfigured()) {
+            $this->addModuleFlashMessage('error.missingNewsletterTemplateConfiguration');
+        } else {
+            $this->view->assign('previewUrl', $newsletterUrl);
+        }
+
         $this->view->assign('pageId', $this->pageId);
         $this->view->assign('pageTitle', $this->getPageTitle($contentRecord));
-        $this->view->assign('previewUrl', $newsletterUrl);
         $this->view->assign('newsletterChannel', $newsletterChannel);
 
         // The module content is rendered through the Extbase view, whose template paths

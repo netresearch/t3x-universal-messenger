@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Tests\Functional\Service;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -38,6 +39,7 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  *
  * @see    https://www.netresearch.de
  */
+#[CoversNothing]
 final class NewsletterContainerTemplateMissingTest extends FunctionalTestCase
 {
     /**

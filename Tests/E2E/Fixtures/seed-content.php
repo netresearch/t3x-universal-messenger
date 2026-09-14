@@ -57,3 +57,34 @@ $pdo
     ->prepare("UPDATE be_users SET universal_messenger_channels = ? WHERE username = 'admin'")
     ->execute([CHANNEL_OWN_UID . ',' . CHANNEL_OTHER_UID]);
 echo "Admin user granted both channel permissions\n";
+
+// A second newsletter page (uid 11), also configured for the "own"
+// channel, but without the "Example Newsletter Template" static template a
+// classic (non-Site-Set) site needs for the container template. A
+// page-scoped sys_template override unsets both the frontend plugin's own
+// templatePathAndFilename AND the backend module's independent copy of it
+// (module.tx_universalmessenger < plugin.tx_universalmessenger is a
+// TypoScript copy processed once, at the site's own base TypoScript, before
+// this override applies, so only unsetting the plugin branch would leave
+// the module's already-copied value intact and not reproduce a real "static
+// template never included" site).
+$pdo
+    ->prepare(
+        'INSERT IGNORE INTO pages (uid, pid, title, slug, doktype, universal_messenger_channel, hidden, deleted, tstamp, crdate)
+         VALUES (11, 1, \'Newsletter Without Template\', \'/newsletter-without-template\', 20, ?, 0, 0, ?, ?)',
+    )
+    ->execute([CHANNEL_OWN_UID, $now, $now]);
+echo "Newsletter page without a container template (uid=11) created\n";
+
+$pdo
+    ->prepare(
+        'INSERT INTO sys_template (pid, tstamp, crdate, title, root, clear, config)
+         VALUES (11, ?, ?, \'GH-141 E2E: container template not configured\', 0, 0, ?)',
+    )
+    ->execute([
+        $now,
+        $now,
+        "plugin.tx_universalmessenger.view.templatePathAndFilename >\n"
+        . 'module.tx_universalmessenger.view.templatePathAndFilename >',
+    ]);
+echo "Page 11's container-template TypoScript unset\n";

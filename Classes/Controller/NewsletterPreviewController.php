@@ -55,19 +55,14 @@ class NewsletterPreviewController extends ActionController implements LoggerAwar
      */
     public function previewAction(int $pageId): ResponseInterface
     {
-        // The container template comes from the extension TypoScript
-        // (plugin.tx_universalmessenger.view), which a classic (non-Site-Set) site only
-        // receives once its integrator includes the "Example Newsletter Template" static
-        // template. Without it, templatePathAndFilename stays empty and the underlying
-        // view resolution throws instead of falling back to any default markup.
-        // UniversalMessengerController::indexAction() checks this upfront (via
-        // NewsletterRenderService::isNewsletterContainerTemplateConfigured()) and shows a real,
-        // properly styled TYPO3 flash message instead of embedding the preview iframe, so an
-        // editor should not normally reach this catch block. It stays as a safety net: this
-        // response is also what createAction() fetches to build the real dispatch body, so a
-        // non-200 status here is load-bearing regardless: it makes that fetch fail loudly
-        // (RuntimeException) rather than silently mailing this error message to real newsletter
-        // recipients as if it were the newsletter content.
+        // See NewsletterRenderService::isNewsletterContainerTemplateConfigured() for why the
+        // container template can be unconfigured. UniversalMessengerController::indexAction()
+        // checks this upfront and shows a real, properly styled TYPO3 flash message instead of
+        // embedding the preview iframe, so an editor should not normally reach this catch
+        // block. It stays as a safety net: this response is also what createAction() fetches
+        // to build the real dispatch body, so a non-200 status here is load-bearing regardless:
+        // it makes that fetch fail loudly (RuntimeException) rather than silently mailing this
+        // error message to real newsletter recipients as if it were the newsletter content.
         try {
             $content = $this->newsletterRenderService->renderNewsletterPreviewPage(
                 $this->request,
