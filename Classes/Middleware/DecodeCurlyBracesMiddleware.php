@@ -68,13 +68,17 @@ class DecodeCurlyBracesMiddleware implements MiddlewareInterface
      */
     private function decodeCurlyBraces(string $content): string
     {
-        // Replaces %7B and %7D back to { and }. The lazy quantifier stops
-        // each match at the nearest closing placeholder, so two independent
-        // placeholder pairs on the same line are decoded independently and
-        // unrelated percent-encoded content between them is left untouched.
-        return (string) preg_replace_callback(
-            '/' . urlencode('{') . '.*?' . urlencode('}') . '/',
-            static fn (array $matches): string => urldecode($matches[0]),
+        // Every %7B/%7D in the response is an encoded curly brace that must
+        // be restored, not a placeholder pair to be located by matching a
+        // span between two markers. A regex-based span match is both
+        // incorrect (it corrupts unrelated percent-encoded content between
+        // two independent pairs, or between an unmatched brace and the next
+        // one) and unbounded (pathological content can exhaust PCRE's
+        // backtrack limit, silently emptying the response). A literal,
+        // per-occurrence replacement has neither problem.
+        return str_ireplace(
+            [urlencode('{'), urlencode('}')],
+            ['{', '}'],
             $content,
         );
     }
