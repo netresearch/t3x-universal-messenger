@@ -94,6 +94,23 @@ final class DecodeCurlyBracesMiddlewareTest extends AbstractMiddlewareAcceptance
         );
     }
 
+    /** str_ireplace() is used deliberately (not the case-sensitive str_replace()), so lowercase percent-encoding must decode too. */
+    #[Test]
+    public function decodesLowercasePercentEncodedCurlyBraces(): void
+    {
+        $subject = new DecodeCurlyBracesMiddleware();
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('Hello %7bname%7d.'),
+        );
+
+        self::assertSame(
+            'Hello {name}.',
+            (string) $response->getBody(),
+        );
+    }
+
     /** The positive control: content without any encoded curly braces must pass through unchanged, proving the middleware does not corrupt ordinary content. */
     #[Test]
     public function leavesContentWithoutEncodedBracesUnchanged(): void
