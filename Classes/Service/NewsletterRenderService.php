@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Service;
 
 use Netresearch\UniversalMessenger\Configuration;
+use Netresearch\UniversalMessenger\Utility\UriUtility;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -138,6 +139,7 @@ class NewsletterRenderService implements SingletonInterface
         $content = $this->renderNewsletterContainer(
             $serverRequest,
             $this->renderByPageId(
+                $serverRequest,
                 $pageId,
                 $languageId,
             ),
@@ -243,20 +245,35 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Renders the page with the given page ID.
      *
-     * @param int $pageId     The page UID
-     * @param int $languageId The language UID of the page
+     * @param ServerRequestInterface $serverRequest The current frontend request; see
+     *                                              UriUtility::resolveAbsoluteUri() for why
+     *                                              it is needed here
+     * @param int                    $pageId        The page UID
+     * @param int                    $languageId    The language UID of the page
      *
      * @return string
      */
-    private function renderByPageId(int $pageId, int $languageId): string
+    private function renderByPageId(ServerRequestInterface $serverRequest, int $pageId, int $languageId): string
     {
-        $url = (string) $this->generatePageUri(
+        $pageUri = $this->generatePageUri(
             $pageId,
             [
                 'type'      => self::VIEW_TYPE_NUMBER,
                 '_language' => $languageId,
             ],
         );
+
+        // $pageUri is null only when generatePageUri() caught a SiteNotFoundException; that
+        // case falls through unchanged to isUrlValid()'s rejection below, same as before this
+        // fallback was added.
+        if ($pageUri instanceof UriInterface) {
+            $pageUri = UriUtility::resolveAbsoluteUri(
+                $pageUri,
+                $serverRequest,
+            );
+        }
+
+        $url = (string) $pageUri;
 
         if (!$this->isUrlValid($url)) {
             throw new RuntimeException('Preview URL is invalid: ' . $url);

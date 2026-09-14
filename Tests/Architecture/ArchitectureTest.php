@@ -111,6 +111,16 @@ final class ArchitectureTest
             ->because('Services must not depend on the infrastructure repository layer (which itself depends on services); this keeps the dependency direction acyclic.');
     }
 
+    public function testUtilityDoesNotDependOnControllers(): Rule
+    {
+        return PHPat::rule()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Utility'))
+            ->shouldNot()
+            ->dependOn()
+            ->classes(Selector::inNamespace(self::NAMESPACE_ROOT . '\\Controller'))
+            ->because('Utility helpers must not depend on controllers.');
+    }
+
     public function testDomainDoesNotDependOnOuterLayers(): Rule
     {
         return PHPat::rule()
