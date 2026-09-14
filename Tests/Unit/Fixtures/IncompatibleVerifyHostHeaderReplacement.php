@@ -16,7 +16,7 @@ namespace Netresearch\UniversalMessenger\Tests\Unit\Fixtures;
  *
  * A GH-174 test fixture: a stand-in with a constructor signature incompatible with
  * TYPO3\CMS\Core\Middleware\VerifyHostHeader's, registered as its XCLASS override to prove
- * that a future TYPO3 core change or a third-party XCLASS of that @internal class makes
+ * that a future TYPO3 core change or a third-party XCLASS of that internal class makes
  * GeneralUtility::makeInstance() itself throw, not just the delegated method call.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
@@ -27,11 +27,6 @@ namespace Netresearch\UniversalMessenger\Tests\Unit\Fixtures;
 final readonly class IncompatibleVerifyHostHeaderReplacement
 {
     /**
-     * @var array<int, string>
-     */
-    private array $trustedHostsPatterns;
-
-    /**
      * Constructor.
      *
      * Deliberately requires an array where VerifyHostHeader requires a string (the trusted
@@ -40,10 +35,9 @@ final readonly class IncompatibleVerifyHostHeaderReplacement
      *
      * @param array<int, string> $trustedHostsPatterns
      */
-    public function __construct(array $trustedHostsPatterns)
-    {
-        $this->trustedHostsPatterns = $trustedHostsPatterns;
-    }
+    public function __construct(
+        private array $trustedHostsPatterns,
+    ) {}
 
     /**
      * This class is never actually constructed (the incompatible parameter type above always

@@ -110,15 +110,16 @@ final class UriUtility
                 $serverParams,
             );
         } catch (Throwable) {
-            // VerifyHostHeader is marked @internal (no BC promise) and may also be XCLASSed
+            // VerifyHostHeader is marked as internal (no BC promise) and may also be XCLASSed
             // with an incompatible constructor, so makeInstance() itself can throw, not just
-            // the delegated call: TYPO3\CMS\Core\Middleware\VerifyHostHeader::
-            // hostHeaderValueMatchesTrustedHostsPattern() reads $serverParams['SERVER_NAME']/
-            // ['SERVER_PORT'] with no null-coalescing, so a request whose server params don't
-            // carry those keys (e.g. a synthetic ServerRequest built outside a real HTTP
-            // request cycle) can throw there too. Catch broadly, since core code marked
-            // internal is not guaranteed to keep surfacing exactly today's exception class,
-            // and fail closed: treat any such failure as an untrusted host.
+            // the delegated call: as observed against TYPO3 v14's VerifyHostHeader::
+            // hostHeaderValueMatchesTrustedHostsPattern() (typo3/cms-core Classes/Middleware/
+            // VerifyHostHeader.php), it reads $serverParams['SERVER_NAME']/['SERVER_PORT']
+            // with no null-coalescing, so a request whose server params don't carry those keys
+            // (e.g. a synthetic ServerRequest built outside a real HTTP request cycle) can
+            // throw there too. Catch broadly, since internal core code is not guaranteed to
+            // keep surfacing exactly today's exception class, and fail closed: treat any such
+            // failure as an untrusted host.
             return false;
         }
     }
