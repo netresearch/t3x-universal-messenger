@@ -13,6 +13,7 @@ namespace Netresearch\UniversalMessenger\Tests\Unit\Service;
 
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
+use Netresearch\UniversalMessenger\Tests\Unit\TrustedServerRequestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\RequestFactory;
@@ -44,6 +45,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(NewsletterRenderService::class)]
 final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
 {
+    use TrustedServerRequestTrait;
+
     /**
      * Router::generateUri() returning a host-less URI (the relative-base symptom) must
      * still result in the newsletter content being fetched, over an absolute URL built
@@ -64,7 +67,7 @@ final class NewsletterRenderServiceRelativeBaseTest extends UnitTestCase
             'https://example.com:8443/some-page?type=1716283827&_language=0',
         );
 
-        $serverRequest = new ServerRequest('https://example.com:8443/newsletter?pageId=42');
+        $serverRequest = $this->createTrustedServerRequest('https://example.com:8443/newsletter?pageId=42');
 
         self::assertSame(
             'rendered container',

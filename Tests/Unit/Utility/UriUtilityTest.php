@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Tests\Unit\Utility;
 
+use Netresearch\UniversalMessenger\Tests\Unit\TrustedServerRequestTrait;
 use Netresearch\UniversalMessenger\Utility\UriUtility;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,14 +31,18 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(UriUtility::class)]
 final class UriUtilityTest extends UnitTestCase
 {
+    use TrustedServerRequestTrait;
+
     /**
-     * A host-less URI (a relative-base site's router output, GH-171) is rebuilt from the request.
+     * A host-less URI (a relative-base site's router output, GH-171) is rebuilt from the request,
+     * once the request's own Host header has been confirmed trusted (HTTP_HOST matches SERVER_NAME:
+     * SERVER_PORT, the default trustedHostsPattern).
      */
     #[Test]
     public function rebuildsAHostLessUriFromTheGivenRequest(): void
     {
         $uri           = new Uri('/some-page?type=1716283827');
-        $serverRequest = new ServerRequest('https://example.com:8443/newsletter?pageId=42');
+        $serverRequest = $this->createTrustedServerRequest('https://example.com:8443/newsletter?pageId=42');
 
         self::assertSame(
             'https://example.com:8443/some-page?type=1716283827',
@@ -55,10 +60,68 @@ final class UriUtilityTest extends UnitTestCase
     public function leavesAUriWithAHostUnchanged(): void
     {
         $uri           = new Uri('https://other-domain.example/some-page?type=1716283827');
-        $serverRequest = new ServerRequest('https://example.com:8443/newsletter?pageId=42');
+        $serverRequest = $this->createTrustedServerRequest('https://example.com:8443/newsletter?pageId=42');
 
         self::assertSame(
             'https://other-domain.example/some-page?type=1716283827',
+            (string) UriUtility::resolveAbsoluteUri(
+                $uri,
+                $serverRequest,
+            ),
+        );
+    }
+
+    /**
+     * A host-less URI must stay host-less when the request's own Host header is not trusted
+     * (HTTP_HOST does not match SERVER_NAME:SERVER_PORT), instead of being resolved against
+     * attacker-controlled input (GH-174). This is the SSRF-hardening re-check, independent of
+     * TYPO3 core's VerifyHostHeader middleware having already run on the way in. Without it,
+     * this method would resolve the host-less URI straight from $serverRequest->getUri(),
+     * which reflects the (here: forged) Host header verbatim.
+     */
+    #[Test]
+    public function keepsAHostLessUriUnresolvedWhenTheRequestsHostIsNotTrusted(): void
+    {
+        $uri           = new Uri('/some-page?type=1716283827');
+        $serverRequest = new ServerRequest(
+            'https://attacker.example:9200/newsletter?pageId=42',
+            null,
+            'php://input',
+            [],
+            [
+                'HTTP_HOST'   => 'attacker.example:9200',
+                'SERVER_NAME' => 'example.com',
+                'SERVER_PORT' => '8443',
+                'HTTPS'       => 'on',
+            ],
+        );
+
+        self::assertSame(
+            '/some-page?type=1716283827',
+            (string) UriUtility::resolveAbsoluteUri(
+                $uri,
+                $serverRequest,
+            ),
+        );
+    }
+
+    /**
+     * A request whose server params carry none of HTTP_HOST/SERVER_NAME/SERVER_PORT (a
+     * synthetic or otherwise incomplete ServerRequest, e.g. one built by a caller outside a
+     * real HTTP request cycle) must be treated as untrusted, not crash. TYPO3 core's
+     * VerifyHostHeader::hostHeaderValueMatchesTrustedHostsPattern() calls
+     * strtolower($serverParams['SERVER_NAME']) with no null-coalescing under strict_types,
+     * so delegating to it with an empty server params array throws a TypeError instead of
+     * returning false.
+     */
+    #[Test]
+    public function keepsAHostLessUriUnresolvedWhenTheRequestHasNoServerParamsAtAll(): void
+    {
+        $uri           = new Uri('/some-page?type=1716283827');
+        $serverRequest = new ServerRequest('https://example.com:8443/newsletter?pageId=42');
+
+        self::assertSame(
+            '/some-page?type=1716283827',
             (string) UriUtility::resolveAbsoluteUri(
                 $uri,
                 $serverRequest,

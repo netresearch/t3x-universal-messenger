@@ -297,6 +297,12 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Performs a GET-request and returns the content from the called URL.
      *
+     * The fetched URL always targets this same TYPO3 instance (see UriUtility::
+     * resolveAbsoluteUri() and UniversalMessengerController::getNewsletterUrl()), so there is
+     * no legitimate reason for it to redirect elsewhere. Following redirects here would let a
+     * compromised or attacker-controlled first hop (GH-174) pivot this self-fetch to an
+     * entirely different, attacker-chosen target.
+     *
      * @param string $url
      *
      * @return string
@@ -309,7 +315,7 @@ class NewsletterRenderService implements SingletonInterface
             $url,
             'GET',
             [
-                'allow_redirects' => true,
+                'allow_redirects' => false,
                 'headers'         => [
                     'Cache-Control' => 'no-cache',
                     'User-Agent'    => 'TYPO3',
