@@ -39,14 +39,27 @@ $insertChannel->execute([CHANNEL_OWN_UID, $now, $now, 'e2e_own', 'E2E Own Channe
 $insertChannel->execute([CHANNEL_OTHER_UID, $now, $now, 'e2e_other', 'E2E Other Channel', 'sender@example.invalid', 'reply@example.invalid']);
 echo "Newsletter channel records created\n";
 
+/** Inserts a doktype-20 newsletter page as a child of the root page, visible, not hidden or deleted. */
+function insertNewsletterPage(PDO $pdo, int $uid, string $title, string $slug, int $channelUid, int $now): void
+{
+    $pdo
+        ->prepare(
+            'INSERT IGNORE INTO pages (uid, pid, title, slug, doktype, universal_messenger_channel, hidden, deleted, tstamp, crdate)
+             VALUES (?, 1, ?, ?, 20, ?, 0, 0, ?, ?)',
+        )
+        ->execute([$uid, $title, $slug, $channelUid, $now, $now]);
+}
+
 // Newsletter page (doktype 20), child of the root page, configured for the
 // "own" channel. Visible, not hidden or deleted.
-$pdo
-    ->prepare(
-        'INSERT IGNORE INTO pages (uid, pid, title, slug, doktype, universal_messenger_channel, hidden, deleted, tstamp, crdate)
-         VALUES (10, 1, \'Newsletter\', \'/newsletter\', 20, ?, 0, 0, ?, ?)',
-    )
-    ->execute([CHANNEL_OWN_UID, $now, $now]);
+insertNewsletterPage(
+    $pdo,
+    10,
+    'Newsletter',
+    '/newsletter',
+    CHANNEL_OWN_UID,
+    $now,
+);
 echo "Newsletter page (uid=10) created\n";
 
 // Grant the admin backend user permission for BOTH channels: the page's own
@@ -68,12 +81,14 @@ echo "Admin user granted both channel permissions\n";
 // this override applies, so only unsetting the plugin branch would leave
 // the module's already-copied value intact and not reproduce a real "static
 // template never included" site).
-$pdo
-    ->prepare(
-        'INSERT IGNORE INTO pages (uid, pid, title, slug, doktype, universal_messenger_channel, hidden, deleted, tstamp, crdate)
-         VALUES (11, 1, \'Newsletter Without Template\', \'/newsletter-without-template\', 20, ?, 0, 0, ?, ?)',
-    )
-    ->execute([CHANNEL_OWN_UID, $now, $now]);
+insertNewsletterPage(
+    $pdo,
+    11,
+    'Newsletter Without Template',
+    '/newsletter-without-template',
+    CHANNEL_OWN_UID,
+    $now,
+);
 echo "Newsletter page without a container template (uid=11) created\n";
 
 $pdo

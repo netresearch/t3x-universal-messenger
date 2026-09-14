@@ -346,7 +346,10 @@ abstract class AbstractBaseController extends ActionController
         string $key,
         ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
     ): ResponseInterface {
-        $this->addModuleFlashMessage($key, $contextualFeedbackSeverity);
+        $this->addModuleFlashMessage(
+            $key,
+            $contextualFeedbackSeverity,
+        );
 
         return new ForwardResponse('error');
     }

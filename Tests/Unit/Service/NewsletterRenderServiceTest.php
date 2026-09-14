@@ -70,8 +70,10 @@ final class NewsletterRenderServiceTest extends UnitTestCase
 
     /**
      * Stubs Configuration so getTypoScriptSetting('view/templatePathAndFilename') returns the
-     * given container-template value; any other path returns null, so a call using the wrong
-     * path is caught by the false-case tests instead of passing by coincidence.
+     * given container-template value; any other path returns null. A call using the wrong path
+     * is caught by returnsTrueWhenTheContainerTemplateIsSet(), which would then observe null
+     * instead of the configured string and fail; the two false-case tests cannot tell a wrong
+     * path from a correct one, since both yield a falsy result either way.
      */
     private function createConfigurationStub(?string $templatePathAndFilename): Configuration
     {

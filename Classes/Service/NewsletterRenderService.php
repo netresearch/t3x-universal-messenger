@@ -41,6 +41,11 @@ class NewsletterRenderService implements SingletonInterface
     public const VIEW_TYPE_NUMBER = 1716283827;
 
     /**
+     * @var string
+     */
+    private const TEMPLATE_PATH_AND_FILENAME_SETTING = 'view/templatePathAndFilename';
+
+    /**
      * @var RequestFactory
      */
     private readonly RequestFactory $requestFactory;
@@ -132,7 +137,10 @@ class NewsletterRenderService implements SingletonInterface
 
         $content = $this->renderNewsletterContainer(
             $serverRequest,
-            $this->renderByPageId($serverRequest, $pageId, $languageId),
+            $this->renderByPageId(
+                $pageId,
+                $languageId,
+            ),
         );
 
         return $this->clearUpContent($content);
@@ -154,28 +162,13 @@ class NewsletterRenderService implements SingletonInterface
 
     /**
      * Whether the container template is configured, i.e. whether "view/templatePathAndFilename"
-     * resolves to a real value in the TypoScript getView() also reads its paths from. A classic
-     * (non-Site-Set) site only receives it once its integrator includes the "Example Newsletter
-     * Template" static template, without it getView() cannot resolve any template.
-     * previewAction() fails directly from that (InvalidTemplateResourceException);
-     * renderNewsletterPage() never calls getView() itself, it fails indirectly, since its caller
-     * routes over HTTP through previewAction(), and a non-200 response there surfaces as a
-     * RuntimeException from getContentFromUrl() instead. Callers with access to a real TYPO3
-     * backend flash message (e.g. UniversalMessengerController::indexAction()) can check this
-     * upfront to show one instead of routing through either of those render failures.
+     * resolves to a real value in the TypoScript getView() also reads its paths from.
      *
-     * As observed on 2026-09-14 (TYPO3 v14), Extbase's ConfigurationManager resolves
-     * "view/templatePathAndFilename" against plugin.tx_universalmessenger.* for a frontend
-     * request, but against module.tx_universalmessenger.* for a backend one
-     * (BackendConfigurationManager hardcodes that lookup, it cannot read plugin.* at all). This
-     * method's only real caller,
-     * indexAction(), always runs in backend context, so it currently checks module.*, kept in
-     * sync with plugin.* only because the TypoScript that sets templatePathAndFilename
-     * (Configuration/TypoScript/ExampleNewsletter/setup.typoscript, the opt-in "Example
-     * Newsletter Template" static template) copies it into module.* right after setting it
-     * (module.tx_universalmessenger < plugin.tx_universalmessenger), the same copy directive
-     * Configuration/TypoScript/Default/UniversalMessenger/PluginConfiguration.typoscript uses
-     * for the other view/* settings, but a separate occurrence of it. An integrator overriding
+     * This method's only real caller, indexAction(), runs in backend context, so it reads
+     * module.tx_universalmessenger.* rather than plugin.tx_universalmessenger.* (TYPO3's
+     * BackendConfigurationManager cannot read plugin.* at all in that context). The opt-in
+     * "Example Newsletter Template" static template keeps both branches in sync via a
+     * TypoScript copy directive. An integrator overriding
      * plugin.tx_universalmessenger.view.templatePathAndFilename without mirroring it on the
      * module.* branch would make this check and the real frontend preview disagree.
      *
@@ -183,7 +176,7 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function isNewsletterContainerTemplateConfigured(): bool
     {
-        $templatePathAndFilename = $this->configuration->getTypoScriptSetting('view/templatePathAndFilename');
+        $templatePathAndFilename = $this->configuration->getTypoScriptSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING);
 
         return ($templatePathAndFilename !== null) && ($templatePathAndFilename !== '');
     }
@@ -218,7 +211,7 @@ class NewsletterRenderService implements SingletonInterface
             templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
             partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
             layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
-            templatePathAndFilename: $this->configuration->getTypoScriptSetting('view/templatePathAndFilename'),
+            templatePathAndFilename: $this->configuration->getTypoScriptSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING),
             request                : $serverRequest,
         );
 
@@ -250,13 +243,12 @@ class NewsletterRenderService implements SingletonInterface
     /**
      * Renders the page with the given page ID.
      *
-     * @param ServerRequestInterface $serverRequest
-     * @param int                    $pageId        The page UID
-     * @param int                    $languageId    The language UID of the page
+     * @param int $pageId     The page UID
+     * @param int $languageId The language UID of the page
      *
      * @return string
      */
-    private function renderByPageId(ServerRequestInterface $serverRequest, int $pageId, int $languageId): string
+    private function renderByPageId(int $pageId, int $languageId): string
     {
         $url = (string) $this->generatePageUri(
             $pageId,

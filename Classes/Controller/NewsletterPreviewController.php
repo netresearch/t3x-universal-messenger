@@ -16,6 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
 /**
@@ -78,8 +79,13 @@ class NewsletterPreviewController extends ActionController implements LoggerAwar
             );
 
             return $this->htmlResponse(
-                'Newsletter template is not configured for this site. The "Example Newsletter'
-                . ' Template" static template (or the equivalent Site Set TypoScript) is missing.',
+                // translate() is typed to return null when the key is not found (this one
+                // stays registered in locallang.xlf as long as this diff does), so keep the
+                // ?? '' even though that currently can't happen here.
+                LocalizationUtility::translate(
+                    'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:'
+                    . 'error.missingNewsletterTemplateConfiguration',
+                ) ?? '',
             )->withStatus(
                 503,
                 'Newsletter template not configured',
