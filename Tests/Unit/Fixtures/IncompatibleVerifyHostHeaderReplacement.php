@@ -35,7 +35,8 @@ final readonly class IncompatibleVerifyHostHeaderReplacement
      * Constructor.
      *
      * Deliberately requires an array where VerifyHostHeader requires a string (the trusted
-     * hosts pattern), so instantiating it with that same one argument raises a TypeError.
+     * hosts pattern), so instantiating it with that same one argument raises a TypeError
+     * during parameter binding, before this body ever runs.
      *
      * @param array<int, string> $trustedHostsPatterns
      */
@@ -45,6 +46,11 @@ final readonly class IncompatibleVerifyHostHeaderReplacement
     }
 
     /**
+     * This class is never actually constructed (the incompatible parameter type above always
+     * throws first), so nothing calls this. It exists only so PHPStan doesn't flag
+     * $trustedHostsPatterns as a write-only property; a plain unused constructor parameter
+     * triggers the same rule from the other direction.
+     *
      * @return array<int, string>
      */
     public function getTrustedHostsPatterns(): array
