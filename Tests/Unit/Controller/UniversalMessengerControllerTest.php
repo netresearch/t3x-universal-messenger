@@ -64,10 +64,11 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * getAuthorizationFailureSeverity() itself is fully covered below, isolated
  * from that collaborator chain.
  *
- * createAction()'s own TEST-send success path is affected the same way: the
- * `newsletter.status.hold` flash message is added via
- * `$this->moduleTemplate->addFlashMessage()` directly (not through the
- * overridable forwardFlashMessage()), so it is likewise out of reach here.
+ * createAction()'s TEST-send success path (the `newsletter.status.hold`
+ * flash message) is covered below via `addModuleFlashMessage()`, the same
+ * overridable helper every rejection path already goes through via
+ * forwardFlashMessage(), see
+ * createActionSendsATestNewsletterAndAddsTheHoldStatusMessage().
  * The TEST/LIVE request-building logic that runs immediately before it
  * (channel suffix, tag, subject prefix) is covered below by letting the
  * mocked EventFileRepository throw once it has recorded the built request,
@@ -958,13 +959,21 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         return $configuration;
     }
 
-    /** Wires the fixed doktype configuration stub every guard test needs. */
-    private function injectConfigurationStub(TestableUniversalMessengerController $subject): void
-    {
+    /**
+     * Wires the fixed doktype configuration stub every guard test needs.
+     * $extensionSettingsMap additionally stubs getExtensionSetting(), for
+     * tests that reach past the guard (see createConfigurationStub()).
+     *
+     * @param array<int, array{0: string, 1: string}> $extensionSettingsMap
+     */
+    private function injectConfigurationStub(
+        TestableUniversalMessengerController $subject,
+        array $extensionSettingsMap = [],
+    ): void {
         $this->injectProperty(
             $subject,
             'configuration',
-            $this->createConfigurationStub(),
+            $this->createConfigurationStub($extensionSettingsMap),
         );
     }
 
@@ -1065,16 +1074,13 @@ final class UniversalMessengerControllerTest extends UnitTestCase
             $subject,
             [self::CONFIGURED_CHANNEL_UID],
             ['title' => 'Camino Demo Newsletter'],
+            [
+                ['newsletter/testChannelSuffix', self::TEST_CHANNEL_SUFFIX],
+                ['newsletter/liveChannelSuffix', self::LIVE_CHANNEL_SUFFIX],
+            ],
         );
         $subject->newsletterUrlOverride = 'https://example.org/newsletter';
 
-        // Overwrites the doktype-only stub authorizeSubjectForCreateAction() just injected
-        // with one that also answers the channel-suffix settings read further down.
-        $this->injectProperty(
-            $subject,
-            'configuration',
-            $this->createConfigurationStubForSend(),
-        );
         $this->injectProperty(
             $subject,
             'localizationRepository',
@@ -1097,18 +1103,6 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         );
 
         return $subject;
-    }
-
-    /**
-     * Stubs the doktype AND the two channel-suffix settings createAction()
-     * reads once past the guard.
-     */
-    private function createConfigurationStubForSend(): Configuration
-    {
-        return $this->createConfigurationStub([
-            ['newsletter/testChannelSuffix', self::TEST_CHANNEL_SUFFIX],
-            ['newsletter/liveChannelSuffix', self::LIVE_CHANNEL_SUFFIX],
-        ]);
     }
 
     /**
@@ -1147,50 +1141,29 @@ final class UniversalMessengerControllerTest extends UnitTestCase
      */
     private function assertBuiltRequest(Event $event, string $expectedChannel, string $expectedTag): void
     {
-        self::assertSame(
-            [$expectedChannel],
-            $this->readEventDestinationChannels($event),
-        );
-        self::assertContains(
-            $expectedTag,
-            $this->readEventTags($event),
-        );
-    }
-
-    /**
-     * These SDK request models are deliberately write-only XML-serializable
-     * value objects (see CreateRequestBuilder::create()) with no getters, so
-     * reading them back for an assertion goes through reflection.
-     *
-     * @return string[]
-     */
-    private function readEventDestinationChannels(Event $event): array
-    {
-        $destination = (new ReflectionProperty($event, 'destination'))->getValue($event);
-
-        self::assertInstanceOf(
-            Destination::class,
-            $destination,
-        );
+        $destination = $this->readObjectProperty($event, 'destination', Destination::class);
 
         /** @var string[] $channels */
-        $channels = (new ReflectionProperty($destination, 'channel'))->getValue($destination);
+        $channels = (new ReflectionProperty(
+            $destination,
+            'channel',
+        ))->getValue($destination);
 
-        return $channels;
-    }
+        self::assertSame(
+            [$expectedChannel],
+            $channels,
+        );
 
-    /**
-     * Same write-only-value-object rationale as readEventDestinationChannels()
-     * above.
-     *
-     * @return string[]
-     */
-    private function readEventTags(Event $event): array
-    {
         /** @var string[] $tags */
-        $tags = (new ReflectionProperty($event, 'tag'))->getValue($event);
+        $tags = (new ReflectionProperty(
+            $event,
+            'tag',
+        ))->getValue($event);
 
-        return $tags;
+        self::assertContains(
+            $expectedTag,
+            $tags,
+        );
     }
 
     /**
@@ -1199,24 +1172,44 @@ final class UniversalMessengerControllerTest extends UnitTestCase
      */
     private function emailSubjectOf(Event $event): string
     {
-        $data = (new ReflectionProperty($event, 'data'))->getValue($event);
-
-        self::assertInstanceOf(
-            Data::class,
-            $data,
-        );
-
-        $email = (new ReflectionProperty($data, 'email'))->getValue($data);
-
-        self::assertInstanceOf(
-            Email::class,
-            $email,
-        );
+        $data  = $this->readObjectProperty($event, 'data', Data::class);
+        $email = $this->readObjectProperty($data, 'email', Email::class);
 
         /** @var string|null $subject */
-        $subject = (new ReflectionProperty($email, 'subject'))->getValue($email);
+        $subject = (new ReflectionProperty(
+            $email,
+            'subject',
+        ))->getValue($email);
 
         return (string) $subject;
+    }
+
+    /**
+     * These SDK request models are deliberately write-only XML-serializable
+     * value objects (see CreateRequestBuilder::create()) with no getters, so
+     * reading one back for an assertion goes through reflection; the
+     * assertInstanceOf() narrows the untyped reflection read back to $T for
+     * every caller in one place.
+     *
+     * @template T of object
+     *
+     * @param class-string<T> $expectedType
+     *
+     * @return T
+     */
+    private function readObjectProperty(object $object, string $property, string $expectedType): object
+    {
+        $value = (new ReflectionProperty(
+            $object,
+            $property,
+        ))->getValue($object);
+
+        self::assertInstanceOf(
+            $expectedType,
+            $value,
+        );
+
+        return $value;
     }
 
     /**
@@ -1224,21 +1217,23 @@ final class UniversalMessengerControllerTest extends UnitTestCase
      * createSubject(), mirroring createGuardSubject() for tests that exercise
      * the full createAction() rather than the guard directly.
      *
-     * @param TestableUniversalMessengerController $subject              The controller under test to wire the collaborators onto
-     * @param int[]                                $permittedChannelUids
-     * @param array<string, int|string|null>       $pageRecordOverrides
+     * @param TestableUniversalMessengerController    $subject              The controller under test to wire the collaborators onto
+     * @param int[]                                   $permittedChannelUids
+     * @param array<string, int|string|null>          $pageRecordOverrides
+     * @param array<int, array{0: string, 1: string}> $extensionSettingsMap Forwarded to createConfigurationStub(), for tests that reach past the guard
      */
     private function authorizeSubjectForCreateAction(
         TestableUniversalMessengerController $subject,
         array $permittedChannelUids,
         array $pageRecordOverrides = [],
+        array $extensionSettingsMap = [],
     ): void {
         $subject->pageRecordOverride                = $this->validNewsletterPageRecord($pageRecordOverrides);
         $subject->backendUserAuthenticationOverride = $this->createBackendUserWithChannelPermissions(
             $permittedChannelUids,
         );
 
-        $this->injectConfigurationStub($subject);
+        $this->injectConfigurationStub($subject, $extensionSettingsMap);
     }
 
     /**
@@ -1290,10 +1285,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
      * Every property injected this way is resolved against the controller itself,
      * covering both inherited/protected properties (e.g. "request", "configuration")
      * and ones declared directly on it (e.g. "eventFileRepository"), object
-     * collaborators and the few plain scalar properties alike (e.g.
-     * "currentSelectedLanguage").
+     * collaborators and the one plain scalar property that needs it
+     * ("currentSelectedLanguage").
      */
-    private function injectProperty(object $subject, string $name, object|int|string $value): void
+    private function injectProperty(object $subject, string $name, object|int $value): void
     {
         $property = new ReflectionProperty(UniversalMessengerController::class, $name);
 
