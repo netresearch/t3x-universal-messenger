@@ -352,19 +352,7 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     #[DataProvider('invalidNewsletterUrlDataProvider')]
     public function createActionRejectsWithNoSiteConfigurationWhenTheNewsletterUrlIsInvalid(string $invalidUrl): void
     {
-        $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
-
-        $subject = $this->createSubject(
-            $eventFileRepository,
-            'POST',
-            ['send' => 'live'],
-        );
-
-        $this->authorizeSubjectForCreateAction(
-            $subject,
-            [self::CONFIGURED_CHANNEL_UID],
-        );
-        $subject->newsletterUrlOverride = $invalidUrl;
+        $subject = $this->createSubjectRejectedForNoSiteConfiguration($invalidUrl);
 
         $subject->createAction($this->createNewsletterChannelStub(self::CONFIGURED_CHANNEL_UID));
 
@@ -381,19 +369,7 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     #[Test]
     public function createActionRejectsWithNoSiteConfigurationWhenSiteFinderThrows(): void
     {
-        $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
-
-        $subject = $this->createSubject(
-            $eventFileRepository,
-            'POST',
-            ['send' => 'live'],
-        );
-
-        $this->authorizeSubjectForCreateAction(
-            $subject,
-            [self::CONFIGURED_CHANNEL_UID],
-        );
-        $subject->newsletterUrlOverride = 'https://example.org/newsletter';
+        $subject = $this->createSubjectRejectedForNoSiteConfiguration();
 
         $siteFinder = self::createStub(SiteFinder::class);
         $siteFinder
@@ -423,19 +399,7 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     #[Test]
     public function createActionRejectsWithNoSiteConfigurationWhenNewsletterRenderServiceThrows(): void
     {
-        $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
-
-        $subject = $this->createSubject(
-            $eventFileRepository,
-            'POST',
-            ['send' => 'live'],
-        );
-
-        $this->authorizeSubjectForCreateAction(
-            $subject,
-            [self::CONFIGURED_CHANNEL_UID],
-        );
-        $subject->newsletterUrlOverride = 'https://example.org/newsletter';
+        $subject = $this->createSubjectRejectedForNoSiteConfiguration();
 
         $this->injectProperty(
             $subject,
@@ -1674,6 +1638,33 @@ final class UniversalMessengerControllerTest extends UnitTestCase
             $subject,
             $extensionSettingsMap,
         );
+    }
+
+    /**
+     * Builds a subject wired so createAction() reaches the "no site
+     * configuration" catch block, for the three tests proving it stays
+     * generic: an invalid newsletter URL, a thrown SiteNotFoundException,
+     * and a thrown RuntimeException from a different collaborator. Each
+     * caller adds only its own additional stub wiring on top.
+     */
+    private function createSubjectRejectedForNoSiteConfiguration(
+        string $newsletterUrlOverride = 'https://example.org/newsletter',
+    ): TestableUniversalMessengerController {
+        $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
+
+        $subject = $this->createSubject(
+            $eventFileRepository,
+            'POST',
+            ['send' => 'live'],
+        );
+
+        $this->authorizeSubjectForCreateAction(
+            $subject,
+            [self::CONFIGURED_CHANNEL_UID],
+        );
+        $subject->newsletterUrlOverride = $newsletterUrlOverride;
+
+        return $subject;
     }
 
     /**
