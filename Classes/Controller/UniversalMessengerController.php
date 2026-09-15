@@ -573,12 +573,16 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     /**
      * Returns the newsletter preview URL.
      *
+     * Wrapped so it can be doubled in tests without a bootstrapped TYPO3 core:
+     * PreviewUriBuilder::create() is a static TYPO3 core call unavailable in a
+     * unit-test harness.
+     *
      * @param int  $pageId
      * @param bool $preview
      *
      * @return string
      */
-    private function getNewsletterUrl(int $pageId, bool $preview = true): string
+    protected function getNewsletterUrl(int $pageId, bool $preview = true): string
     {
         // Call the newsletter preview frontend controller to render the selected page
         // in the mail template style inside the backend iframe.

@@ -45,6 +45,11 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
 
     public ?BackendUserAuthentication $backendUserAuthenticationOverride = null;
 
+    /**
+     * @var string|null
+     */
+    public ?string $newsletterUrlOverride = null;
+
     protected function forwardFlashMessage(
         string $key,
         ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
@@ -68,6 +73,14 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $this->backendUserAuthenticationOverride ?? parent::getBackendUserAuthentication();
+    }
+
+    /**
+     * Returns the doubled newsletter URL instead of calling PreviewUriBuilder.
+     */
+    protected function getNewsletterUrl(int $pageId, bool $preview = true): string
+    {
+        return $this->newsletterUrlOverride ?? '';
     }
 
     /**
