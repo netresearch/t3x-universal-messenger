@@ -15,7 +15,10 @@ use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\Request\Event;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Data;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Data\Email;
+use Netresearch\Sdk\UniversalMessenger\Request\Event\Data\Email\HtmlText;
+use Netresearch\Sdk\UniversalMessenger\Request\Event\Data\Email\PlainText;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Destination;
+use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\UniversalMessengerController;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
@@ -24,6 +27,7 @@ use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -76,6 +80,13 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * @see    https://www.netresearch.de
  */
 #[CoversClass(UniversalMessengerController::class)]
+#[UsesClass(CreateRequestBuilder::class)]
+#[UsesClass(Event::class)]
+#[UsesClass(Destination::class)]
+#[UsesClass(Data::class)]
+#[UsesClass(Email::class)]
+#[UsesClass(HtmlText::class)]
+#[UsesClass(PlainText::class)]
 final class UniversalMessengerControllerTest extends UnitTestCase
 {
     /**
@@ -311,7 +322,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
             ->method('sendEventFile')
             ->willReturn(true);
 
-        $subject = $this->createSubjectPastTheGuard($eventFileRepository, 'live');
+        $subject = $this->createSubjectPastTheGuard(
+            $eventFileRepository,
+            'live',
+        );
 
         $subject->createAction($this->createNewsletterChannelStub(self::CONFIGURED_CHANNEL_UID));
 
@@ -322,14 +336,24 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         );
     }
 
-    /** An invalid (empty) newsletter URL must be rejected before any collaborator further down the chain is touched. */
+    /**
+     * An invalid (empty) newsletter URL must be rejected before any
+     * collaborator further down the chain is touched.
+     */
     #[Test]
     public function createActionRejectsWithNoSiteConfigurationWhenTheNewsletterUrlIsInvalid(): void
     {
         $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
 
-        $subject = $this->createSubject($eventFileRepository, 'POST', ['send' => 'live']);
-        $this->authorizeSubjectForCreateAction($subject, [self::CONFIGURED_CHANNEL_UID]);
+        $subject = $this->createSubject(
+            $eventFileRepository,
+            'POST',
+            ['send' => 'live'],
+        );
+        $this->authorizeSubjectForCreateAction(
+            $subject,
+            [self::CONFIGURED_CHANNEL_UID],
+        );
         $subject->newsletterUrlOverride = '';
 
         $subject->createAction($this->createNewsletterChannelStub(self::CONFIGURED_CHANNEL_UID));
@@ -340,21 +364,35 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         );
     }
 
-    /** The site the page belongs to disappeared (deleted/misconfigured) between form render and submit. */
+    /**
+     * The site the page belongs to disappeared (deleted/misconfigured)
+     * between form render and submit.
+     */
     #[Test]
     public function createActionRejectsWithNoSiteConfigurationWhenSiteFinderThrows(): void
     {
         $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
 
-        $subject = $this->createSubject($eventFileRepository, 'POST', ['send' => 'live']);
-        $this->authorizeSubjectForCreateAction($subject, [self::CONFIGURED_CHANNEL_UID]);
+        $subject = $this->createSubject(
+            $eventFileRepository,
+            'POST',
+            ['send' => 'live'],
+        );
+        $this->authorizeSubjectForCreateAction(
+            $subject,
+            [self::CONFIGURED_CHANNEL_UID],
+        );
         $subject->newsletterUrlOverride = 'https://example.org/newsletter';
 
         $siteFinder = self::createStub(SiteFinder::class);
         $siteFinder
             ->method('getSiteByPageId')
             ->willThrowException(new SiteNotFoundException('No site found for the given page.'));
-        $this->injectProperty($subject, 'siteFinder', $siteFinder);
+        $this->injectProperty(
+            $subject,
+            'siteFinder',
+            $siteFinder,
+        );
 
         $subject->createAction($this->createNewsletterChannelStub(self::CONFIGURED_CHANNEL_UID));
 
@@ -375,7 +413,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     #[Test]
     public function createActionBuildsTheTestRequestAndReportsAWebserviceException(): void
     {
-        $newsletterChannel = $this->createNewsletterChannelStub(self::CONFIGURED_CHANNEL_UID, 'crmDemoChannel');
+        $newsletterChannel = $this->createNewsletterChannelStub(
+            self::CONFIGURED_CHANNEL_UID,
+            'crmDemoChannel',
+        );
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects(self::once())->method('error');
@@ -390,13 +431,19 @@ final class UniversalMessengerControllerTest extends UnitTestCase
                     'crmDemoChannel' . self::TEST_CHANNEL_SUFFIX,
                     'TEST',
                 );
-                self::assertStringStartsWith('TEST: ', $this->emailSubjectOf($event));
+                self::assertSame(
+                    'TEST: Camino Demo Newsletter',
+                    $this->emailSubjectOf($event),
+                );
 
                 return true;
             }))
             ->willThrowException(new ServiceException('The webservice is unavailable.'));
 
-        $subject = $this->createSubjectPastTheGuard($eventFileRepository, 'test');
+        $subject = $this->createSubjectPastTheGuard(
+            $eventFileRepository,
+            'test',
+        );
         $subject->setLogger($logger);
 
         $subject->createAction($newsletterChannel);
@@ -417,7 +464,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     #[Test]
     public function createActionBuildsTheLiveRequestAndSucceedsWithoutForwardingAMessage(): void
     {
-        $newsletterChannel = $this->createNewsletterChannelStub(self::CONFIGURED_CHANNEL_UID, 'crmDemoChannel');
+        $newsletterChannel = $this->createNewsletterChannelStub(
+            self::CONFIGURED_CHANNEL_UID,
+            'crmDemoChannel',
+        );
 
         $eventFileRepository = $this->createMock(EventFileRepository::class);
         $eventFileRepository
@@ -429,18 +479,78 @@ final class UniversalMessengerControllerTest extends UnitTestCase
                     'crmDemoChannel' . self::LIVE_CHANNEL_SUFFIX,
                     'LIVE',
                 );
-                self::assertStringStartsNotWith('TEST: ', $this->emailSubjectOf($event));
+                self::assertSame(
+                    'Camino Demo Newsletter',
+                    $this->emailSubjectOf($event),
+                );
 
                 return true;
             }))
             ->willReturn(true);
 
-        $subject = $this->createSubjectPastTheGuard($eventFileRepository, 'live');
+        $subject = $this->createSubjectPastTheGuard(
+            $eventFileRepository,
+            'live',
+        );
 
         $response = $subject->createAction($newsletterChannel);
 
-        self::assertSame([], $subject->forwardedFlashMessages);
-        self::assertInstanceOf(ForwardResponse::class, $response);
+        self::assertSame(
+            [],
+            $subject->forwardedFlashMessages,
+        );
+        self::assertInstanceOf(
+            ForwardResponse::class,
+            $response,
+        );
+        self::assertSame(
+            'index',
+            $response->getActionName(),
+        );
+    }
+
+    /**
+     * Proves the TEST-success flash message is added via the same
+     * addModuleFlashMessage() helper the rejection paths use, not a direct,
+     * untestable moduleTemplate call, and with the INFO severity a
+     * successful send warrants. The request-building assertions belong to
+     * createActionBuildsTheTestRequestAndReportsAWebserviceException()
+     * above; this one stays focused on the success outcome.
+     */
+    #[Test]
+    public function createActionSendsATestNewsletterAndAddsTheHoldStatusMessage(): void
+    {
+        $newsletterChannel = $this->createNewsletterChannelStub(
+            self::CONFIGURED_CHANNEL_UID,
+            'crmDemoChannel',
+        );
+
+        $eventFileRepository = $this->createMock(EventFileRepository::class);
+        $eventFileRepository
+            ->expects(self::once())
+            ->method('sendEventFile')
+            ->willReturn(true);
+
+        $subject = $this->createSubjectPastTheGuard(
+            $eventFileRepository,
+            'test',
+        );
+
+        $subject->createAction($newsletterChannel);
+
+        self::assertSame(
+            [],
+            $subject->forwardedFlashMessages,
+        );
+        self::assertSame(
+            [
+                [
+                    'key'      => 'newsletter.status.hold',
+                    'severity' => ContextualFeedbackSeverity::INFO,
+                ],
+            ],
+            $subject->addedFlashMessages,
+        );
     }
 
     /** Page was deleted, or never existed, between form render and submit. */
@@ -824,13 +934,26 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         return $subject;
     }
 
-    /** Stubs Configuration so the guard's doktype check has a fixed value to compare against. */
-    private function createConfigurationStub(): Configuration
+    /**
+     * Stubs Configuration so the guard's doktype check has a fixed value to
+     * compare against. $extensionSettingsMap additionally stubs
+     * getExtensionSetting() for tests that reach past the guard, in the
+     * willReturnMap() format (pairs of [path, value]).
+     *
+     * @param array<int, array{0: string, 1: string}> $extensionSettingsMap
+     */
+    private function createConfigurationStub(array $extensionSettingsMap = []): Configuration
     {
         $configuration = self::createStub(Configuration::class);
         $configuration
             ->method('getNewsletterPageDokType')
             ->willReturn(self::NEWSLETTER_PAGE_DOKTYPE);
+
+        if ($extensionSettingsMap !== []) {
+            $configuration
+                ->method('getExtensionSetting')
+                ->willReturnMap($extensionSettingsMap);
+        }
 
         return $configuration;
     }
@@ -932,43 +1055,66 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         EventFileRepository $eventFileRepository,
         string $sendType,
     ): TestableUniversalMessengerController {
-        $subject = $this->createSubject($eventFileRepository, 'POST', ['send' => $sendType]);
+        $subject = $this->createSubject(
+            $eventFileRepository,
+            'POST',
+            ['send' => $sendType],
+        );
 
-        $subject->pageRecordOverride = $this->validNewsletterPageRecord([
-            'title' => 'Camino Demo Newsletter',
-        ]);
-        $subject->backendUserAuthenticationOverride = $this->createBackendUserWithChannelPermissions(
+        $this->authorizeSubjectForCreateAction(
+            $subject,
             [self::CONFIGURED_CHANNEL_UID],
+            ['title' => 'Camino Demo Newsletter'],
         );
         $subject->newsletterUrlOverride = 'https://example.org/newsletter';
 
-        $this->injectProperty($subject, 'configuration', $this->createConfigurationStubForSend());
-        $this->injectProperty($subject, 'localizationRepository', self::createStub(LocalizationRepository::class));
-        $this->injectProperty($subject, 'siteFinder', $this->createSiteFinderStub());
-        $this->injectProperty($subject, 'newsletterRenderService', $this->createNewsletterRenderServiceStub());
-        $this->injectScalarProperty($subject, 'currentSelectedLanguage', 0);
+        // Overwrites the doktype-only stub authorizeSubjectForCreateAction() just injected
+        // with one that also answers the channel-suffix settings read further down.
+        $this->injectProperty(
+            $subject,
+            'configuration',
+            $this->createConfigurationStubForSend(),
+        );
+        $this->injectProperty(
+            $subject,
+            'localizationRepository',
+            self::createStub(LocalizationRepository::class),
+        );
+        $this->injectProperty(
+            $subject,
+            'siteFinder',
+            $this->createSiteFinderStub(),
+        );
+        $this->injectProperty(
+            $subject,
+            'newsletterRenderService',
+            $this->createNewsletterRenderServiceStub(),
+        );
+        $this->injectProperty(
+            $subject,
+            'currentSelectedLanguage',
+            0,
+        );
 
         return $subject;
     }
 
-    /** Stubs the doktype AND the two channel-suffix settings createAction() reads once past the guard. */
+    /**
+     * Stubs the doktype AND the two channel-suffix settings createAction()
+     * reads once past the guard.
+     */
     private function createConfigurationStubForSend(): Configuration
     {
-        $configuration = self::createStub(Configuration::class);
-        $configuration
-            ->method('getNewsletterPageDokType')
-            ->willReturn(self::NEWSLETTER_PAGE_DOKTYPE);
-        $configuration
-            ->method('getExtensionSetting')
-            ->willReturnMap([
-                ['newsletter/testChannelSuffix', self::TEST_CHANNEL_SUFFIX],
-                ['newsletter/liveChannelSuffix', self::LIVE_CHANNEL_SUFFIX],
-            ]);
-
-        return $configuration;
+        return $this->createConfigurationStub([
+            ['newsletter/testChannelSuffix', self::TEST_CHANNEL_SUFFIX],
+            ['newsletter/liveChannelSuffix', self::LIVE_CHANNEL_SUFFIX],
+        ]);
     }
 
-    /** A SiteFinder double resolving any page ID to the same doubled Site, used for both getBase() and generateLiveEventId(). */
+    /**
+     * A SiteFinder double resolving any page ID to the same doubled Site,
+     * used for both getBase() and generateLiveEventId().
+     */
     private function createSiteFinderStub(): SiteFinder
     {
         $site = self::createStub(Site::class);
@@ -981,7 +1127,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         return $siteFinder;
     }
 
-    /** Stands in for the real HTTP self-request that would render the newsletter page. */
+    /**
+     * Stands in for the real HTTP self-request that would render the
+     * newsletter page.
+     */
     private function createNewsletterRenderServiceStub(): NewsletterRenderService
     {
         $newsletterRenderService = self::createStub(NewsletterRenderService::class);
@@ -992,7 +1141,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         return $newsletterRenderService;
     }
 
-    /** Asserts the channel and tag createAction() attached to the built event request. */
+    /**
+     * Asserts the channel and tag createAction() attached to the built
+     * event request.
+     */
     private function assertBuiltRequest(Event $event, string $expectedChannel, string $expectedTag): void
     {
         self::assertSame(
@@ -1016,7 +1168,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     {
         $destination = (new ReflectionProperty($event, 'destination'))->getValue($event);
 
-        self::assertInstanceOf(Destination::class, $destination);
+        self::assertInstanceOf(
+            Destination::class,
+            $destination,
+        );
 
         /** @var string[] $channels */
         $channels = (new ReflectionProperty($destination, 'channel'))->getValue($destination);
@@ -1025,6 +1180,9 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     }
 
     /**
+     * Same write-only-value-object rationale as readEventDestinationChannels()
+     * above.
+     *
      * @return string[]
      */
     private function readEventTags(Event $event): array
@@ -1035,16 +1193,25 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         return $tags;
     }
 
-    /** Reads the subject line createAction() attached to the built event request. */
+    /**
+     * Reads the subject line createAction() attached to the built event
+     * request.
+     */
     private function emailSubjectOf(Event $event): string
     {
         $data = (new ReflectionProperty($event, 'data'))->getValue($event);
 
-        self::assertInstanceOf(Data::class, $data);
+        self::assertInstanceOf(
+            Data::class,
+            $data,
+        );
 
         $email = (new ReflectionProperty($data, 'email'))->getValue($data);
 
-        self::assertInstanceOf(Email::class, $email);
+        self::assertInstanceOf(
+            Email::class,
+            $email,
+        );
 
         /** @var string|null $subject */
         $subject = (new ReflectionProperty($email, 'subject'))->getValue($email);
@@ -1122,17 +1289,11 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     /**
      * Every property injected this way is resolved against the controller itself,
      * covering both inherited/protected properties (e.g. "request", "configuration")
-     * and ones declared directly on it (e.g. "eventFileRepository").
+     * and ones declared directly on it (e.g. "eventFileRepository"), object
+     * collaborators and the few plain scalar properties alike (e.g.
+     * "currentSelectedLanguage").
      */
-    private function injectProperty(object $subject, string $name, object $value): void
-    {
-        $property = new ReflectionProperty(UniversalMessengerController::class, $name);
-
-        $property->setValue($subject, $value);
-    }
-
-    /** Same as injectProperty(), for the (few) non-object collaborators the deeper createAction() tests need initialized. */
-    private function injectScalarProperty(object $subject, string $name, int|string $value): void
+    private function injectProperty(object $subject, string $name, object|int|string $value): void
     {
         $property = new ReflectionProperty(UniversalMessengerController::class, $name);
 

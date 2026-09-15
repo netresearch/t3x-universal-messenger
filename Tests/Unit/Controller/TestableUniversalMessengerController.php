@@ -39,6 +39,11 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
     public array $forwardedFlashMessages = [];
 
     /**
+     * @var array<int, array{key: string, severity: ContextualFeedbackSeverity}>
+     */
+    public array $addedFlashMessages = [];
+
+    /**
      * @var array<string, int|string|null>|null
      */
     public ?array $pageRecordOverride = null;
@@ -57,6 +62,20 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
         $this->forwardedFlashMessages[] = $key;
 
         return new ForwardResponse('error');
+    }
+
+    /**
+     * Records the message instead of touching moduleTemplate, which is never
+     * initialized here (the constructor that would build it is bypassed).
+     */
+    protected function addModuleFlashMessage(
+        string $key,
+        ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
+    ): void {
+        $this->addedFlashMessages[] = [
+            'key'      => $key,
+            'severity' => $contextualFeedbackSeverity,
+        ];
     }
 
     /**

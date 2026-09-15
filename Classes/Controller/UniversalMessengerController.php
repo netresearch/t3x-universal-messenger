@@ -483,9 +483,8 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
             // Print some status for TEST
             if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
-                $this->moduleTemplate->addFlashMessage(
-                    $this->translate('newsletter.status.hold'),
-                    $this->translate('common.universalMessenger'),
+                $this->addModuleFlashMessage(
+                    'newsletter.status.hold',
                     ContextualFeedbackSeverity::INFO,
                 );
             }
