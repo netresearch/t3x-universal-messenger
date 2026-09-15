@@ -1737,10 +1737,16 @@ final class UniversalMessengerControllerTest extends UnitTestCase
      * and ones declared directly on it (e.g. "eventFileRepository"), object
      * collaborators and the one plain scalar property that needs it
      * ("currentSelectedLanguage").
+     *
+     * The property is re-resolved against its actual declaring class:
+     * initializing a readonly property via reflection (e.g. the inherited
+     * "localizationRepository") requires that exact class, not merely one
+     * that inherits the property, or PHP rejects it as a foreign scope.
      */
     private function injectProperty(object $subject, string $name, object|int $value): void
     {
         $property = new ReflectionProperty(UniversalMessengerController::class, $name);
+        $property = new ReflectionProperty($property->getDeclaringClass()->getName(), $name);
 
         $property->setValue($subject, $value);
     }
