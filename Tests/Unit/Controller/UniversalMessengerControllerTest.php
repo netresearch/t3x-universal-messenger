@@ -16,9 +16,7 @@ use Netresearch\Sdk\UniversalMessenger\Request\Event;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Data;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Data\Email;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Data\Email\HtmlText;
-use Netresearch\Sdk\UniversalMessenger\Request\Event\Data\Email\PlainText;
 use Netresearch\Sdk\UniversalMessenger\Request\Event\Destination;
-use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\UniversalMessengerController;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
@@ -27,7 +25,6 @@ use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -83,13 +80,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * @see    https://www.netresearch.de
  */
 #[CoversClass(UniversalMessengerController::class)]
-#[UsesClass(CreateRequestBuilder::class)]
-#[UsesClass(Event::class)]
-#[UsesClass(Destination::class)]
-#[UsesClass(Data::class)]
-#[UsesClass(Email::class)]
-#[UsesClass(HtmlText::class)]
-#[UsesClass(PlainText::class)]
 final class UniversalMessengerControllerTest extends UnitTestCase
 {
     /**
