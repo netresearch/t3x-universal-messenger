@@ -39,11 +39,21 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
     public array $forwardedFlashMessages = [];
 
     /**
+     * @var array<int, array{key: string, severity: ContextualFeedbackSeverity}>
+     */
+    public array $addedFlashMessages = [];
+
+    /**
      * @var array<string, int|string|null>|null
      */
     public ?array $pageRecordOverride = null;
 
     public ?BackendUserAuthentication $backendUserAuthenticationOverride = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $newsletterUrlOverride = null;
 
     protected function forwardFlashMessage(
         string $key,
@@ -52,6 +62,20 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
         $this->forwardedFlashMessages[] = $key;
 
         return new ForwardResponse('error');
+    }
+
+    /**
+     * Records the message instead of touching moduleTemplate, which is never
+     * initialized here (the constructor that would build it is bypassed).
+     */
+    protected function addModuleFlashMessage(
+        string $key,
+        ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
+    ): void {
+        $this->addedFlashMessages[] = [
+            'key'      => $key,
+            'severity' => $contextualFeedbackSeverity,
+        ];
     }
 
     /**
@@ -68,6 +92,14 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $this->backendUserAuthenticationOverride ?? parent::getBackendUserAuthentication();
+    }
+
+    /**
+     * Returns the doubled newsletter URL instead of calling PreviewUriBuilder.
+     */
+    protected function getNewsletterUrl(int $pageId, bool $preview = true): string
+    {
+        return $this->newsletterUrlOverride ?? '';
     }
 
     /**

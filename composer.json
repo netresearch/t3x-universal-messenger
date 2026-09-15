@@ -23,7 +23,7 @@
         "typo3/cms-lowlevel": "^14.0",
         "nyholm/psr7": "^1.8",
         "pelago/emogrifier": "^7.2 || ^8.0",
-        "netresearch/sdk-api-universal-messenger": "^3.0"
+        "netresearch/sdk-api-universal-messenger": "^3.1"
     },
     "require-dev": {
         "netresearch/typo3-ci-workflows": "^1.4"
