@@ -1736,7 +1736,10 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     private function injectProperty(object $subject, string $name, object|int $value): void
     {
         $property = new ReflectionProperty(UniversalMessengerController::class, $name);
-        $property = new ReflectionProperty($property->getDeclaringClass()->getName(), $name);
+        $property = new ReflectionProperty(
+            $property->getDeclaringClass()->getName(),
+            $name,
+        );
 
         $property->setValue($subject, $value);
     }
