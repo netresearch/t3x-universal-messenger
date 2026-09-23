@@ -7,7 +7,7 @@
   "discussion_status": "Met",
   "discussion_justification": "GitHub issues and pull requests are public, searchable, addressable by URL and need no proprietary client: https://github.com/netresearch/t3x-universal-messenger/issues",
   "license_location_status": "Met",
-  "license_location_justification": "The licence text is in the repository root: https://github.com/netresearch/t3x-universal-messenger/blob/main/LICENSE",
+  "license_location_justification": "The licence file is in the repository root: https://github.com/netresearch/t3x-universal-messenger/blob/main/LICENSE",
   "release_notes_status": "Met",
   "release_notes_justification": "Human-readable release notes per version are kept in https://github.com/netresearch/t3x-universal-messenger/blob/main/CHANGELOG.md; it covers the latest release, v3.0.5.",
   "repo_distributed_status": "Met",
