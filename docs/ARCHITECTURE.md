@@ -41,4 +41,4 @@ From `Tests/Architecture/ArchitectureTest.php` — violations fail `composer ci:
 ## Key decisions
 
 - No ADR directory exists; design rationale lives in code comments (`ext_localconf.php` on TypoScript/site-set loading and the v14.2 page-type behavior, `checks.yml` on the CI gate pattern) and in `README.md`.
-- Version/compatibility facts: `ext_emconf.php` and `composer.json` are the source of truth (PHP ^8.2, TYPO3 ^14.0).
+- Version/compatibility facts: `ext_emconf.php` and `composer.json` are the source of truth (PHP ^8.2, TYPO3 ^14.3).

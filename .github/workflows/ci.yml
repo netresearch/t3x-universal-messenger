@@ -19,7 +19,7 @@ jobs:
       contents: read
     with:
       php-versions: '["8.2","8.3","8.4","8.5"]'
-      typo3-versions: '["^14.0"]'
+      typo3-versions: '["^14.3"]'
       run-functional-tests: true
       run-acceptance-tests: true
       functional-test-db: 'sqlite'

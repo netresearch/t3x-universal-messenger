@@ -14,7 +14,7 @@ set -euo pipefail
 
 PHP_VERSION=8.5
 
-# This extension requires typo3/cms-core ^14.0 (composer.json); the shared
+# This extension requires typo3/cms-core ^14.3 (composer.json); the shared
 # provisioner defaults to TYPO3 13 when E2E_TYPO3_VERSION is unset, which
 # then fails to resolve against this extension's own constraint.
 export E2E_TYPO3_VERSION=14

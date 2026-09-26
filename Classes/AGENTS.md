@@ -34,7 +34,7 @@ PHP code of the `universal_messenger` TYPO3 v14 extension: a backend module (Ext
 <!-- AGENTS-GENERATED:START setup -->
 ## Setup & environment
 - Install dev tools: `composer install` (binaries in `.Build/bin/`, vendors in `.Build/vendor/`)
-- PHP: ^8.2 · TYPO3: ^14.0 (core, backend, frontend, extbase, fluid, lowlevel)
+- PHP: ^8.2 · TYPO3: ^14.3 (core, backend, frontend, extbase, fluid, lowlevel)
 - Services are autowired/autoconfigured via `Configuration/Services.yaml`; `Domain/Model/*` is excluded from DI
 <!-- AGENTS-GENERATED:END setup -->
 

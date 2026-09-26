@@ -43,7 +43,7 @@ Requirements
 
     ..  card:: TYPO3
 
-        TYPO3 14.0 or later. The extension does not support earlier TYPO3
+        TYPO3 14.3 LTS. The extension does not support earlier TYPO3
         versions, see :ref:`introduction-version-matrix`.
 
     ..  card:: PHP
@@ -69,7 +69,7 @@ Version matrix
 ==================  ====================
 Extension version   TYPO3 version
 ==================  ====================
-3.x                 14.0 - 14.99
+3.x                 14.3 LTS
 2.x                 13.4, 12.4
 ==================  ====================
 
