@@ -11,7 +11,7 @@ GitHub Actions CI for the extension. Every workflow here is a **thin caller** of
 ## Key Files
 | File | Purpose |
 |------|---------|
-| `ci.yml` | Test matrix (PHP 8.2–8.5 × TYPO3 ^14.0, functional on SQLite, codecov upload) — **intentional drift**, per-extension |
+| `ci.yml` | Test matrix (PHP 8.2–8.5 × TYPO3 ^14.3, functional on SQLite, codecov upload) — **intentional drift**, per-extension |
 | `checks.yml` | Security/quality jobs (CodeQL, betterleaks, zizmor, fuzz, license, scorecard, dependency-review, pr-quality) + `All security checks` gate — byte-identical across t3x repos, drift-enforced |
 | `harness-verify.yml` | Agent-harness consistency check via `Build/Scripts/verify-harness.sh` |
 | `check-template-drift.yml` | Fails when shared template files drift from `netresearch/.github` |
@@ -59,7 +59,7 @@ jobs:
       contents: read
     with:
       php-versions: '["8.2","8.3","8.4","8.5"]'
-      typo3-versions: '["^14.0"]'
+      typo3-versions: '["^14.3"]'
 ```
 
 ### Why individual check names are not required by rulesets

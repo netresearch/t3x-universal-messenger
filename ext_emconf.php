@@ -18,7 +18,7 @@ $EM_CONF['universal_messenger'] = [
     'version'        => '3.0.5',
     'constraints'    => [
         'depends' => [
-            'typo3' => '14.0.0-14.99.99',
+            'typo3' => '14.3.0-14.3.99',
         ],
         'conflicts' => [
         ],
