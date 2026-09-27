@@ -47,7 +47,9 @@ final class ModuleGroupIconTest extends UnitTestCase
     #[Test]
     public function moduleGroupIconIsRegisteredAsInlineCapableSvg(): void
     {
-        $icons = require self::EXTENSION_ROOT . '/Configuration/Icons.php';
+        // No other code in the unit suite includes Icons.php. Should that
+        // change, require_once returns true and the next assertion fails.
+        $icons = require_once self::EXTENSION_ROOT . '/Configuration/Icons.php';
 
         self::assertTrue(is_array($icons));
         self::assertSame(
