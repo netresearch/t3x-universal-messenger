@@ -13,13 +13,15 @@ declare(strict_types=1);
 // upon removeAll call in persistence manager.
 return [
     'ctrl' => [
-        'title'     => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
-        'label'     => 'title',
-        'tstamp'    => 'tstamp',
-        'crdate'    => 'crdate',
-        'hideTable' => false,
-        'sortby'    => 'sorting',
-        'iconfile'  => 'EXT:universal_messenger/Resources/Public/Icons/Extension.svg',
+        'title'            => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:tx_universalmessenger_domain_model_newsletterchannel',
+        'label'            => 'title',
+        'tstamp'           => 'tstamp',
+        'crdate'           => 'crdate',
+        'hideTable'        => false,
+        'sortby'           => 'sorting',
+        'typeicon_classes' => [
+            'default' => 'universal-messenger-record-newsletterchannel',
+        ],
     ],
     'types' => [
         0 => [
