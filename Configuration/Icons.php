@@ -12,10 +12,14 @@ declare(strict_types=1);
 use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 
+// The Netresearch module group is shared: nr_textdb and nr_sync register the
+// same identifier, and the last extension loaded wins. All three ship
+// ModuleGroup.svg with identical bytes. The module menu renders the icon
+// inline, so its currentColor letter follows the backend colour scheme.
 return [
     'extension-netresearch-module' => [
         'provider' => SvgIconProvider::class,
-        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Extension.svg',
+        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/ModuleGroup.svg',
     ],
     'extension-netresearch-universal-messenger' => [
         'provider' => BitmapIconProvider::class,
