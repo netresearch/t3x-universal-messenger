@@ -33,9 +33,9 @@ final class BackendIconsTest extends UnitTestCase
 {
     /**
      * The module group icon "extension-netresearch-module" is registered by
-     * universal_messenger, nr_textdb and nr_sync. The last extension loaded
-     * wins, so all three ship the same bytes; the same hash is pinned in
-     * nr_textdb and nr_sync.
+     * universal_messenger and nr_textdb (nr_sync only on 13.4). The last
+     * extension loaded wins, so they ship the same bytes; the same hash is
+     * pinned in nr_textdb and nr_sync.
      */
     private const MODULE_GROUP_SVG_SHA256 = 'f61031fd7d3f9b73f28bd4e05b5b398dca87e92a645dc03ad1daa3ccf54524c5';
 
@@ -91,6 +91,17 @@ final class BackendIconsTest extends UnitTestCase
             ],
             $icons['universal-messenger-record-newsletterchannel'] ?? null,
         );
+    }
+
+    #[Test]
+    public function groupModuleUsesTheSharedGroupIcon(): void
+    {
+        // Only this test includes Modules.php; a second include would make
+        // require_once return true and fail the next assertion.
+        $modules = require_once self::EXTENSION_ROOT . '/Configuration/Backend/Modules.php';
+
+        self::assertTrue(is_array($modules));
+        self::assertSame('extension-netresearch-module', $modules['netresearch_module']['iconIdentifier'] ?? null);
     }
 
     #[Test]

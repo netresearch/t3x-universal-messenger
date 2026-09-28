@@ -13,9 +13,9 @@ use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 
-// The Netresearch module group is shared: nr_textdb and nr_sync register the
-// same identifier, and the last extension loaded wins. All three ship
-// ModuleGroup.svg with identical bytes. The module menu renders the icon
+// The Netresearch module group is shared: nr_textdb (nr_sync only on 13.4)
+// registers the same identifier, and the last extension loaded wins. They
+// ship ModuleGroup.svg with identical bytes. The module menu renders the icon
 // inline, so its currentColor letter follows the backend colour scheme.
 return [
     'extension-netresearch-module' => [
