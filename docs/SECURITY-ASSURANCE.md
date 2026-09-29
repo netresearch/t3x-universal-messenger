@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 # Security assurance
 
 This document states what the `universal_messenger` TYPO3 extension protects, what it relies on, and where its guarantees end. Every statement refers to the code at the path it names. Vulnerability reports go through [SECURITY.md](../SECURITY.md); the component map is in [ARCHITECTURE.md](ARCHITECTURE.md).

@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 # Contributing
 
 Thank you for contributing! Pull requests are welcome — please open them against `main`.

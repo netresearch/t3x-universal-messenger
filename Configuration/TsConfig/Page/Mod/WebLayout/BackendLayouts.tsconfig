@@ -1,1 +1,4 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 @import 'EXT:universal_messenger/Configuration/TsConfig/Page/Mod/WebLayout/BackendLayouts/*.tsconfig'

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 # cat=General; type=int+; label=LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:config.default.storagePageId
 storagePageId = 0
 

@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 # Execution plans
 
 Working directory for agent execution plans, as required by the agent-harness docs/ structure.

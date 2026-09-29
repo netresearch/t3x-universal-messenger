@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Netresearch DTT GmbH
+// SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 import { test, expect } from '@playwright/test';
 import { loginToBackend, gotoUniversalMessengerModule, getModuleFrame } from './helpers/typo3-backend';
 

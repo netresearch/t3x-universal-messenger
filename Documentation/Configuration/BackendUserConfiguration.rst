@@ -1,3 +1,6 @@
+..  SPDX-FileCopyrightText: Netresearch DTT GmbH
+..  SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 ..  include:: /Includes.rst.txt
 
 ..  _configuration-backend-user:

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Netresearch DTT GmbH
+// SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({

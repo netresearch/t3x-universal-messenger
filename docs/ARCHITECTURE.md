@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 # Architecture
 
 Agent-facing component map of the `universal_messenger` TYPO3 extension. Every path below exists in this repo; the dependency rules mirror `Tests/Architecture/ArchitectureTest.php` (PHPat, executed inside the PHPStan run — `composer ci:test:php:phpstan`).

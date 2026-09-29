@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 name: Sync TER metadata
 
 # One-off/occasional manual trigger to push TER "external_manual" and other

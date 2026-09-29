@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 .PHONY: help cgl cgl-fix phpstan rector
 
 help: ## Show this help
