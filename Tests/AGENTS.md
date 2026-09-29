@@ -25,6 +25,8 @@ Test suites of the `universal_messenger` extension: PHPUnit unit, acceptance and
 | `Acceptance/Middleware/DecodeCurlyBracesMiddlewareTest.php` | Real PSR-15 request/response through the middleware, no collaborators to mock |
 | `Functional/Controller/UniversalMessengerControllerArgumentsTest.php` | Functional controller test |
 | `Functional/Configuration/PagesTcaTest.php` | TCA integrity test for the `pages` overrides |
+| `Unit/Configuration/BackendIconsTest.php` | Pins the icon registrations and the group module's icon identifier, the bytes of the group icon (identical in nr_textdb and nr_sync), the channel record sprite and the Extension Manager logo |
+| `Functional/Imaging/BackendIconRenderingTest.php` | The group icon's inline markup draws the letter in currentColor; the channel record icon renders as `<svg><use>`, never `<img>` |
 | `Architecture/ArchitectureTest.php` | PHPat layer rules — runs inside PHPStan, **not** via PHPUnit |
 | `E2E/tests/gh-139-idor.spec.ts` | Real-browser regression: a real admin login, real backend module, tampered POST |
 | `E2E/Fixtures/seed-content.php` | Seeds the newsletter page + channels + admin permissions the E2E suite needs |
