@@ -25,7 +25,7 @@ The extension adds a TYPO3 v14 backend module for sending newsletters through th
 | Backend event listeners | `Classes/Backend/EventListener/` | Page-layout content, content-preview rendering, blinded-configuration options (tags in `Configuration/Services.yaml`) |
 | Data processing | `Classes/DataProcessing/ControlStructureProcessor.php` | FlexForm-driven data processor for the control-structure content element |
 | ViewHelpers | `Classes/ViewHelpers/` (`Condition/`, `Format/`, `Html/`) | Newsletter/mail-safe Fluid helpers (row/column/container/spacer/body) |
-| Configuration access | `Classes/Configuration.php`, `Classes/WebserviceConfiguration.php`, `Classes/Constants.php` | Typed access to extension settings (`ext_conf_template.txt`) |
+| Configuration access | `Classes/Configuration.php`, `Classes/WebserviceConfiguration.php`, `Classes/Constants.php` | Typed access to the extension settings in `$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']`: the options `ext_conf_template.txt` declares, and the API credentials `apiUrl`, `apiKey`, `apiSecret` the installation sets there (README) |
 | Utility | `Classes/Utility/UriUtility.php` | Stateless helpers shared between layers (e.g. resolving a host-less PSR-7 URI to an absolute one) |
 
 ## Dependency rules (enforced by PHPat)
