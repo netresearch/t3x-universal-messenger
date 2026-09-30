@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
 #
 # CI wrapper for runTests.sh -s e2e.
 #

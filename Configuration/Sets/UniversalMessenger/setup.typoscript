@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 # TYPO3 v14 Site Set.
 #
 # Provides the extension's default TypoScript - the newsletter preview PAGE type

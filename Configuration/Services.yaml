@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 services:
     _defaults:
         autowire: true

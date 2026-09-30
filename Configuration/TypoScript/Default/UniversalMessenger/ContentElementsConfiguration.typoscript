@@ -1,2 +1,5 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 # Manual inclusion to keep control over loading order
 @import 'EXT:universal_messenger/Configuration/TypoScript/Default/ContentElements/ControlStructure.typoscript'

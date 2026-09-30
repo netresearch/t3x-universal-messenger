@@ -1,9 +1,22 @@
 <?php
 
+/*
+ * This file is part of the package netresearch/universal-messenger.
+ *
+ * SPDX-FileCopyrightText: Netresearch DTT GmbH
+ * SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 $header = <<<'EOF'
     This file is part of the package netresearch/universal-messenger.
+
+    SPDX-FileCopyrightText: Netresearch DTT GmbH
+    SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
 
     For the full copyright and license information, please read the
     LICENSE file that was distributed with this source code.

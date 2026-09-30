@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 # 3.0.5
 
 ## SECURITY

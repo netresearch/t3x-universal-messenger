@@ -1,2 +1,5 @@
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+# SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+
 # Hide the "new" button on the record detail view in backend for table "tx_universalmessenger_domain_model_newsletterchannel"
 options.saveDocNew.tx_universalmessenger_domain_model_newsletterchannel = 0

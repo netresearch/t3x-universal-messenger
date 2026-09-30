@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 <!-- Managed by agent: keep sections and order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md — Classes
@@ -89,7 +93,7 @@ Layer rules (enforced by PHPat, see `../docs/ARCHITECTURE.md`): nothing depends 
 
 <!-- AGENTS-GENERATED:START security -->
 ## Security & safety
-- API credentials (base URL, key, secret) come from the extension configuration (`ext_conf_template.txt`) — never hard-code or log them
+- API credentials (`apiUrl`, `apiKey`, `apiSecret`) come from `$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']`, set by the installation (e.g. in `additional.php`, see README) and read in `WebserviceConfiguration.php`; `ext_conf_template.txt` does not declare them. Never hard-code or log them; `Backend/EventListener/ModifyBlindedConfigurationOptionsEventListener.php` masks key and secret in the Configuration module
 - **Escape output** in Fluid: `{variable}` auto-escapes; `<f:format.raw>` only for content that is sanitized upstream
 - Use QueryBuilder/Extbase repositories — never raw SQL
 - Backend access is permission-gated (`be_groups`/`be_users` TCA overrides define newsletter channel access); keep access checks when touching the module

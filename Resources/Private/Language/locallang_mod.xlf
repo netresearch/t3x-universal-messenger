@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--
+    SPDX-FileCopyrightText: Netresearch DTT GmbH
+    SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 <xliff version="1.0">
     <file source-language="en" datatype="plaintext" original="messages">
         <header/>

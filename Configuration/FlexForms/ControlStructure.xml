@@ -1,4 +1,8 @@
 <?xml version="1.0"?>
+<!--
+    SPDX-FileCopyrightText: Netresearch DTT GmbH
+    SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 <T3DataStructure>
     <meta>
         <langDisable>1</langDisable>

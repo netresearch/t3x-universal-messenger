@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Netresearch DTT GmbH
+SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
+-->
 [![Latest version](https://img.shields.io/github/v/release/netresearch/universal-messenger?sort=semver)](https://github.com/netresearch/universal-messenger/releases/latest)
 [![License](https://img.shields.io/badge/license-proprietary-red)](https://github.com/netresearch/universal-messenger/blob/main/LICENSE)
 [![CI](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml/badge.svg)](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml)
@@ -27,6 +31,7 @@ A TYPO3 extension that provides a TYPO3 backend module to send TYPO3 pages as ne
       * [Control structure](#control-structure)
   * [Development](#development)
     * [Testing](#testing)
+    * [Security](#security)
 <!-- TOC -->
 
 
@@ -349,3 +354,8 @@ composer ci:test:php:phplint
 composer ci:test:php:phpstan
 composer ci:test:php:rector
 ```
+
+### Security
+[docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md) describes the security requirements, the threat model and trust
+boundaries, and what users can and cannot expect from the extension. Report vulnerabilities as described in
+[SECURITY.md](SECURITY.md).
