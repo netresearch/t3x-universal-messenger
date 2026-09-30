@@ -9,7 +9,7 @@ This document states what the `universal_messenger` TYPO3 extension protects, wh
 ## Security requirements
 
 1. Only a backend user who is permitted for a newsletter channel can send a newsletter page to that channel.
-2. A send reaches the Universal Messenger (UM) API only through an explicitly submitted form, never through navigation, a bookmarked URL or a replayed request.
+2. A send reaches the Universal Messenger (UM) API only through a submitted form (a POST request), never through navigation, a bookmarked URL or a request replayed as GET, for example after a backend re-login.
 3. The UM API key and secret are not shown in the TYPO3 backend and are not written to the API log.
 4. The server-side request that renders a newsletter only fetches pages from the same TYPO3 instance.
 
@@ -64,11 +64,11 @@ Threats considered:
 | Weakness | Countermeasure | Evidence |
 | --- | --- | --- |
 | Broken access control / IDOR (OWASP A01, CWE-639, CWE-862) | Submitted channel must equal the page's channel and be granted to the user | `UniversalMessengerController::getChannelAuthorizationFailure()`; `Tests/Unit/Controller/UniversalMessengerControllerTest.php` (`authorizationFails*`, `createActionRejects*`); `Tests/E2E/tests/gh-139-idor.spec.ts` |
-| Send triggered by navigation, a bookmarked URL or a replayed request | `createAction()` refuses every method except POST | `UniversalMessengerController::createAction()`; `doesNotSendTheNewsletterForANonPostRequest` in `Tests/Unit/Controller/UniversalMessengerControllerTest.php` |
+| Send triggered by navigation, a bookmarked URL or a request replayed as GET | `createAction()` refuses every method except POST | `UniversalMessengerController::createAction()`; `doesNotSendTheNewsletterForANonPostRequest` in `Tests/Unit/Controller/UniversalMessengerControllerTest.php` |
 | Server-side request forgery (OWASP A10, CWE-918) | Host-less URIs are completed only with a `Host` that passes TYPO3's `trustedHostsPattern`; redirects are not followed | `Classes/Utility/UriUtility.php`; `NewsletterRenderService::getContentFromUrl()` (`allow_redirects => false`); `Tests/Unit/Utility/UriUtilityTest.php`; `Tests/Unit/Service/NewsletterRenderServiceSelfFetchTest.php` |
 | Exposure of sensitive information (CWE-200, CWE-532) | Key and secret blinded in the configuration module; `Authorization` header redacted in the API log | `ModifyBlindedConfigurationOptionsEventListener.php`; SDK `RedactAuthorizationHeaderFormatter` |
 | Cross-site scripting (OWASP A03, CWE-79) | Fluid escapes variables by default; raw output is limited to editor-supplied rich text and rendered content | `Resources/Private/` templates; see "What users cannot expect" |
-| SQL injection (CWE-89) | Database access goes through the Extbase repository and persistence manager; the extension contains no hand-written SQL | `Classes/Domain/Repository/NewsletterChannelRepository.php`, `Classes/Command/ImportCommand.php` |
+| SQL injection (CWE-89) | Database access goes through the Extbase repository and persistence manager and through TYPO3 core APIs (`BackendUtility::getRecord()`, `LocalizationRepository::getRecordTranslation()`); the extension contains no hand-written SQL | `Classes/Domain/Repository/NewsletterChannelRepository.php`, `Classes/Command/ImportCommand.php`, `Classes/Controller/UniversalMessengerController.php`, `Classes/Backend/EventListener/ModifyPageLayoutContentEventListener.php` |
 | Vulnerable dependencies (OWASP A06) | Dependency review, Composer Audit and Renovate updates | `.github/workflows/checks.yml`, `renovate.json` |
 
 ## Verification
