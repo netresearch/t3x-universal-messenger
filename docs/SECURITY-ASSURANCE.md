@@ -25,7 +25,7 @@ This document states what the `universal_messenger` TYPO3 extension protects, wh
 - **Protection of the credentials at rest.** The key and secret are stored in plain text in the TYPO3 configuration files of the installation. Protecting those files and the server is the operator's responsibility.
 - **Log confidentiality.** With `enableLogging` set (`ext_conf_template.txt`), the SDK writes complete API requests and responses, including the newsletter HTML, to the configured log writer. Only the `Authorization` header is redacted.
 - **Sanitising editor content.** Editors are trusted. The mail templates output rich-text and HTML content unescaped (`<f:format.raw>` in `Resources/Private/FluidStyledMailContent/Templates/`). UM control structures entered in the "Control structure" content element are passed to UM unchanged.
-- **Recipient data protection.** Recipient lists, personalisation and delivery are handled by the UM server. The extension sends only the rendered HTML, subject, sender and channel identifiers (`createAction()`).
+- **Recipient data protection.** Recipient lists, personalisation and delivery are handled by the UM server. The extension sends no recipient data: `createAction()` sends the rendered HTML, subject, sender and reply-to address, the site base URL, the channel identifiers and title, the send type, the event ID and the image-embedding and encoding settings.
 - **Image embedding.** With "Embed images" set to `all`, the UM server downloads images from the site's public URLs; access to them is controlled by the UM server's allow list, not by this extension (README section "Basic").
 
 ## Threat model
