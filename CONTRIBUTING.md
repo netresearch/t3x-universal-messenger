@@ -33,6 +33,7 @@ Every pull request in this repository runs these dependency and security checks 
 - CodeQL code scanning.
 - Betterleaks secret scanning.
 - zizmor analysis of the GitHub Actions workflows.
-- OpenSSF Scorecard.
 
-`.github/workflows/ci.yml` additionally runs PHP lint, the code style check, PHPStan (including the PHPat architecture rules), Rector and Fractor dry-runs, the unit, acceptance and functional test suites, and the Playwright end-to-end tests.
+The same workflow runs OpenSSF Scorecard on pushes to `main` and on its schedule, not on pull requests.
+
+`.github/workflows/ci.yml` additionally runs PHP lint, the code style check, PHPStan (including the PHPat architecture rules), the Rector dry-run, the unit, acceptance and functional test suites, and the Playwright end-to-end tests.
