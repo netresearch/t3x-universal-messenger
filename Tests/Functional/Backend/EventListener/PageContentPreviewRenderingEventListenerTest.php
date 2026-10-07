@@ -75,6 +75,31 @@ final class PageContentPreviewRenderingEventListenerTest extends FunctionalTestC
     }
 
     #[Test]
+    public function showsTheTextsWithoutTheirMarkupAsTheCorePreviewDoes(): void
+    {
+        $event = $this->createEvent(
+            'tt_content',
+            [
+                'CType'       => 'control_structure',
+                'bodytext'    => '<p>Premium <em class="x">list</em> & friends</p>',
+                'pi_flexform' => $this->flexFormWithReplacementText(
+                    htmlspecialchars('<p>Everybody <a href="https://example.org/">else</a></p>'),
+                ),
+            ],
+        );
+
+        $this->invokeListener($event);
+
+        $preview = (string) $event->getPreviewContent();
+
+        self::assertStringContainsString('Premium list &amp; friends', $preview);
+        self::assertStringContainsString('Everybody else', $preview);
+        self::assertStringNotContainsString('<p>', $preview);
+        self::assertStringNotContainsString('<em', $preview);
+        self::assertStringNotContainsString('<a ', $preview);
+    }
+
+    #[Test]
     public function rendersAnEmptyReplacementTextWhenTheElementHasNoFlexForm(): void
     {
         $event = $this->createEvent(

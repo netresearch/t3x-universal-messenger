@@ -16,6 +16,7 @@ namespace Netresearch\UniversalMessenger\Backend\EventListener;
 
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -63,7 +64,8 @@ final readonly class PageContentPreviewRenderingEventListener
         $flexformData = $this->flexFormTools
             ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
 
-        $replacementBodyText = $flexformData['settings']['replacementBodyText'] ?? '';
+        $bodyText            = $this->renderText((string) $record->get('bodytext'));
+        $replacementBodyText = $this->renderText((string) ($flexformData['settings']['replacementBodyText'] ?? ''));
 
         // Create preview output
         $event->setPreviewContent(
@@ -74,7 +76,7 @@ final readonly class PageContentPreviewRenderingEventListener
             <strong>{$this->translate('content_element.control_structure.bodytext')}</strong>
         </div>
         <div>
-            {$record->get('bodytext')}
+            {$bodyText}
         </div>
     </div>
     <div>
@@ -88,6 +90,21 @@ final readonly class PageContentPreviewRenderingEventListener
 </div>
 HTML
         );
+    }
+
+    /**
+     * Reduces rich text to escaped plain text, the way the core preview of
+     * a text element shows its body text.
+     *
+     * @param string $input
+     *
+     * @return string
+     */
+    private function renderText(string $input): string
+    {
+        $input = GeneralUtility::fixed_lgd_cs(strip_tags($input), 1500);
+
+        return nl2br(htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8', false));
     }
 
     /**
