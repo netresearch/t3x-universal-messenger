@@ -73,7 +73,7 @@ class NewsletterPreviewController extends ActionController implements LoggerAwar
      *
      * @return ResponseInterface
      */
-    public function previewAction(int $pageId, string $token = ''): ResponseInterface
+    public function previewAction(int $pageId = 0, string $token = ''): ResponseInterface
     {
         if (!$this->isPreviewAllowed($pageId, $token)) {
             return $this->htmlResponse('')->withStatus(403, 'Preview not allowed');
