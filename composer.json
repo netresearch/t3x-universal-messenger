@@ -1,7 +1,7 @@
 {
     "name": "netresearch/universal-messenger",
     "type": "typo3-cms-extension",
-    "description": "TYPO3 extension providing a backend module to send newsletters using Universal Messenger API",
+    "description": "Universal Messenger - Backend module to send newsletters with the Universal Messenger API.",
     "license": "proprietary",
     "authors": [
         {

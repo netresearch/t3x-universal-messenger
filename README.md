@@ -6,7 +6,7 @@ SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
 [![License](https://img.shields.io/badge/license-proprietary-red)](https://github.com/netresearch/universal-messenger/blob/main/LICENSE)
 [![CI](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml/badge.svg)](https://github.com/netresearch/universal-messenger/actions/workflows/ci.yml)
 
-# Universal Messenger
+# Universal Messenger for TYPO3
 A TYPO3 extension that provides a TYPO3 backend module to send TYPO3 pages as newsletters using the Universal Messenger API.
 
 
