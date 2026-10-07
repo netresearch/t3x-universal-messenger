@@ -35,7 +35,7 @@ use RuntimeException;
  * a real TYPO3 container this tier deliberately does not provide.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

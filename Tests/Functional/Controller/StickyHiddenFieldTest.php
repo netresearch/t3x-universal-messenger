@@ -41,7 +41,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  * that must never mirror an unrelated previous submission.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

@@ -26,7 +26,7 @@ use PHPat\Test\PHPat;
  * layer is the innermost layer and must stay free of infrastructure concerns.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

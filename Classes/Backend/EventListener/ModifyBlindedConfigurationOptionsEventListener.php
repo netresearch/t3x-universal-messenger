@@ -20,7 +20,7 @@ use TYPO3\CMS\Lowlevel\Event\ModifyBlindedConfigurationOptionsEvent;
  * Event listener to blind a configuration option a page "System" => "Configuration".
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

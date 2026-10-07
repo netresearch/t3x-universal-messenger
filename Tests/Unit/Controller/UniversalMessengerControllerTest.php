@@ -80,7 +80,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * catch block without ever reaching that line.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

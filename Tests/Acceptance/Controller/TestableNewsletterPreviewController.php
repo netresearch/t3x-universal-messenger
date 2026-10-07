@@ -32,7 +32,7 @@ use TYPO3\CMS\Extbase\Mvc\RequestInterface;
  * container this Acceptance tier deliberately does not provide.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

@@ -30,7 +30,7 @@ use TYPO3\CMS\Extbase\Http\ForwardResponse;
  * on the controller decision.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

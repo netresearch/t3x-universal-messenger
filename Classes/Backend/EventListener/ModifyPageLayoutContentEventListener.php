@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Localization\LanguageService;
  * Event listener to add a link button to the Universal Messenger module to the default button bar.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */
