@@ -32,6 +32,11 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(ModifyBlindedConfigurationOptionsEventListener::class)]
 final class ModifyBlindedConfigurationOptionsEventListenerTest extends UnitTestCase
 {
+    /**
+     * @var string
+     */
+    private const MASK = '******';
+
     #[Test]
     public function masksTheApiCredentialsAndKeepsOptionsBlindedByOthers(): void
     {
@@ -41,7 +46,7 @@ final class ModifyBlindedConfigurationOptionsEventListenerTest extends UnitTestC
                     'DB' => [
                         'Connections' => [
                             'Default' => [
-                                'password' => '******',
+                                'password' => self::MASK,
                             ],
                         ],
                     ],
@@ -58,14 +63,14 @@ final class ModifyBlindedConfigurationOptionsEventListenerTest extends UnitTestC
                     'DB' => [
                         'Connections' => [
                             'Default' => [
-                                'password' => '******',
+                                'password' => self::MASK,
                             ],
                         ],
                     ],
                     'EXTENSIONS' => [
                         'universal_messenger' => [
-                            'apiKey'    => '******',
-                            'apiSecret' => '******',
+                            'apiKey'    => self::MASK,
+                            'apiSecret' => self::MASK,
                         ],
                     ],
                 ],
@@ -79,7 +84,7 @@ final class ModifyBlindedConfigurationOptionsEventListenerTest extends UnitTestC
     {
         $blindedOptions = [
             'SomeOtherProvider' => [
-                'secret' => '******',
+                'secret' => self::MASK,
             ],
         ];
 

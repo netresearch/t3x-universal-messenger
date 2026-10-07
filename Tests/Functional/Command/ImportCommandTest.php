@@ -46,6 +46,11 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 final class ImportCommandTest extends FunctionalTestCase
 {
     /**
+     * @var string
+     */
+    private const WEBSERVICE_FAILURE = 'The webservice is unavailable.';
+
+    /**
      * @var int
      */
     private const STORAGE_PAGE_ID = 42;
@@ -188,7 +193,7 @@ final class ImportCommandTest extends FunctionalTestCase
     #[Test]
     public function reportsAWebserviceFailureAndKeepsTheStoredChannels(): void
     {
-        $serviceException = new ServiceException('The webservice is unavailable.');
+        $serviceException = new ServiceException(self::WEBSERVICE_FAILURE);
 
         $newsletterRepository = self::createStub(NewsletterRepository::class);
         $newsletterRepository
@@ -202,14 +207,14 @@ final class ImportCommandTest extends FunctionalTestCase
             ->expects(self::once())
             ->method('error')
             ->with(
-                'The webservice is unavailable.',
+                self::WEBSERVICE_FAILURE,
                 ['exception' => $serviceException],
             );
 
         $commandTester = $this->runImport($logger);
 
         self::assertSame(Command::FAILURE, $commandTester->getStatusCode());
-        self::assertStringContainsString('The webservice is unavailable.', $commandTester->getDisplay());
+        self::assertStringContainsString(self::WEBSERVICE_FAILURE, $commandTester->getDisplay());
         self::assertSame(
             ['crmDemoChannel', 'foreignChannel', 'obsoleteChannel'],
             array_keys($this->fetchChannelRows()),

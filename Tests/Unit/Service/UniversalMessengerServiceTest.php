@@ -21,7 +21,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\NullLogger;
-use RuntimeException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -91,7 +91,7 @@ final class UniversalMessengerServiceTest extends UnitTestCase
             ->method('getExtensionSetting')
             ->willReturnCallback(static function (string $path): string {
                 if ($path === 'enableLogging') {
-                    throw new RuntimeException('Extension configuration is not available.');
+                    throw new ExtensionConfigurationPathDoesNotExistException('Extension configuration is not available.', 1790500001);
                 }
 
                 return '';
