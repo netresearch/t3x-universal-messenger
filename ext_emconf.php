@@ -11,8 +11,8 @@
  */
 
 $EM_CONF['universal_messenger'] = [
-    'title'          => 'Netresearch: Universal Messenger',
-    'description'    => 'TYPO3 extension providing a backend module to send newsletters using Universal Messenger API',
+    'title'          => 'Universal Messenger',
+    'description'    => 'Backend module to send newsletters with the Universal Messenger API.',
     'category'       => 'module',
     'author'         => 'Rico Sonntag',
     'author_email'   => 'rico.sonntag@netresearch.de',
