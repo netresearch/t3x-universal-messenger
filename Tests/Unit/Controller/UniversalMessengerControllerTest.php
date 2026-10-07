@@ -848,9 +848,6 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     }
 
     /**
-     * Page was deleted, or never existed, between form render and submit.
-     */
-    /**
      * Both URLs the module builds (the preview iframe and the one createAction() fetches)
      * carry the token NewsletterPreviewController requires for the page.
      */
@@ -875,6 +872,9 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         }
     }
 
+    /**
+     * Page was deleted, or never existed, between form render and submit.
+     */
     #[Test]
     public function authorizationFailsWithPageNotAllowedWhenThePageDoesNotExist(): void
     {
