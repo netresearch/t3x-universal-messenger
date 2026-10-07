@@ -23,7 +23,7 @@ namespace Netresearch\UniversalMessenger\Tests\Unit\Fixtures;
  * GeneralUtility::makeInstance() itself throw, not just the delegated method call.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

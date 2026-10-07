@@ -30,7 +30,7 @@ use TYPO3\CMS\Extbase\Http\ForwardResponse;
  * on the controller decision.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */
@@ -112,6 +112,17 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
     public function getChannelAuthorizationFailure(?array $pageRecord, int $channelUid): ?string
     {
         return parent::getChannelAuthorizationFailure($pageRecord, $channelUid);
+    }
+
+    /**
+     * Widens visibility so the preview URL's query parameters can be checked without
+     * PreviewUriBuilder, which getNewsletterUrl() calls statically.
+     *
+     * @return array<string, mixed>
+     */
+    public function getNewsletterUrlParameters(int $pageId, bool $preview): array
+    {
+        return parent::getNewsletterUrlParameters($pageId, $preview);
     }
 
     /**

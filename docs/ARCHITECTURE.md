@@ -40,7 +40,7 @@ From `Tests/Architecture/ArchitectureTest.php` — violations fail `composer ci:
 
 - **Channel import**: `ImportCommand` → `NewsletterRepository` (UM API via `UniversalMessengerService->api()`) → `NewsletterChannelRepository` persists `NewsletterChannel` rows.
 - **Newsletter send**: backend module (`UniversalMessengerController`) → `NewsletterRenderService` performs a frontend HTTP request → the response is post-processed by `InlineCssMiddleware`, then `DecodeCurlyBracesMiddleware` re-decodes the braces the CSS-inlining DOM step encoded → controller submits the final HTML through `NewsletterRepository` to the UM API.
-- **Preview**: same render path, exposed as the `NewsletterPreview` Extbase plugin (`ext_localconf.php`); preview parameters are excluded from cHash.
+- **Preview**: same render path, exposed as the `NewsletterPreview` Extbase plugin (`ext_localconf.php`); it renders only the routed page with the token the backend module adds to every preview URL (`NewsletterPreviewToken`); preview parameters are excluded from cHash.
 
 ## Key decisions
 

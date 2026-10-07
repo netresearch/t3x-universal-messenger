@@ -23,7 +23,7 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  * ControlStructureProcessor.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

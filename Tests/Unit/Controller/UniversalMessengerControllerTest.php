@@ -24,6 +24,7 @@ use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Controller\UniversalMessengerController;
 use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
 use Netresearch\UniversalMessenger\Repository\EventFileRepository;
+use Netresearch\UniversalMessenger\Service\NewsletterPreviewToken;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -35,6 +36,7 @@ use ReflectionProperty;
 use RuntimeException;
 use TYPO3\CMS\Backend\Domain\Repository\Localization\LocalizationRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Crypto\HashService;
 use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\Uri;
@@ -78,7 +80,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * catch block without ever reaching that line.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */
@@ -843,6 +845,31 @@ final class UniversalMessengerControllerTest extends UnitTestCase
             [],
             $subject->forwardedFlashMessages,
         );
+    }
+
+    /**
+     * Both URLs the module builds (the preview iframe and the one createAction() fetches)
+     * carry the token NewsletterPreviewController requires for the page.
+     */
+    #[Test]
+    public function theNewsletterUrlCarriesThePreviewTokenOfThePage(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'unit-test-encryption-key-not-secret';
+        $token                                              = new NewsletterPreviewToken(new HashService());
+
+        $subject = $this->newTestableController();
+        $this->injectProperty($subject, 'newsletterPreviewToken', $token);
+
+        foreach ([true, false] as $preview) {
+            $parameters = $subject->getNewsletterUrlParameters(42, $preview);
+
+            self::assertSame($preview, $parameters['preview']);
+            self::assertSame(1715682913, $parameters['type']);
+            self::assertSame(
+                ['pageId' => 42, 'token' => $token->create(42)],
+                $parameters['tx_universalmessenger_newsletterpreview'],
+            );
+        }
     }
 
     /**

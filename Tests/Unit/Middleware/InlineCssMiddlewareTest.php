@@ -30,7 +30,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * key order, i.e. a higher key can override a lower one with equal specificity.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

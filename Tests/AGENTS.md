@@ -67,7 +67,7 @@ Tests/
 - Functional tests extend `\TYPO3\TestingFramework\Core\Functional\FunctionalTestCase` and declare `$testExtensionsToLoad`
 - Protected controller internals are tested through a dedicated testable subclass (`Unit/Controller/TestableUniversalMessengerController.php`) — follow that pattern instead of reflection
 - New architecture constraints go into `Architecture/ArchitectureTest.php` as PHPat rules with a `because(...)` explanation
-- E2E tests drive a real Chromium against a real, freshly-provisioned TYPO3 instance (`Build/Scripts/runTests.conf`'s `e2e_provision_seed()` seeds fixtures). This is the only tier that exercises `ModuleTemplate`-dependent controller code (e.g. `indexAction()`) end to end; TYPO3 backend module content lives inside `#typo3-contentIframe`, use `page.frameLocator()` not `page.locator()`
+- E2E tests drive a real Chromium against a real, freshly-provisioned TYPO3 instance (`Build/Scripts/runTests.conf`'s `e2e_provision_seed()` seeds fixtures). This is the only tier that renders the backend module in a browser; `ModuleTemplate`-dependent controller code (e.g. `indexAction()`) is also dispatched through Extbase in `Functional/Controller/UniversalMessengerControllerIndexActionTest.php`. TYPO3 backend module content lives inside `#typo3-contentIframe`, use `page.frameLocator()` not `page.locator()`
 <!-- AGENTS-GENERATED:END patterns -->
 
 <!-- AGENTS-GENERATED:START code-style -->

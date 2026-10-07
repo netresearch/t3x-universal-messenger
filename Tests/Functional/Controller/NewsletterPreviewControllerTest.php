@@ -35,7 +35,7 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  * would be pure duplication.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */
@@ -92,7 +92,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
         $subject = TestableNewsletterPreviewController::createReady($renderServiceStub);
         $subject->setLogger($loggerMock);
 
-        $response = $subject->previewAction(10);
+        $response = $subject->previewAction(10, TestableNewsletterPreviewController::tokenFor(10));
 
         $this->assertMissingTemplateResponse($response);
     }
@@ -117,7 +117,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
 
         $subject = TestableNewsletterPreviewController::createReady($renderServiceStub);
 
-        $response = $subject->previewAction(10);
+        $response = $subject->previewAction(10, TestableNewsletterPreviewController::tokenFor(10));
 
         $this->assertMissingTemplateResponse($response);
     }

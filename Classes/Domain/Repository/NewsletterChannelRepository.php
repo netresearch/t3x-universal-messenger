@@ -26,7 +26,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  * The newsletter channel repository.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  *

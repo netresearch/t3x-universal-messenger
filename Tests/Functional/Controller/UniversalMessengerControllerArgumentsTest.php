@@ -36,7 +36,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  * action directly bypasses exactly the layer examined here.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */

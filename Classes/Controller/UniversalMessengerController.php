@@ -26,6 +26,7 @@ use Netresearch\UniversalMessenger\Domain\Model\NewsletterChannel;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Repository\EventFileRepository;
 use Netresearch\UniversalMessenger\Repository\NewsletterRepository;
+use Netresearch\UniversalMessenger\Service\NewsletterPreviewToken;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
 use Netresearch\UniversalMessenger\Utility\UriUtility;
 use Psr\Http\Message\ResponseInterface;
@@ -56,7 +57,7 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  * UniversalMessengerController.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */
@@ -90,6 +91,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     private NewsletterRepository $newsletterRepository;
 
     /**
+     * @var NewsletterPreviewToken
+     */
+    private readonly NewsletterPreviewToken $newsletterPreviewToken;
+
+    /**
      * UniversalMessengerController constructor.
      *
      * @param ModuleTemplateFactory       $moduleTemplateFactory
@@ -101,6 +107,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
      * @param SiteFinder                  $siteFinder
      * @param EventFileRepository         $eventFileRepository
      * @param NewsletterRepository        $newsletterRepository
+     * @param NewsletterPreviewToken      $newsletterPreviewToken
      */
     public function __construct(
         ModuleTemplateFactory $moduleTemplateFactory,
@@ -112,6 +119,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         SiteFinder $siteFinder,
         EventFileRepository $eventFileRepository,
         NewsletterRepository $newsletterRepository,
+        NewsletterPreviewToken $newsletterPreviewToken,
     ) {
         parent::__construct(
             $moduleTemplateFactory,
@@ -122,9 +130,10 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $localizationRepository,
         );
 
-        $this->siteFinder           = $siteFinder;
-        $this->eventFileRepository  = $eventFileRepository;
-        $this->newsletterRepository = $newsletterRepository;
+        $this->siteFinder             = $siteFinder;
+        $this->eventFileRepository    = $eventFileRepository;
+        $this->newsletterRepository   = $newsletterRepository;
+        $this->newsletterPreviewToken = $newsletterPreviewToken;
     }
 
     /**
@@ -589,13 +598,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         // Call the newsletter preview frontend controller to render the selected page
         // in the mail template style inside the backend iframe.
         $previewUri = PreviewUriBuilder::create($pageId)
-            ->withAdditionalQueryParameters([
-                'preview'                                 => $preview,
-                'type'                                    => self::PREVIEW_TYPE_NUMBER,
-                'tx_universalmessenger_newsletterpreview' => [
-                    'pageId' => $pageId,
-                ],
-            ])
+            ->withAdditionalQueryParameters($this->getNewsletterUrlParameters($pageId, $preview))
             ->withLanguage($this->currentSelectedLanguage)
             ->buildUri();
 
@@ -609,6 +612,27 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         );
 
         return (string) $previewUri;
+    }
+
+    /**
+     * The query parameters of the newsletter preview URL: the preview page type, and the
+     * page together with the token NewsletterPreviewController requires for it.
+     *
+     * @param int  $pageId
+     * @param bool $preview
+     *
+     * @return array<string, mixed>
+     */
+    protected function getNewsletterUrlParameters(int $pageId, bool $preview): array
+    {
+        return [
+            'preview'                                 => $preview,
+            'type'                                    => self::PREVIEW_TYPE_NUMBER,
+            'tx_universalmessenger_newsletterpreview' => [
+                'pageId' => $pageId,
+                'token'  => $this->newsletterPreviewToken->create($pageId),
+            ],
+        ];
     }
 
     /**

@@ -47,7 +47,7 @@ Threats considered:
 ## Trust boundaries
 
 1. **Browser to TYPO3 backend.** Authentication, sessions and module permissions are enforced by TYPO3 core. The extension adds the channel authorization check above.
-2. **Browser to TYPO3 frontend.** The preview plugin (`Classes/Controller/NewsletterPreviewController.php`) is reachable through a frontend page type and takes a `pageId` argument. It renders the page through a server-side request that carries no cookies or credentials (`NewsletterRenderService::getContentFromUrl()`), so it returns only content TYPO3 serves to an anonymous visitor.
+2. **Browser to TYPO3 frontend.** The preview plugin (`Classes/Controller/NewsletterPreviewController.php`) is reachable through a frontend page type and takes a `pageId` and a `token` argument. It renders a page only when the request is routed to that page and carries the token the backend module issued for it (an HMAC of the page UID keyed with the installation's encryption key, `Classes/Service/NewsletterPreviewToken.php`); any other request gets an empty 403 before anything is fetched. It renders the page through a server-side request that carries no cookies or credentials (`NewsletterRenderService::getContentFromUrl()`), so it returns only content TYPO3 serves to an anonymous visitor.
 3. **TYPO3 to itself.** `NewsletterRenderService` fetches the rendered newsletter page over HTTP from the same instance. The target URL is built by the site router (`generatePageUri()`, `UniversalMessengerController::getNewsletterUrl()`).
 4. **TYPO3 to UM API.** All API traffic goes through `netresearch/sdk-api-universal-messenger` with HTTP basic authentication (`Classes/Service/UniversalMessengerService.php`, `Classes/Repository/`).
 

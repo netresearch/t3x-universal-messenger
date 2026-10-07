@@ -23,7 +23,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  * them supplies the title/description for the imported TYPO3 record.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license LicenseRef-Netresearch-Restricted-Use
  *
  * @see    https://www.netresearch.de
  */
