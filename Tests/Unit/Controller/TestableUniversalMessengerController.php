@@ -115,6 +115,17 @@ final class TestableUniversalMessengerController extends UniversalMessengerContr
     }
 
     /**
+     * Widens visibility so the preview URL's query parameters can be checked without
+     * PreviewUriBuilder, which getNewsletterUrl() calls statically.
+     *
+     * @return array<string, mixed>
+     */
+    public function getNewsletterUrlParameters(int $pageId, bool $preview): array
+    {
+        return parent::getNewsletterUrlParameters($pageId, $preview);
+    }
+
+    /**
      * Widens visibility so the severity mapping can be exercised directly.
      */
     public function getAuthorizationFailureSeverity(string $authorizationFailure): ContextualFeedbackSeverity

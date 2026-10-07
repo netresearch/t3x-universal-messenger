@@ -92,7 +92,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
         $subject = TestableNewsletterPreviewController::createReady($renderServiceStub);
         $subject->setLogger($loggerMock);
 
-        $response = $subject->previewAction(10);
+        $response = $subject->previewAction(10, TestableNewsletterPreviewController::tokenFor(10));
 
         $this->assertMissingTemplateResponse($response);
     }
@@ -117,7 +117,7 @@ final class NewsletterPreviewControllerTest extends FunctionalTestCase
 
         $subject = TestableNewsletterPreviewController::createReady($renderServiceStub);
 
-        $response = $subject->previewAction(10);
+        $response = $subject->previewAction(10, TestableNewsletterPreviewController::tokenFor(10));
 
         $this->assertMissingTemplateResponse($response);
     }
