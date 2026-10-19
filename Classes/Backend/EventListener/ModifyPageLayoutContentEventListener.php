@@ -151,6 +151,10 @@ final readonly class ModifyPageLayoutContentEventListener
      */
     private function getPageId(ServerRequestInterface $serverRequest): int
     {
-        return (int) ($serverRequest->getParsedBody()['id'] ?? $serverRequest->getQueryParams()['id'] ?? 0);
+        $pageId = $serverRequest->getParsedBody()['id'] ?? $serverRequest->getQueryParams()['id'] ?? 0;
+
+        // A value that is not scalar (e.g. "id[]=2") is no page ID; casting it
+        // would have selected page 1.
+        return is_scalar($pageId) ? (int) $pageId : 0;
     }
 }

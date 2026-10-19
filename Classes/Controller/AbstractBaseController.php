@@ -168,7 +168,21 @@ abstract class AbstractBaseController extends ActionController
         $this->moduleData              = $this->request->getAttribute('moduleData');
         $this->site                    = $this->request->getAttribute('site');
         $this->availableLanguages      = $this->getAvailableSiteLanguages();
-        $this->currentSelectedLanguage = (int) ($this->moduleData?->get('language') ?? 0);
+        $this->currentSelectedLanguage = $this->getSelectedLanguage();
+    }
+
+    /**
+     * Returns the language selected in the module data. A value that is not
+     * scalar (e.g. "language[]=1" in the request) selects the default
+     * language; casting it would have selected language 1.
+     *
+     * @return int
+     */
+    private function getSelectedLanguage(): int
+    {
+        $language = $this->moduleData?->get('language') ?? 0;
+
+        return is_scalar($language) ? (int) $language : 0;
     }
 
     /**
@@ -200,7 +214,11 @@ abstract class AbstractBaseController extends ActionController
      */
     private function getPageId(): int
     {
-        return (int) ($this->request->getParsedBody()['id'] ?? $this->request->getQueryParams()['id'] ?? -1);
+        $pageId = $this->request->getParsedBody()['id'] ?? $this->request->getQueryParams()['id'] ?? -1;
+
+        // A value that is not scalar (e.g. "id[]=2") is no page ID; casting it
+        // would have selected page 1.
+        return is_scalar($pageId) ? (int) $pageId : -1;
     }
 
     /**

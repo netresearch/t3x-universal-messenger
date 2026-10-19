@@ -276,7 +276,54 @@ final class UniversalMessengerControllerIndexActionTest extends FunctionalTestCa
         self::assertStringContainsString('<h2>Camino Demo Newsletter DE</h2>', $html);
     }
 
-    private function dispatchIndexAction(int $pageId, int $language = 0): string
+    /**
+     * An "id[]=…" parameter is no page ID. Cast to int it would select
+     * page 1, the site root "Camino", whose title then appeared in the
+     * document title.
+     */
+    #[Test]
+    public function treatsAPageIdGivenAsAnArrayAsNoPage(): void
+    {
+        $html = $this->dispatchIndexAction(
+            self::NEWSLETTER_PAGE_ID,
+            0,
+            ['id' => [(string) self::NEWSLETTER_PAGE_ID]],
+        );
+
+        self::assertStringContainsString(
+            '[INFO] Universal Messenger: Please select a page with the page type "Newsletter".',
+            $html,
+        );
+        self::assertStringContainsString('<title>Universal Messenger</title>', $html);
+        self::assertSame([], $this->requestedStatusEventIds);
+    }
+
+    /**
+     * A language given as an array in the module data selects the default
+     * language. Cast to int it would select language 1.
+     */
+    #[Test]
+    public function selectsTheDefaultLanguageWhenTheLanguageIsAnArray(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('pages')->insert('pages', [
+            'pid'              => self::ROOT_PAGE_ID,
+            'doktype'          => 20,
+            'title'            => 'Camino Demo Newsletter DE',
+            'sys_language_uid' => 1,
+            'l10n_parent'      => self::NEWSLETTER_PAGE_ID,
+        ]);
+
+        $html = $this->dispatchIndexAction(self::NEWSLETTER_PAGE_ID, ['1']);
+
+        self::assertStringContainsString('<h2>Camino Demo Newsletter</h2>', $html);
+        self::assertStringNotContainsString('<h2>Camino Demo Newsletter DE</h2>', $html);
+    }
+
+    /**
+     * @param int|list<string>                        $language    the language in the module data
+     * @param array<string, string|list<string>>|null $queryParams the query parameters, by default the page ID
+     */
+    private function dispatchIndexAction(int $pageId, int|array $language = 0, ?array $queryParams = null): string
     {
         $this->requestedStatusEventIds = [];
 
@@ -292,7 +339,7 @@ final class UniversalMessengerControllerIndexActionTest extends FunctionalTestCa
             'https://example.org/typo3/module/netresearch/universal-messenger?id=' . $pageId,
             'GET',
         ))
-            ->withQueryParams(['id' => (string) $pageId])
+            ->withQueryParams($queryParams ?? ['id' => (string) $pageId])
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
             ->withAttribute('module', $module)
             ->withAttribute('route', new Route('/module/netresearch/universal-messenger', ['_identifier' => 'netresearch_universal_messenger', 'packageName' => 'netresearch/universal-messenger']))
