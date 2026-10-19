@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
-use function count;
-
 use LogicException;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
@@ -42,6 +40,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
+use function count;
 
 /**
  * AbstractBaseController.

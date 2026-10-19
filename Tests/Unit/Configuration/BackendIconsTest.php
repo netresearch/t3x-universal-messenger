@@ -16,15 +16,14 @@ namespace Netresearch\UniversalMessenger\Tests\Unit\Configuration;
 
 use DOMDocument;
 use DOMElement;
-
-use function hash_file;
-use function is_array;
-
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function hash_file;
+use function is_array;
 
 /**
  * Pins the backend icons that must follow, or survive, the backend colour

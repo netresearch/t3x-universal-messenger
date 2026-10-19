@@ -15,9 +15,6 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Controller;
 
 use Exception;
-
-use function in_array;
-
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\Model\NewsletterStatus;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
@@ -33,9 +30,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
-use function sprintf;
-
 use TYPO3\CMS\Backend\Domain\Repository\Localization\LocalizationRepository;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
@@ -52,6 +46,9 @@ use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
+
+use function in_array;
+use function sprintf;
 
 /**
  * UniversalMessengerController.

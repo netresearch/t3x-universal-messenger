@@ -74,25 +74,25 @@ final readonly class PageContentPreviewRenderingEventListener
         // Create preview output
         $event->setPreviewContent(
             <<<HTML
-<div>
-    <div>
-        <div style="margin: 20px 0 10px 0;">
-            <strong>{$this->translate('content_element.control_structure.bodytext')}</strong>
-        </div>
-        <div>
-            {$bodyText}
-        </div>
-    </div>
-    <div>
-        <div style="margin: 20px 0 10px 0;">
-            <strong>{$this->translate('content_element.control_structure.flexform.replacementBodyText')}</strong>
-        </div>
-        <div>
-            {$replacementBodyText}
-        </div>
-    </div>
-</div>
-HTML
+                <div>
+                    <div>
+                        <div style="margin: 20px 0 10px 0;">
+                            <strong>{$this->translate('content_element.control_structure.bodytext')}</strong>
+                        </div>
+                        <div>
+                            {$bodyText}
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin: 20px 0 10px 0;">
+                            <strong>{$this->translate('content_element.control_structure.flexform.replacementBodyText')}</strong>
+                        </div>
+                        <div>
+                            {$replacementBodyText}
+                        </div>
+                    </div>
+                </div>
+                HTML,
         );
     }
 

@@ -26,9 +26,6 @@ use Netresearch\UniversalMessenger\Repository\NewsletterRepository;
 use Netresearch\UniversalMessenger\Service\ChannelDeduplicationService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
-use function sprintf;
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,6 +35,8 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+
+use function sprintf;
 
 /**
  * Class ImportCommand.
