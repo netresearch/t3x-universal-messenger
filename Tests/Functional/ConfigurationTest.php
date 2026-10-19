@@ -49,6 +49,17 @@ final class ConfigurationTest extends FunctionalTestCase
         ],
     ];
 
+    /**
+     * Sets an extension setting the way settings.php does.
+     */
+    private function setExtensionSetting(string $name, int|string $value): void
+    {
+        /** @var array{EXTENSIONS: array{universal_messenger: array<string, mixed>, ...}, ...} $typo3ConfVars */
+        $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
+
+        $typo3ConfVars['EXTENSIONS']['universal_messenger'][$name] = $value;
+    }
+
     protected function tearDown(): void
     {
         // Leave no request behind for the next test case: the extbase
@@ -74,7 +85,7 @@ final class ConfigurationTest extends FunctionalTestCase
     #[Test]
     public function returnsAnIntegerExtensionSettingAsString(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']['storagePageId'] = 42;
+        $this->setExtensionSetting('storagePageId', 42);
 
         self::assertSame('42', (new Configuration())->getExtensionSetting('storagePageId'));
     }
@@ -115,7 +126,7 @@ final class ConfigurationTest extends FunctionalTestCase
     public function returnsTheConfiguredNewsletterPageDokTypeOrTheDefault(?string $setting, int $expected): void
     {
         if ($setting !== null) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']['newsletterPageDokType'] = $setting;
+            $this->setExtensionSetting('newsletterPageDokType', $setting);
         }
 
         self::assertSame($expected, (new Configuration())->getNewsletterPageDokType());

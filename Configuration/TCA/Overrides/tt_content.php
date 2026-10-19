@@ -26,9 +26,13 @@ call_user_func(static function (): void {
         'LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_group.universalmessenger',
     );
 
+    // The tt_content TCA of the core, with one "types" entry per CType
+    /** @var array{tt_content: array{types: array<string, mixed>, ...}, ...} $tca */
+    $tca = &$GLOBALS['TCA'];
+
     // Add content element
-    if (!is_array($GLOBALS['TCA']['tt_content']['types']['control_structure'] ?? false)) {
-        $GLOBALS['TCA']['tt_content']['types']['control_structure'] = [];
+    if (!is_array($tca['tt_content']['types']['control_structure'] ?? false)) {
+        $tca['tt_content']['types']['control_structure'] = [];
     }
 
     // Add content element PageTSConfig
@@ -51,7 +55,7 @@ call_user_func(static function (): void {
     );
 
     ArrayUtility::mergeRecursiveWithOverrule(
-        $GLOBALS['TCA']['tt_content'],
+        $tca['tt_content'],
         [
             // Add the icon to the icon class configuration
             'ctrl' => [

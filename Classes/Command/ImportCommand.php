@@ -16,6 +16,7 @@ namespace Netresearch\UniversalMessenger\Command;
 
 use DateTime;
 use Exception;
+use LogicException;
 use Netresearch\Sdk\UniversalMessenger\Model\Collection\NewsletterChannelCollection;
 use Netresearch\Sdk\UniversalMessenger\Model\NewsletterChannel;
 use Netresearch\UniversalMessenger\Configuration;
@@ -51,34 +52,34 @@ class ImportCommand extends Command implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * @var SymfonyStyle
+     * @var SymfonyStyle|null
      */
-    private SymfonyStyle $symfonyStyle;
+    private ?SymfonyStyle $symfonyStyle = null;
 
     /**
-     * @var PersistenceManagerInterface
+     * @var PersistenceManagerInterface|null
      */
-    private PersistenceManagerInterface $persistenceManager;
+    private ?PersistenceManagerInterface $persistenceManager = null;
 
     /**
-     * @var NewsletterChannelRepository
+     * @var NewsletterChannelRepository|null
      */
-    private NewsletterChannelRepository $newsletterChannelRepository;
+    private ?NewsletterChannelRepository $newsletterChannelRepository = null;
 
     /**
-     * @var NewsletterRepository
+     * @var NewsletterRepository|null
      */
-    private NewsletterRepository $newsletterRepository;
+    private ?NewsletterRepository $newsletterRepository = null;
 
     /**
-     * @var Configuration
+     * @var Configuration|null
      */
-    private Configuration $configuration;
+    private ?Configuration $configuration = null;
 
     /**
-     * @var ChannelDeduplicationService
+     * @var ChannelDeduplicationService|null
      */
-    private ChannelDeduplicationService $channelDeduplicationService;
+    private ?ChannelDeduplicationService $channelDeduplicationService = null;
 
     /**
      * Configures the command.
@@ -102,7 +103,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->symfonyStyle = new SymfonyStyle($input, $output);
-        $this->symfonyStyle->title($this->getName() ?? '');
+        $this->symfonyStyle()->title($this->getName() ?? '');
 
         $this->initCliEnvironment();
         $this->bootstrap();
@@ -164,7 +165,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
         // Group the raw channels by their suffix-stripped channel ID, so multiple
         // test/live variants of the same logical channel are handled together instead
         // of silently overwriting each other's title/description on every match.
-        $groupedChannels = $this->channelDeduplicationService->groupByStrippedId(
+        $groupedChannels = $this->channelDeduplicationService()->groupByStrippedId(
             iterator_to_array($newsletterChannelCollection),
             [
                 $this->getTestChannelSuffix(),
@@ -172,9 +173,9 @@ class ImportCommand extends Command implements LoggerAwareInterface
             ],
         );
 
-        $this->symfonyStyle->text('Perform import');
-        $this->symfonyStyle->newLine();
-        $this->symfonyStyle->progressStart(count($groupedChannels));
+        $this->symfonyStyle()->text('Perform import');
+        $this->symfonyStyle()->newLine();
+        $this->symfonyStyle()->progressStart(count($groupedChannels));
 
         // List of newsletter channels imported
         $channelIds = [];
@@ -188,26 +189,26 @@ class ImportCommand extends Command implements LoggerAwareInterface
                 // Newsletter channel
                 $newsletterChannelDomainModel = $this->hydrateNewsletterChannel(
                     $channelId,
-                    $this->channelDeduplicationService->selectCanonicalChannel($channelId, $candidateChannels),
+                    $this->channelDeduplicationService()->selectCanonicalChannel($channelId, $candidateChannels),
                     $storagePid,
                 );
 
                 // Add the new entity and persist it
-                $this->newsletterChannelRepository->add($newsletterChannelDomainModel);
-                $this->persistenceManager->persistAll();
+                $this->newsletterChannelRepository()->add($newsletterChannelDomainModel);
+                $this->persistenceManager()->persistAll();
             } catch (Exception $exception) {
                 $this->handleException($exception);
             }
 
-            $this->symfonyStyle->progressAdvance();
+            $this->symfonyStyle()->progressAdvance();
         }
 
-        $this->symfonyStyle->progressFinish();
+        $this->symfonyStyle()->progressFinish();
 
         // Remove all obsolete records
         $this->removeObsoleteRecords($channelIds);
 
-        $this->symfonyStyle->success('Import done');
+        $this->symfonyStyle()->success('Import done');
 
         // All fine
         return self::SUCCESS;
@@ -221,9 +222,9 @@ class ImportCommand extends Command implements LoggerAwareInterface
     private function queryNewsletterChannelCollection(): NewsletterChannelCollection
     {
         try {
-            $this->symfonyStyle->note('Download updated list of newsletter channels from Universal Messenger');
+            $this->symfonyStyle()->note('Download updated list of newsletter channels from Universal Messenger');
 
-            return $this->newsletterRepository->findAllChannels();
+            return $this->newsletterRepository()->findAllChannels();
         } catch (Exception $exception) {
             $this->handleException($exception);
         }
@@ -245,7 +246,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
         NewsletterChannel $newsletterChannel,
         int $storagePid,
     ): NewsletterChannelDomainModel {
-        $newsletterChannelDomainModel = $this->newsletterChannelRepository
+        $newsletterChannelDomainModel = $this->newsletterChannelRepository()
             ->findByChannelId($channelId);
 
         // Create new record if it not exists in the database
@@ -310,7 +311,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function warnOnAmbiguousChannelGroup(string $channelId, array $candidateChannels): void
     {
-        if (!$this->channelDeduplicationService->isAmbiguousGroup($candidateChannels)) {
+        if (!$this->channelDeduplicationService()->isAmbiguousGroup($candidateChannels)) {
             return;
         }
 
@@ -328,7 +329,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
             $channelId,
         );
 
-        $this->symfonyStyle->warning($message);
+        $this->symfonyStyle()->warning($message);
         $this->logger?->warning($message);
     }
 
@@ -363,19 +364,19 @@ class ImportCommand extends Command implements LoggerAwareInterface
     private function removeObsoleteRecords(array $channelIds): void
     {
         try {
-            $this->symfonyStyle->text('Remove obsolete records');
-            $this->symfonyStyle->newLine();
+            $this->symfonyStyle()->text('Remove obsolete records');
+            $this->symfonyStyle()->newLine();
 
-            $queryResult = $this->newsletterChannelRepository
+            $queryResult = $this->newsletterChannelRepository()
                 ->findAllExceptWithChannelId($channelIds);
 
             // Remove each record
             foreach ($queryResult as $newsletterChannel) {
-                $this->newsletterChannelRepository->remove($newsletterChannel);
+                $this->newsletterChannelRepository()->remove($newsletterChannel);
             }
 
             // Persist everything
-            $this->persistenceManager->persistAll();
+            $this->persistenceManager()->persistAll();
         } catch (Exception $exception) {
             $this->handleException($exception);
         }
@@ -388,7 +389,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function getStoragePageId(): int
     {
-        return (int) ($this->configuration->getExtensionSetting('storagePageId') ?? 0);
+        return (int) ($this->configuration()->getExtensionSetting('storagePageId') ?? 0);
     }
 
     /**
@@ -398,7 +399,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function getTestChannelSuffix(): string
     {
-        return $this->configuration->getExtensionSetting('newsletter/testChannelSuffix') ?? '';
+        return $this->configuration()->getExtensionSetting('newsletter/testChannelSuffix') ?? '';
     }
 
     /**
@@ -408,7 +409,73 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function getLiveChannelSuffix(): string
     {
-        return $this->configuration->getExtensionSetting('newsletter/liveChannelSuffix') ?? '';
+        return $this->configuration()->getExtensionSetting('newsletter/liveChannelSuffix') ?? '';
+    }
+
+    /**
+     * @return SymfonyStyle
+     *
+     * @throws LogicException if called before execute() set it
+     */
+    private function symfonyStyle(): SymfonyStyle
+    {
+        return $this->symfonyStyle
+            ?? throw new LogicException('symfonyStyle is set in execute().');
+    }
+
+    /**
+     * @return PersistenceManagerInterface
+     *
+     * @throws LogicException if called before bootstrap() set it
+     */
+    private function persistenceManager(): PersistenceManagerInterface
+    {
+        return $this->persistenceManager
+            ?? throw new LogicException('persistenceManager is set in bootstrap().');
+    }
+
+    /**
+     * @return NewsletterChannelRepository
+     *
+     * @throws LogicException if called before bootstrap() set it
+     */
+    private function newsletterChannelRepository(): NewsletterChannelRepository
+    {
+        return $this->newsletterChannelRepository
+            ?? throw new LogicException('newsletterChannelRepository is set in bootstrap().');
+    }
+
+    /**
+     * @return NewsletterRepository
+     *
+     * @throws LogicException if called before bootstrap() set it
+     */
+    private function newsletterRepository(): NewsletterRepository
+    {
+        return $this->newsletterRepository
+            ?? throw new LogicException('newsletterRepository is set in bootstrap().');
+    }
+
+    /**
+     * @return Configuration
+     *
+     * @throws LogicException if called before bootstrap() set it
+     */
+    private function configuration(): Configuration
+    {
+        return $this->configuration
+            ?? throw new LogicException('configuration is set in bootstrap().');
+    }
+
+    /**
+     * @return ChannelDeduplicationService
+     *
+     * @throws LogicException if called before bootstrap() set it
+     */
+    private function channelDeduplicationService(): ChannelDeduplicationService
+    {
+        return $this->channelDeduplicationService
+            ?? throw new LogicException('channelDeduplicationService is set in bootstrap().');
     }
 
     /**
@@ -420,7 +487,7 @@ class ImportCommand extends Command implements LoggerAwareInterface
      */
     private function handleException(Throwable $exception): void
     {
-        $this->symfonyStyle->writeln(
+        $this->symfonyStyle()->writeln(
             sprintf(
                 '<error>%s</error>',
                 $exception->getMessage(),

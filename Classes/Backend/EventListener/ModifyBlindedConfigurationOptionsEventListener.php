@@ -39,8 +39,19 @@ final class ModifyBlindedConfigurationOptionsEventListener
 
         // Blind API key and secret
         if ($event->getProviderIdentifier() === 'confVars') {
-            $blindedConfigurationOptions['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']['apiKey']    = '******';
-            $blindedConfigurationOptions['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']['apiSecret'] = '******';
+            $blindedConfigurationOptions = array_replace_recursive(
+                $blindedConfigurationOptions,
+                [
+                    'TYPO3_CONF_VARS' => [
+                        'EXTENSIONS' => [
+                            'universal_messenger' => [
+                                'apiKey'    => '******',
+                                'apiSecret' => '******',
+                            ],
+                        ],
+                    ],
+                ],
+            );
         }
 
         $event->setBlindedConfigurationOptions($blindedConfigurationOptions);

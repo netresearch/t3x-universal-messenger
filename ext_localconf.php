@@ -52,13 +52,18 @@ call_user_func(static function (): void {
         ],
     );
 
+    // The two keys below exist in TYPO3's DefaultConfiguration.php, which
+    // declares FE.cacheHash.excludedParameters and BE.stylesheets as arrays.
+    /** @var array{FE: array{cacheHash: array{excludedParameters: list<string>, ...}, ...}, BE: array{stylesheets: array<string, string>, ...}, ...} $typo3ConfVars */
+    $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
+
     // Ignore the following parameters in cHash calculation
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_universalmessenger_newsletterpreview[pageId]';
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_universalmessenger_newsletterpreview[token]';
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'type';
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'preview';
+    $typo3ConfVars['FE']['cacheHash']['excludedParameters'][] = 'tx_universalmessenger_newsletterpreview[pageId]';
+    $typo3ConfVars['FE']['cacheHash']['excludedParameters'][] = 'tx_universalmessenger_newsletterpreview[token]';
+    $typo3ConfVars['FE']['cacheHash']['excludedParameters'][] = 'type';
+    $typo3ConfVars['FE']['cacheHash']['excludedParameters'][] = 'preview';
 
     // Add our custom style sheet
-    $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['universal_messenger']
+    $typo3ConfVars['BE']['stylesheets']['universal_messenger']
         = 'EXT:universal_messenger/Resources/Public/Css/Module.css';
 });

@@ -65,9 +65,9 @@ class Configuration
     /**
      * Returns the TypoScript configuration.
      *
-     * @return mixed|null
+     * @return array<array-key, mixed>
      */
-    private function getTypoScriptConfiguration(): mixed
+    private function getTypoScriptConfiguration(): array
     {
         return $this->getConfigurationManager()
             ->getConfiguration(

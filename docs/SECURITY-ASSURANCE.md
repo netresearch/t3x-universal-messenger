@@ -73,4 +73,4 @@ Threats considered:
 
 ## Verification
 
-The checks that run on every pull request are listed in [CONTRIBUTING.md](../CONTRIBUTING.md#governance-and-policies). They include PHPStan level 8 with strict rules (`Build/phpstan.neon`), Opengrep, CodeQL, Betterleaks, Composer Audit, and the unit, acceptance, functional and end-to-end test suites.
+The checks that run on every pull request are listed in [CONTRIBUTING.md](../CONTRIBUTING.md#governance-and-policies). They include PHPStan level 10 with strict rules (`Build/phpstan.neon`, based on the shared configuration of `netresearch/typo3-ci-workflows`), Opengrep, CodeQL, Betterleaks, Composer Audit, and the unit, acceptance, functional and end-to-end test suites.

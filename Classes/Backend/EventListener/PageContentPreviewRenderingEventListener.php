@@ -61,10 +61,14 @@ final readonly class PageContentPreviewRenderingEventListener
             return;
         }
 
-        $flexformData = $this->flexFormTools
-            ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
+        // Both are text columns, whose values the database returns as strings.
+        $flexForm = $record->getRawRecord()?->get('pi_flexform') ?? '';
+        $bodyText = $record->get('bodytext');
 
-        $bodyText            = $this->renderText((string) $record->get('bodytext'));
+        $flexformData = $this->flexFormTools
+            ->convertFlexFormContentToArray(is_string($flexForm) ? $flexForm : '');
+
+        $bodyText            = $this->renderText(is_string($bodyText) ? $bodyText : '');
         $replacementBodyText = $this->renderText($this->getReplacementBodyText($flexformData));
 
         // Create preview output

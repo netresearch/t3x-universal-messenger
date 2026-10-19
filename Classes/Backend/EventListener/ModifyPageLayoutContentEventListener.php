@@ -139,7 +139,10 @@ final readonly class ModifyPageLayoutContentEventListener
      */
     private function getLanguageService(): LanguageService
     {
-        return $GLOBALS['LANG'];
+        $languageService = $GLOBALS['LANG'];
+        assert($languageService instanceof LanguageService);
+
+        return $languageService;
     }
 
     /**

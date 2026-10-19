@@ -45,12 +45,19 @@ final class NewsletterPreviewControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'acceptance-test-encryption-key-not-secret';
+
+        /** @var array{SYS?: array<string, mixed>, ...} $typo3ConfVars */
+        $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
+
+        $typo3ConfVars['SYS']['encryptionKey'] = 'acceptance-test-encryption-key-not-secret';
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+        /** @var array{SYS?: array<string, mixed>, ...} $typo3ConfVars */
+        $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
+
+        unset($typo3ConfVars['SYS']['encryptionKey']);
         parent::tearDown();
     }
 

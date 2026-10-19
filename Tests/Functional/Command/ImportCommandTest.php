@@ -268,7 +268,7 @@ final class ImportCommandTest extends FunctionalTestCase
     }
 
     /**
-     * @return array<string, array<string, mixed>> The stored rows, indexed and sorted by channel ID
+     * @return array<array-key, array<string, mixed>> The stored rows, indexed and sorted by channel ID
      */
     private function fetchChannelRows(): array
     {

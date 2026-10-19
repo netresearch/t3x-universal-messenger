@@ -73,7 +73,7 @@ Tests/
 <!-- AGENTS-GENERATED:START code-style -->
 ## Code Style
 - Test class name matches source: `MyClass` → `MyClassTest`; same PSR-12/CGL rules as `Classes/`
-- Tests are analyzed by PHPStan too (`Build/phpstan.neon` includes `Tests/`) — keep them level-8 clean
+- Tests are analyzed by PHPStan too (`Build/phpstan.neon` includes `Tests/`) — keep them level-10 clean
 - Use data providers for multiple similar cases
 - Mock external services — never call the real Universal Messenger API in tests
 <!-- AGENTS-GENERATED:END code-style -->

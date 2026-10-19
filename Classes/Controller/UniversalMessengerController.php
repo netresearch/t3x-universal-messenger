@@ -149,7 +149,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     public function indexAction(): ResponseInterface
     {
         // Create button bar
-        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        $buttonBar = $this->moduleTemplate()->getDocHeaderComponent()->getButtonBar();
 
         // Add language dropdown
         if (($languageButton = $this->makeLanguageSwitchButton()) instanceof ButtonInterface) {
@@ -235,9 +235,9 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.missingTypoScriptConfiguration');
         }
 
-        $this->moduleTemplate->assign('content', $renderedContent);
+        $this->moduleTemplate()->assign('content', $renderedContent);
 
-        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+        return $this->moduleTemplate()->renderResponse('Backend/UniversalMessenger');
     }
 
     /**
@@ -256,11 +256,12 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $this->getBackendUserAuthentication()->workspace,
         );
 
-        if ($localizedRecord instanceof RawRecord) {
-            return (string) ($localizedRecord->get('title') ?? '');
-        }
+        // The title of a page record from the database is a string.
+        $title = $localizedRecord instanceof RawRecord
+            ? $localizedRecord->get('title')
+            : $pageRecord['title'] ?? '';
 
-        return (string) ($pageRecord['title'] ?? '');
+        return is_string($title) ? $title : '';
     }
 
     /**
@@ -357,16 +358,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $backendUserAuthentication = $this->getBackendUserAuthentication();
         $newsletterChannelIds      = '';
 
-        // Newsletter channel permissions of the groups
+        // Newsletter channel permissions of the groups. The field is a text
+        // column, so the database returns a comma-separated string.
         foreach ($backendUserAuthentication->userGroups as $group) {
-            if (isset($group['universal_messenger_channels'])) {
+            if (is_array($group) && is_string($group['universal_messenger_channels'] ?? null)) {
                 $newsletterChannelIds .= ',' . $group['universal_messenger_channels'];
             }
         }
 
         // Newsletter channel permissions of the user record
-        if ($backendUserAuthentication->user['universal_messenger_channels'] ?? false) {
-            $newsletterChannelIds .= ',' . $backendUserAuthentication->user['universal_messenger_channels'];
+        $userChannelIds = $backendUserAuthentication->user['universal_messenger_channels'] ?? '';
+
+        if (is_string($userChannelIds) && ($userChannelIds !== '')) {
+            $newsletterChannelIds .= ',' . $userChannelIds;
         }
 
         // Make the IDs unique
@@ -555,7 +559,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $severity = ContextualFeedbackSeverity::OK;
         }
 
-        $this->moduleTemplate->addFlashMessage(
+        $this->moduleTemplate()->addFlashMessage(
             $message,
             $this->translate('common.universalMessenger'),
             $severity,

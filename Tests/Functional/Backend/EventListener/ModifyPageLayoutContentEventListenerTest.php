@@ -213,7 +213,13 @@ final class ModifyPageLayoutContentEventListenerTest extends FunctionalTestCase
     {
         $buttons = $moduleTemplate->getDocHeaderComponent()->getButtonBar()->getButtons($request);
 
-        foreach ($buttons[ButtonBar::BUTTON_POSITION_LEFT][3] ?? [] as $button) {
+        $leftButtonGroups = $buttons[ButtonBar::BUTTON_POSITION_LEFT] ?? [];
+        self::assertIsArray($leftButtonGroups);
+
+        $thirdButtonGroup = $leftButtonGroups[3] ?? [];
+        self::assertIsArray($thirdButtonGroup);
+
+        foreach ($thirdButtonGroup as $button) {
             if ($button instanceof LinkButton
                 && str_contains($button->getHref(), '/module/netresearch/universal-messenger')
             ) {

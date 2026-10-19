@@ -40,7 +40,7 @@ final class PagesTcaTest extends FunctionalTestCase
     {
         self::assertArrayHasKey(
             'universal_messenger_channel',
-            $GLOBALS['TCA']['pages']['columns'],
+            $this->getPagesColumns(),
             'The extension should register the "universal_messenger_channel" column on the pages table.',
         );
     }
@@ -48,12 +48,21 @@ final class PagesTcaTest extends FunctionalTestCase
     #[Test]
     public function newsletterDoktypeIsAddedToThePageTypeSelector(): void
     {
-        $doktypeItems = $GLOBALS['TCA']['pages']['columns']['doktype']['config']['items'] ?? [];
+        $doktypeColumn = $this->getPagesColumns()['doktype'] ?? null;
+        self::assertIsArray($doktypeColumn);
+        self::assertIsArray($doktypeColumn['config'] ?? null);
 
-        $registeredValues = array_map(
-            static fn (array $item): int => (int) ($item['value'] ?? 0),
-            $doktypeItems,
-        );
+        $doktypeItems = $doktypeColumn['config']['items'] ?? [];
+        self::assertIsArray($doktypeItems);
+
+        $registeredValues = [];
+
+        foreach ($doktypeItems as $item) {
+            self::assertIsArray($item);
+            self::assertIsNumeric($item['value'] ?? null);
+
+            $registeredValues[] = (int) $item['value'];
+        }
 
         // The default newsletter page type value is 20 (ext_conf_template.txt).
         self::assertContains(
@@ -61,5 +70,20 @@ final class PagesTcaTest extends FunctionalTestCase
             $registeredValues,
             'The newsletter page type (doktype 20) should be registered in the pages doktype selector.',
         );
+    }
+
+    /**
+     * Returns the column configuration of the pages table.
+     *
+     * @return array<array-key, mixed>
+     */
+    private function getPagesColumns(): array
+    {
+        $tca = $GLOBALS['TCA'] ?? null;
+        self::assertIsArray($tca);
+        self::assertIsArray($tca['pages'] ?? null);
+        self::assertIsArray($tca['pages']['columns'] ?? null);
+
+        return $tca['pages']['columns'];
     }
 }

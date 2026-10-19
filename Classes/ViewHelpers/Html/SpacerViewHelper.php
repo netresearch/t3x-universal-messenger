@@ -68,10 +68,13 @@ class SpacerViewHelper extends AbstractHtmlViewHelper
      */
     public function render(): string
     {
+        // Fluid hands over an int or NULL for the "size" argument
+        $size = $this->arguments['size'] ?? null;
+
         // Template
         $view = $this->getTemplateObject()
             ->assign('class', $this->arguments['class'])
-            ->assign('size', (int) $this->arguments['size']);
+            ->assign('size', is_int($size) ? $size : 0);
 
         return $view->render(self::$viewHelperTemplate);
     }

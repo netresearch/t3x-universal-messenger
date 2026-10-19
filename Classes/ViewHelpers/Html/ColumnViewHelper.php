@@ -70,13 +70,19 @@ class ColumnViewHelper extends AbstractHtmlViewHelper
      */
     public function render(): string
     {
+        // Fluid hands over the declared types or NULL for an argument that
+        // is not set.
+        $classArgument       = $this->arguments['class'] ?? null;
+        $numberArgument      = $this->arguments['number'] ?? null;
+        $totalNumberArgument = $this->arguments['totalNumber'] ?? null;
+
         $view        = $this->getTemplateObject();
         $class       = ['columns', 'small-12'];
-        $number      = (int) ($this->arguments['number'] ?? 1);
-        $totalNumber = (int) ($this->arguments['totalNumber'] ?? 1);
+        $number      = is_int($numberArgument) ? $numberArgument : 1;
+        $totalNumber = is_int($totalNumberArgument) ? $totalNumberArgument : 1;
 
-        if (isset($this->arguments['class'])) {
-            $class = explode(' ', trim((string) $this->arguments['class']));
+        if (is_string($classArgument)) {
+            $class = explode(' ', trim($classArgument));
         } else {
             $class[] = 'large-' . (12 / $totalNumber);
 

@@ -45,9 +45,14 @@ class ControlStructureProcessor implements DataProcessorInterface
         array $processorConfiguration,
         array $processedData,
     ): array {
+        // The record data of a content element; pi_flexform is a text column,
+        // whose value the database returns as a string.
+        $data     = $processedData['data'] ?? [];
+        $flexForm = is_array($data) ? $data['pi_flexform'] ?? '' : '';
+
         // Pass the flex form configuration to the content element template
         $processedData['flexformConfiguration'] = $this->convertFlexFormContentToArray(
-            $processedData['data']['pi_flexform'] ?? '',
+            is_string($flexForm) ? $flexForm : '',
         );
 
         return $processedData;
@@ -68,7 +73,7 @@ class ControlStructureProcessor implements DataProcessorInterface
      *
      * @param string $flexFormContent
      *
-     * @return array<string, array<string, string>>
+     * @return array<array-key, mixed>
      */
     private function convertFlexFormContentToArray(string $flexFormContent): array
     {

@@ -49,6 +49,9 @@ class PlaceholderViewHelper extends AbstractViewHelper
      */
     public function render(): string
     {
-        return '{' . $this->arguments['value'] . '}';
+        // Fluid hands over the required "value" argument as a string
+        $value = $this->arguments['value'];
+
+        return '{' . (is_string($value) ? $value : '') . '}';
     }
 }

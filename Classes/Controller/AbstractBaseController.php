@@ -16,6 +16,7 @@ namespace Netresearch\UniversalMessenger\Controller;
 
 use function count;
 
+use LogicException;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
@@ -68,9 +69,11 @@ abstract class AbstractBaseController extends ActionController
     protected Configuration $configuration;
 
     /**
-     * @var ModuleTemplate
+     * Set by initializeAction(); read it through moduleTemplate().
+     *
+     * @var ModuleTemplate|null
      */
-    protected ModuleTemplate $moduleTemplate;
+    protected ?ModuleTemplate $moduleTemplate = null;
 
     /**
      * @var NewsletterChannelRepository
@@ -121,12 +124,12 @@ abstract class AbstractBaseController extends ActionController
     /**
      * @var array<int, string>
      */
-    protected mixed $languages;
+    protected array $languages = [];
 
     /**
      * @var int
      */
-    protected int $currentSelectedLanguage;
+    protected int $currentSelectedLanguage = 0;
 
     /**
      * AbstractBaseController constructor.
@@ -186,6 +189,19 @@ abstract class AbstractBaseController extends ActionController
     }
 
     /**
+     * Returns the module template that initializeAction() created.
+     *
+     * @return ModuleTemplate
+     *
+     * @throws LogicException if called before initializeAction()
+     */
+    protected function moduleTemplate(): ModuleTemplate
+    {
+        return $this->moduleTemplate
+            ?? throw new LogicException('The module template is created in initializeAction().');
+    }
+
+    /**
      * @return SiteLanguage[]
      */
     private function getAvailableSiteLanguages(): array
@@ -204,7 +220,7 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function errorAction(): ResponseInterface
     {
-        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+        return $this->moduleTemplate()->renderResponse('Backend/UniversalMessenger');
     }
 
     /**
@@ -233,6 +249,9 @@ abstract class AbstractBaseController extends ActionController
             $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW),
         );
 
+        // A page record from the database carries its title as a string.
+        $pageTitle = $pageRecord['title'] ?? '';
+
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $moduleTemplate->setBodyTag('<body class="typo3-module-universal-messenger">');
         $moduleTemplate->setModuleId('typo3-module-universal-messenger');
@@ -242,7 +261,7 @@ abstract class AbstractBaseController extends ActionController
                 null,
                 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf',
             ),
-            $pageRecord['title'] ?? '',
+            is_string($pageTitle) ? $pageTitle : '',
         );
 
         if ($pageRecord !== false) {
@@ -285,8 +304,9 @@ abstract class AbstractBaseController extends ActionController
                 $this->getBackendUserAuthentication()->workspace,
             );
 
+            // Both lists are indexed by the integer language ID.
             foreach (array_keys($pageTranslations) as $languageId) {
-                if (isset($this->availableLanguages[$languageId])) {
+                if (is_int($languageId) && isset($this->availableLanguages[$languageId])) {
                     $this->languages[$languageId] = $this->availableLanguages[$languageId]->getTitle();
                 }
             }
@@ -348,7 +368,7 @@ abstract class AbstractBaseController extends ActionController
         string $key,
         ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
     ): void {
-        $this->moduleTemplate->addFlashMessage(
+        $this->moduleTemplate()->addFlashMessage(
             $this->translate($key),
             $this->translate('common.universalMessenger'),
             $contextualFeedbackSeverity,
@@ -380,7 +400,10 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
-        return $GLOBALS['BE_USER'];
+        $backendUserAuthentication = $GLOBALS['BE_USER'];
+        assert($backendUserAuthentication instanceof BackendUserAuthentication);
+
+        return $backendUserAuthentication;
     }
 
     /**
@@ -390,7 +413,10 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function getLanguageService(): LanguageService
     {
-        return $GLOBALS['LANG'];
+        $languageService = $GLOBALS['LANG'];
+        assert($languageService instanceof LanguageService);
+
+        return $languageService;
     }
 
     /**

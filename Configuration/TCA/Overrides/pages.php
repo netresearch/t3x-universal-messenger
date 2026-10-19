@@ -41,8 +41,13 @@ call_user_func(static function (): void {
         ],
     );
 
+    // The pages TCA of the core: one "types" entry per doktype, each with
+    // its "showitem" list.
+    /** @var array{pages: array{types: array<int|string, array{showitem: string, ...}>, ...}, ...} $tca */
+    $tca = &$GLOBALS['TCA'];
+
     ArrayUtility::mergeRecursiveWithOverrule(
-        $GLOBALS['TCA']['pages'],
+        $tca['pages'],
         [
             // Add the icon to the icon class configuration
             'ctrl' => [
@@ -57,7 +62,7 @@ call_user_func(static function (): void {
                 $newsletterPageDokType => [
                     // Replaces the removed PageDoktypeRegistry->add() allowedTables => '*'
                     'allowedRecordTypes' => ['*'],
-                    'showitem'           => $GLOBALS['TCA']['pages']['types'][PageRepository::DOKTYPE_DEFAULT]['showitem'],
+                    'showitem'           => $tca['pages']['types'][PageRepository::DOKTYPE_DEFAULT]['showitem'],
                 ],
             ],
         ],

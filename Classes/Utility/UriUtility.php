@@ -97,7 +97,9 @@ final class UriUtility
      */
     private static function isRequestHostTrusted(ServerRequestInterface $serverRequest): bool
     {
-        $trustedHostsPattern = $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] ?? '';
+        $typo3ConfVars       = $GLOBALS['TYPO3_CONF_VARS'] ?? [];
+        $systemConfiguration = is_array($typo3ConfVars) ? $typo3ConfVars['SYS'] ?? [] : [];
+        $trustedHostsPattern = is_array($systemConfiguration) ? $systemConfiguration['trustedHostsPattern'] ?? '' : '';
 
         try {
             $verifyHostHeader = GeneralUtility::makeInstance(
@@ -106,10 +108,11 @@ final class UriUtility
             );
 
             $serverParams = $serverRequest->getServerParams();
-            $httpHost     = (string) ($serverParams['HTTP_HOST'] ?? '');
+            $httpHost     = $serverParams['HTTP_HOST'] ?? '';
 
+            // Server parameters are strings.
             return $verifyHostHeader->isAllowedHostHeaderValue(
-                $httpHost,
+                is_string($httpHost) ? $httpHost : '',
                 $serverParams,
             );
         } catch (Throwable) {
