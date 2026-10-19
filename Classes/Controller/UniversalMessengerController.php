@@ -383,6 +383,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     }
 
     /**
+     * Returns the value of the submit button. A value that is no string
+     * (e.g. "send[]=live") is as invalid as a missing one.
+     *
+     * @return string|null
+     */
+    private function getSendArgument(): ?string
+    {
+        $send = $this->request->hasArgument('send') ? $this->request->getArgument('send') : null;
+
+        return is_string($send) ? $send : null;
+    }
+
+    /**
      * @param NewsletterChannel|null $newsletterChannel
      *
      * @return ResponseInterface
@@ -398,13 +411,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.sendNotConfirmed');
         }
 
-        // The value of the submit button; a value that is no string (e.g.
-        // "send[]=live") is as invalid as a missing one.
-        $send = $this->request->hasArgument('send') ? $this->request->getArgument('send') : null;
+        $send = $this->getSendArgument();
 
         // Check if the submitted request is valid
         if (!$newsletterChannel instanceof NewsletterChannel
-            || !is_string($send)
+            || $send === null
         ) {
             return $this->forwardFlashMessage('error.invalidRequest');
         }
