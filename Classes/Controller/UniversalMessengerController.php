@@ -397,9 +397,13 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.sendNotConfirmed');
         }
 
+        // The value of the submit button; a value that is no string (e.g.
+        // "send[]=live") is as invalid as a missing one.
+        $send = $this->request->hasArgument('send') ? $this->request->getArgument('send') : null;
+
         // Check if the submitted request is valid
         if (!$newsletterChannel instanceof NewsletterChannel
-            || !$this->request->hasArgument('send')
+            || !is_string($send)
         ) {
             return $this->forwardFlashMessage('error.invalidRequest');
         }
@@ -431,7 +435,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
             $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($newsletterUrl);
-            $newsletterType      = strtoupper((string) $this->request->getArgument('send'));
+            $newsletterType      = strtoupper($send);
             $newsletterChannelId = $newsletterChannel->getChannelId();
 
             if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
