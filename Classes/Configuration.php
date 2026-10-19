@@ -93,6 +93,10 @@ class Configuration
     /**
      * Returns an extension setting by a given path.
      *
+     * A scalar setting is returned as a string, also when settings.php
+     * holds it as an int or bool. A path that leads to a group of settings
+     * (an array) is no single setting and yields NULL.
+     *
      * @param string $path Path to get the config for
      *
      * @return string|null
@@ -100,11 +104,13 @@ class Configuration
     public function getExtensionSetting(string $path): ?string
     {
         try {
-            return $this->getExtensionConfiguration()
+            $value = $this->getExtensionConfiguration()
                 ->get('universal_messenger', $path);
         } catch (Exception) {
             return null;
         }
+
+        return is_scalar($value) ? (string) $value : null;
     }
 
     /**

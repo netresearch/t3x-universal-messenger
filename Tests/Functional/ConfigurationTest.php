@@ -67,6 +67,27 @@ final class ConfigurationTest extends FunctionalTestCase
         self::assertSame('_Test', $subject->getExtensionSetting('newsletter/testChannelSuffix'));
     }
 
+    /**
+     * settings.php may hold a setting as an int; it is returned as the
+     * string the extension configuration module would have stored.
+     */
+    #[Test]
+    public function returnsAnIntegerExtensionSettingAsString(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']['storagePageId'] = 42;
+
+        self::assertSame('42', (new Configuration())->getExtensionSetting('storagePageId'));
+    }
+
+    /**
+     * A path that leads to a group of settings is no single setting.
+     */
+    #[Test]
+    public function returnsNullForAGroupOfExtensionSettings(): void
+    {
+        self::assertNull((new Configuration())->getExtensionSetting('newsletter'));
+    }
+
     #[Test]
     public function returnsNullForAnExtensionSettingThatIsNotConfigured(): void
     {
