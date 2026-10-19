@@ -53,6 +53,14 @@ final class HtmlViewHelpersTest extends FunctionalTestCase
      */
     private const CHILD_CONTENT = '<p>Newsletter child content</p>';
 
+    /**
+     * A template root path whose ViewHelpers/ directory overrides the
+     * container template.
+     *
+     * @var string
+     */
+    private const OVERRIDE_TEMPLATE_ROOT_PATH = 'EXT:universal_messenger/Tests/Functional/ViewHelpers/Fixtures/Override/';
+
     protected array $testExtensionsToLoad = [
         'netresearch/universal-messenger',
     ];
@@ -187,22 +195,9 @@ final class HtmlViewHelpersTest extends FunctionalTestCase
     #[Test]
     public function aConfiguredTemplateRootPathOverridesTheExtensionTemplate(): void
     {
-        $configuration = self::createStub(Configuration::class);
-        $configuration
-            ->method('hasTypoScriptSetting')
-            ->willReturnMap([
-                ['view/templateRootPaths', true],
-            ]);
-        $configuration
-            ->method('getTypoScriptSetting')
-            ->willReturnMap([
-                [
-                    'view/templateRootPaths',
-                    [
-                        10 => 'EXT:universal_messenger/Tests/Functional/ViewHelpers/Fixtures/Override/',
-                    ],
-                ],
-            ]);
+        $configuration = $this->createConfigurationWithTemplateRootPaths([
+            10 => self::OVERRIDE_TEMPLATE_ROOT_PATH,
+        ]);
 
         $html = $this->render(ContainerViewHelper::class, ['class' => 'custom'], $configuration);
 
@@ -219,23 +214,10 @@ final class HtmlViewHelpersTest extends FunctionalTestCase
     #[Test]
     public function aTemplateRootPathEntryThatIsNoPathIsSkipped(): void
     {
-        $configuration = self::createStub(Configuration::class);
-        $configuration
-            ->method('hasTypoScriptSetting')
-            ->willReturnMap([
-                ['view/templateRootPaths', true],
-            ]);
-        $configuration
-            ->method('getTypoScriptSetting')
-            ->willReturnMap([
-                [
-                    'view/templateRootPaths',
-                    [
-                        10 => ['EXT:universal_messenger/Resources/Private/Templates/'],
-                        20 => 'EXT:universal_messenger/Tests/Functional/ViewHelpers/Fixtures/Override/',
-                    ],
-                ],
-            ]);
+        $configuration = $this->createConfigurationWithTemplateRootPaths([
+            10 => ['EXT:universal_messenger/Resources/Private/Templates/'],
+            20 => self::OVERRIDE_TEMPLATE_ROOT_PATH,
+        ]);
 
         $html = $this->render(ContainerViewHelper::class, ['class' => 'custom'], $configuration);
 
@@ -252,6 +234,19 @@ final class HtmlViewHelpersTest extends FunctionalTestCase
     #[Test]
     public function aTemplateRootPathsSettingThatIsNoListAddsNoPath(): void
     {
+        $configuration = $this->createConfigurationWithTemplateRootPaths(self::OVERRIDE_TEMPLATE_ROOT_PATH);
+
+        $html = $this->render(ContainerViewHelper::class, [], $configuration);
+
+        self::assertStringContainsString('<table align="center" class="container float-center">', $html);
+    }
+
+    /**
+     * Returns a configuration whose TypoScript sets "view.templateRootPaths"
+     * to the given value.
+     */
+    private function createConfigurationWithTemplateRootPaths(mixed $templateRootPaths): Configuration
+    {
         $configuration = self::createStub(Configuration::class);
         $configuration
             ->method('hasTypoScriptSetting')
@@ -261,12 +256,10 @@ final class HtmlViewHelpersTest extends FunctionalTestCase
         $configuration
             ->method('getTypoScriptSetting')
             ->willReturnMap([
-                ['view/templateRootPaths', 'EXT:universal_messenger/Tests/Functional/ViewHelpers/Fixtures/Override/'],
+                ['view/templateRootPaths', $templateRootPaths],
             ]);
 
-        $html = $this->render(ContainerViewHelper::class, [], $configuration);
-
-        self::assertStringContainsString('<table align="center" class="container float-center">', $html);
+        return $configuration;
     }
 
     /**

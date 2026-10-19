@@ -130,7 +130,7 @@ final class PageContentPreviewRenderingEventListenerTest extends FunctionalTestC
             'tt_content',
             [
                 'CType'       => 'control_structure',
-                'bodytext'    => 'Shown to subscribers of the premium list',
+                'bodytext'    => 'Shown to subscribers of the newsletter list',
                 'pi_flexform' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>'
                     . '<T3FlexForms><data><sheet index="sDEF"><language index="lDEF">'
                     . '<field index="settings.replacementBodyText"><value index="vDEF" type="array">'

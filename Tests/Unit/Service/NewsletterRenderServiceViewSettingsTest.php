@@ -45,16 +45,24 @@ final class NewsletterRenderServiceViewSettingsTest extends UnitTestCase
     use NewsletterContentResponseTrait;
     use TrustedServerRequestTrait;
 
+    private const TEMPLATE_ROOT_PATH = 'EXT:universal_messenger/Resources/Private/Templates/';
+
+    private const PARTIAL_ROOT_PATH = 'EXT:universal_messenger/Resources/Private/Partials/';
+
+    private const LAYOUT_ROOT_PATH = 'EXT:universal_messenger/Resources/Private/Layouts/';
+
+    private const TEMPLATE_PATH_AND_FILENAME = 'EXT:universal_messenger/Resources/Private/Templates/Container.html';
+
     private ?ViewFactoryData $viewFactoryData = null;
 
     #[Test]
     public function passesViewSettingsOfTheWrongKindAsNotConfigured(): void
     {
         $subject = $this->createSubject([
-            'view/templateRootPaths'       => 'EXT:universal_messenger/Resources/Private/Templates/',
-            'view/partialRootPaths'        => 'EXT:universal_messenger/Resources/Private/Partials/',
-            'view/layoutRootPaths'         => 'EXT:universal_messenger/Resources/Private/Layouts/',
-            'view/templatePathAndFilename' => ['EXT:universal_messenger/Resources/Private/Templates/Container.html'],
+            'view/templateRootPaths'       => self::TEMPLATE_ROOT_PATH,
+            'view/partialRootPaths'        => self::PARTIAL_ROOT_PATH,
+            'view/layoutRootPaths'         => self::LAYOUT_ROOT_PATH,
+            'view/templatePathAndFilename' => [self::TEMPLATE_PATH_AND_FILENAME],
         ]);
 
         $subject->renderNewsletterPreviewPage(
@@ -73,10 +81,10 @@ final class NewsletterRenderServiceViewSettingsTest extends UnitTestCase
     public function passesConfiguredViewSettingsUnchanged(): void
     {
         $subject = $this->createSubject([
-            'view/templateRootPaths'       => [10 => 'EXT:universal_messenger/Resources/Private/Templates/'],
-            'view/partialRootPaths'        => [10 => 'EXT:universal_messenger/Resources/Private/Partials/'],
-            'view/layoutRootPaths'         => [10 => 'EXT:universal_messenger/Resources/Private/Layouts/'],
-            'view/templatePathAndFilename' => 'EXT:universal_messenger/Resources/Private/Templates/Container.html',
+            'view/templateRootPaths'       => [10 => self::TEMPLATE_ROOT_PATH],
+            'view/partialRootPaths'        => [10 => self::PARTIAL_ROOT_PATH],
+            'view/layoutRootPaths'         => [10 => self::LAYOUT_ROOT_PATH],
+            'view/templatePathAndFilename' => self::TEMPLATE_PATH_AND_FILENAME,
         ]);
 
         $subject->renderNewsletterPreviewPage(
@@ -85,10 +93,10 @@ final class NewsletterRenderServiceViewSettingsTest extends UnitTestCase
         );
 
         self::assertInstanceOf(ViewFactoryData::class, $this->viewFactoryData);
-        self::assertSame([10 => 'EXT:universal_messenger/Resources/Private/Templates/'], $this->viewFactoryData->templateRootPaths);
-        self::assertSame([10 => 'EXT:universal_messenger/Resources/Private/Partials/'], $this->viewFactoryData->partialRootPaths);
-        self::assertSame([10 => 'EXT:universal_messenger/Resources/Private/Layouts/'], $this->viewFactoryData->layoutRootPaths);
-        self::assertSame('EXT:universal_messenger/Resources/Private/Templates/Container.html', $this->viewFactoryData->templatePathAndFilename);
+        self::assertSame([10 => self::TEMPLATE_ROOT_PATH], $this->viewFactoryData->templateRootPaths);
+        self::assertSame([10 => self::PARTIAL_ROOT_PATH], $this->viewFactoryData->partialRootPaths);
+        self::assertSame([10 => self::LAYOUT_ROOT_PATH], $this->viewFactoryData->layoutRootPaths);
+        self::assertSame(self::TEMPLATE_PATH_AND_FILENAME, $this->viewFactoryData->templatePathAndFilename);
     }
 
     /**

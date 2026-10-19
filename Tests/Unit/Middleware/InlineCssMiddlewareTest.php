@@ -37,36 +37,29 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(InlineCssMiddleware::class)]
 final class InlineCssMiddlewareTest extends UnitTestCase
 {
+    /**
+     * The first CSS file colours the newsletter text red.
+     */
+    private const FIRST_CSS_FILE = __DIR__ . '/Fixtures/first.css';
+
+    /**
+     * The second CSS file colours the newsletter text blue.
+     */
+    private const SECOND_CSS_FILE = __DIR__ . '/Fixtures/second.css';
+
+    private const SECOND_CSS_RULE = 'color: blue';
+
     #[Test]
     public function laterConfiguredCssFileTakesPrecedenceOverAnEarlierOneWithEqualSpecificity(): void
     {
-        $configuration = self::createStub(Configuration::class);
-        $configuration
-            ->method('getTypoScriptSetting')
-            ->willReturn(
-                [
-                    '10' => __DIR__ . '/Fixtures/first.css',
-                    '20' => __DIR__ . '/Fixtures/second.css',
-                ],
-            );
+        $renderedHtml = $this->processWithInlineCssFiles(
+            [
+                '10' => self::FIRST_CSS_FILE,
+                '20' => self::SECOND_CSS_FILE,
+            ],
+        );
 
-        $request = (new ServerRequest())
-            ->withAttribute(
-                'routing',
-                new PageArguments(1, (string) Constants::NEWSLETTER_PREVIEW_TYPENUM, []),
-            );
-
-        $requestHandler = self::createStub(RequestHandlerInterface::class);
-        $requestHandler
-            ->method('handle')
-            ->willReturn(new HtmlResponse('<html><body><p class="newsletter-text">Text</p></body></html>'));
-
-        $response = (new InlineCssMiddleware($configuration))
-            ->process($request, $requestHandler);
-
-        $renderedHtml = (string) $response->getBody();
-
-        self::assertStringContainsString('color: blue', $renderedHtml);
+        self::assertStringContainsString(self::SECOND_CSS_RULE, $renderedHtml);
         self::assertStringNotContainsString('color: red', $renderedHtml);
     }
 
@@ -79,12 +72,12 @@ final class InlineCssMiddlewareTest extends UnitTestCase
     {
         $renderedHtml = $this->processWithInlineCssFiles(
             [
-                '10' => [__DIR__ . '/Fixtures/first.css'],
-                '20' => __DIR__ . '/Fixtures/second.css',
+                '10' => [self::FIRST_CSS_FILE],
+                '20' => self::SECOND_CSS_FILE,
             ],
         );
 
-        self::assertStringContainsString('color: blue', $renderedHtml);
+        self::assertStringContainsString(self::SECOND_CSS_RULE, $renderedHtml);
         self::assertStringNotContainsString('color: red', $renderedHtml);
     }
 
@@ -94,10 +87,10 @@ final class InlineCssMiddlewareTest extends UnitTestCase
     #[Test]
     public function inlinesNoFileWhenInlineCssFilesIsNoList(): void
     {
-        $renderedHtml = $this->processWithInlineCssFiles(__DIR__ . '/Fixtures/second.css');
+        $renderedHtml = $this->processWithInlineCssFiles(self::SECOND_CSS_FILE);
 
         self::assertStringContainsString('<p>Text</p>', $renderedHtml);
-        self::assertStringNotContainsString('color: blue', $renderedHtml);
+        self::assertStringNotContainsString(self::SECOND_CSS_RULE, $renderedHtml);
     }
 
     /**
