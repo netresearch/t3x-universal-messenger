@@ -113,7 +113,13 @@ class InlineCssMiddleware implements MiddlewareInterface
 
         $cssContent = '';
 
-        foreach ($inlineCssFiles as $path) {
+        // A setting that is no list of files ("inlineCssFiles = …") inlines
+        // no file, and so does an entry that is no file name.
+        foreach (is_array($inlineCssFiles) ? $inlineCssFiles : [] as $path) {
+            if (!is_string($path)) {
+                continue;
+            }
+
             $file = GeneralUtility::getFileAbsFileName($path);
 
             if (file_exists($file)) {

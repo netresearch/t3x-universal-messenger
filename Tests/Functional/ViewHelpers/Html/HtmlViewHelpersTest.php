@@ -213,6 +213,63 @@ final class HtmlViewHelpersTest extends FunctionalTestCase
     }
 
     /**
+     * An entry of "view.templateRootPaths" that is no path, e.g. a nested
+     * list, is skipped; the other entries still apply.
+     */
+    #[Test]
+    public function aTemplateRootPathEntryThatIsNoPathIsSkipped(): void
+    {
+        $configuration = self::createStub(Configuration::class);
+        $configuration
+            ->method('hasTypoScriptSetting')
+            ->willReturnMap([
+                ['view/templateRootPaths', true],
+            ]);
+        $configuration
+            ->method('getTypoScriptSetting')
+            ->willReturnMap([
+                [
+                    'view/templateRootPaths',
+                    [
+                        10 => ['EXT:universal_messenger/Resources/Private/Templates/'],
+                        20 => 'EXT:universal_messenger/Tests/Functional/ViewHelpers/Fixtures/Override/',
+                    ],
+                ],
+            ]);
+
+        $html = $this->render(ContainerViewHelper::class, ['class' => 'custom'], $configuration);
+
+        self::assertSame(
+            '<div class="override-container custom">' . self::CHILD_CONTENT . '</div>',
+            $html,
+        );
+    }
+
+    /**
+     * A "view.templateRootPaths" setting that is no list adds no path; the
+     * extension's own view helper templates are used.
+     */
+    #[Test]
+    public function aTemplateRootPathsSettingThatIsNoListAddsNoPath(): void
+    {
+        $configuration = self::createStub(Configuration::class);
+        $configuration
+            ->method('hasTypoScriptSetting')
+            ->willReturnMap([
+                ['view/templateRootPaths', true],
+            ]);
+        $configuration
+            ->method('getTypoScriptSetting')
+            ->willReturnMap([
+                ['view/templateRootPaths', 'EXT:universal_messenger/Tests/Functional/ViewHelpers/Fixtures/Override/'],
+            ]);
+
+        $html = $this->render(ContainerViewHelper::class, [], $configuration);
+
+        self::assertStringContainsString('<table align="center" class="container float-center">', $html);
+    }
+
+    /**
      * Invokes the view helper through Fluid's own invoker, which applies the
      * registered argument defaults and validation exactly as a template does,
      * and returns the output with all whitespace runs collapsed to one space.

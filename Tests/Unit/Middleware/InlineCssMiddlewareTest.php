@@ -69,4 +69,62 @@ final class InlineCssMiddlewareTest extends UnitTestCase
         self::assertStringContainsString('color: blue', $renderedHtml);
         self::assertStringNotContainsString('color: red', $renderedHtml);
     }
+
+    /**
+     * An entry of "inlineCssFiles" that is no file name, e.g. a nested list,
+     * is skipped; the other entries are still inlined.
+     */
+    #[Test]
+    public function skipsAnInlineCssFilesEntryThatIsNoFileName(): void
+    {
+        $renderedHtml = $this->processWithInlineCssFiles(
+            [
+                '10' => [__DIR__ . '/Fixtures/first.css'],
+                '20' => __DIR__ . '/Fixtures/second.css',
+            ],
+        );
+
+        self::assertStringContainsString('color: blue', $renderedHtml);
+        self::assertStringNotContainsString('color: red', $renderedHtml);
+    }
+
+    /**
+     * An "inlineCssFiles" setting that is no list inlines no file.
+     */
+    #[Test]
+    public function inlinesNoFileWhenInlineCssFilesIsNoList(): void
+    {
+        $renderedHtml = $this->processWithInlineCssFiles(__DIR__ . '/Fixtures/second.css');
+
+        self::assertStringContainsString('<p>Text</p>', $renderedHtml);
+        self::assertStringNotContainsString('color: blue', $renderedHtml);
+    }
+
+    /**
+     * Runs the middleware for a newsletter preview request with the given
+     * "inlineCssFiles" setting and returns the rendered HTML.
+     */
+    private function processWithInlineCssFiles(mixed $inlineCssFiles): string
+    {
+        $configuration = self::createStub(Configuration::class);
+        $configuration
+            ->method('getTypoScriptSetting')
+            ->willReturn($inlineCssFiles);
+
+        $request = (new ServerRequest())
+            ->withAttribute(
+                'routing',
+                new PageArguments(1, (string) Constants::NEWSLETTER_PREVIEW_TYPENUM, []),
+            );
+
+        $requestHandler = self::createStub(RequestHandlerInterface::class);
+        $requestHandler
+            ->method('handle')
+            ->willReturn(new HtmlResponse('<html><body><p class="newsletter-text">Text</p></body></html>'));
+
+        $response = (new InlineCssMiddleware($configuration))
+            ->process($request, $requestHandler);
+
+        return (string) $response->getBody();
+    }
 }

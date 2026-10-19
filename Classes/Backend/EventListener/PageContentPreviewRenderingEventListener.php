@@ -65,7 +65,7 @@ final readonly class PageContentPreviewRenderingEventListener
             ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
 
         $bodyText            = $this->renderText((string) $record->get('bodytext'));
-        $replacementBodyText = $this->renderText((string) ($flexformData['settings']['replacementBodyText'] ?? ''));
+        $replacementBodyText = $this->renderText($this->getReplacementBodyText($flexformData));
 
         // Create preview output
         $event->setPreviewContent(
@@ -90,6 +90,23 @@ final readonly class PageContentPreviewRenderingEventListener
 </div>
 HTML
         );
+    }
+
+    /**
+     * Returns the replacement text from the FlexForm settings. A value that
+     * is not scalar, e.g. a nested list in hand-made FlexForm XML, counts as
+     * no text.
+     *
+     * @param array<array-key, mixed> $flexformData
+     *
+     * @return string
+     */
+    private function getReplacementBodyText(array $flexformData): string
+    {
+        $settings            = $flexformData['settings'] ?? [];
+        $replacementBodyText = is_array($settings) ? ($settings['replacementBodyText'] ?? '') : '';
+
+        return is_scalar($replacementBodyText) ? (string) $replacementBodyText : '';
     }
 
     /**

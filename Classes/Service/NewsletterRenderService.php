@@ -213,14 +213,44 @@ class NewsletterRenderService implements SingletonInterface
     private function getView(ServerRequestInterface $serverRequest): ViewInterface
     {
         $viewFactoryData = new ViewFactoryData(
-            templateRootPaths      : $this->configuration->getTypoScriptSetting('view/templateRootPaths'),
-            partialRootPaths       : $this->configuration->getTypoScriptSetting('view/partialRootPaths'),
-            layoutRootPaths        : $this->configuration->getTypoScriptSetting('view/layoutRootPaths'),
-            templatePathAndFilename: $this->configuration->getTypoScriptSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING),
+            templateRootPaths      : $this->getArraySetting('view/templateRootPaths'),
+            partialRootPaths       : $this->getArraySetting('view/partialRootPaths'),
+            layoutRootPaths        : $this->getArraySetting('view/layoutRootPaths'),
+            templatePathAndFilename: $this->getStringSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING),
             request                : $serverRequest,
         );
 
         return $this->viewFactory->create($viewFactoryData);
+    }
+
+    /**
+     * Returns a TypoScript setting that holds a list, e.g. of template root
+     * paths, or NULL if the setting is not a list.
+     *
+     * @param string $path
+     *
+     * @return array<array-key, mixed>|null
+     */
+    private function getArraySetting(string $path): ?array
+    {
+        $value = $this->configuration->getTypoScriptSetting($path);
+
+        return is_array($value) ? $value : null;
+    }
+
+    /**
+     * Returns a TypoScript setting that holds a single value, or NULL if the
+     * setting is not a string.
+     *
+     * @param string $path
+     *
+     * @return string|null
+     */
+    private function getStringSetting(string $path): ?string
+    {
+        $value = $this->configuration->getTypoScriptSetting($path);
+
+        return is_string($value) ? $value : null;
     }
 
     /**
