@@ -181,7 +181,7 @@ class NewsletterRenderService implements SingletonInterface
      */
     public function isNewsletterContainerTemplateConfigured(): bool
     {
-        $templatePathAndFilename = $this->configuration->getTypoScriptSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING);
+        $templatePathAndFilename = $this->getStringSetting(self::TEMPLATE_PATH_AND_FILENAME_SETTING);
 
         return ($templatePathAndFilename !== null) && ($templatePathAndFilename !== '');
     }
