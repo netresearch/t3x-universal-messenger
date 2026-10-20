@@ -49,6 +49,17 @@ final class ConfigurationTest extends FunctionalTestCase
         ],
     ];
 
+    /**
+     * Sets an extension setting the way settings.php does.
+     */
+    private function setExtensionSetting(string $name, int|string $value): void
+    {
+        /** @var array{EXTENSIONS: array{universal_messenger: array<string, mixed>, ...}, ...} $typo3ConfVars */
+        $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
+
+        $typo3ConfVars['EXTENSIONS']['universal_messenger'][$name] = $value;
+    }
+
     protected function tearDown(): void
     {
         // Leave no request behind for the next test case: the extbase
@@ -65,6 +76,27 @@ final class ConfigurationTest extends FunctionalTestCase
 
         self::assertSame('42', $subject->getExtensionSetting('storagePageId'));
         self::assertSame('_Test', $subject->getExtensionSetting('newsletter/testChannelSuffix'));
+    }
+
+    /**
+     * settings.php may hold a setting as an int; it is returned as the
+     * string the extension configuration module would have stored.
+     */
+    #[Test]
+    public function returnsAnIntegerExtensionSettingAsString(): void
+    {
+        $this->setExtensionSetting('storagePageId', 42);
+
+        self::assertSame('42', (new Configuration())->getExtensionSetting('storagePageId'));
+    }
+
+    /**
+     * A path that leads to a group of settings is no single setting.
+     */
+    #[Test]
+    public function returnsNullForAGroupOfExtensionSettings(): void
+    {
+        self::assertNull((new Configuration())->getExtensionSetting('newsletter'));
     }
 
     #[Test]
@@ -94,7 +126,7 @@ final class ConfigurationTest extends FunctionalTestCase
     public function returnsTheConfiguredNewsletterPageDokTypeOrTheDefault(?string $setting, int $expected): void
     {
         if ($setting !== null) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['universal_messenger']['newsletterPageDokType'] = $setting;
+            $this->setExtensionSetting('newsletterPageDokType', $setting);
         }
 
         self::assertSame($expected, (new Configuration())->getNewsletterPageDokType());

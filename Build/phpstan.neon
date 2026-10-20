@@ -1,29 +1,20 @@
 # SPDX-FileCopyrightText: Netresearch DTT GmbH
 # SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
 
+# The shared config sets level 10, treatPhpDocTypesAsCertain, the
+# strictness flags and excludePaths; phpstan/extension-installer registers
+# phpstan-typo3, phpat and the other PHPStan extensions.
 includes:
-    - %currentWorkingDirectory%/.Build/vendor/phpstan/phpstan-strict-rules/rules.neon
-    - %currentWorkingDirectory%/.Build/vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - %currentWorkingDirectory%/.Build/vendor/phpstan/phpstan-phpunit/extension.neon
-    - %currentWorkingDirectory%/.Build/vendor/phpstan/phpstan-phpunit/rules.neon
-    - %currentWorkingDirectory%/.Build/vendor/saschaegerer/phpstan-typo3/extension.neon
-    - %currentWorkingDirectory%/.Build/vendor/phpat/phpat/extension.neon
+    - %currentWorkingDirectory%/.Build/vendor/netresearch/typo3-ci-workflows/config/phpstan/phpstan.neon
     - %currentWorkingDirectory%/Build/phpstan-baseline.neon
 
 parameters:
-    # You can currently choose from 10 levels (0 is the loosest and 9 is the strictest).
-    level: 8
-
     paths:
         - %currentWorkingDirectory%/Classes/
         - %currentWorkingDirectory%/Configuration/
         - %currentWorkingDirectory%/Resources/
         - %currentWorkingDirectory%/Tests/
         - %currentWorkingDirectory%/ext_localconf.php
-
-    excludePaths:
-        - %currentWorkingDirectory%/.Build/*
-        - %currentWorkingDirectory%/ext_emconf.php
 
     ignoreErrors:
         -

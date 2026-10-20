@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\ViewHelpers\Condition;
 
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
@@ -36,10 +37,16 @@ class IsNewsletterTypeNumberViewHelper extends AbstractConditionViewHelper
      */
     public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
-        return (int) (
-            $GLOBALS['TYPO3_REQUEST']->getParsedBody()['type']
-            ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['type']
-            ?? null
-        ) === NewsletterRenderService::VIEW_TYPE_NUMBER;
+        $serverRequest = $GLOBALS['TYPO3_REQUEST'];
+        assert($serverRequest instanceof ServerRequestInterface);
+
+        $parsedBody = $serverRequest->getParsedBody();
+        $type       = (is_array($parsedBody) ? $parsedBody['type'] ?? null : null)
+            ?? $serverRequest->getQueryParams()['type']
+            ?? null;
+
+        // A type that is not scalar (e.g. "type[]=…") is no type number
+        return is_scalar($type)
+            && ((int) $type === NewsletterRenderService::VIEW_TYPE_NUMBER);
     }
 }

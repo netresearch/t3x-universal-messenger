@@ -58,6 +58,20 @@ final class NewsletterRenderServiceTest extends UnitTestCase
         self::assertFalse($subject->isNewsletterContainerTemplateConfigured());
     }
 
+    /**
+     * Container template set to a TypoScript array -> not configured, because getView() passes
+     * only a string on and would render without a container template.
+     */
+    #[Test]
+    public function returnsFalseWhenTheContainerTemplateIsNotAString(): void
+    {
+        $configurationStub = $this->createConfigurationStub(['value' => 'EXT:foo/Bar.html']);
+
+        $subject = $this->createSubject($configurationStub);
+
+        self::assertFalse($subject->isNewsletterContainerTemplateConfigured());
+    }
+
     /** Container template set to a real path -> configured. */
     #[Test]
     public function returnsTrueWhenTheContainerTemplateIsSet(): void
@@ -78,13 +92,16 @@ final class NewsletterRenderServiceTest extends UnitTestCase
      * instead of the configured string and fail; the two false-case tests cannot tell a wrong
      * path from a correct one, since both yield a falsy result either way.
      */
-    private function createConfigurationStub(?string $templatePathAndFilename): Configuration
+    /**
+     * @param array<string, string>|string|null $templatePathAndFilename
+     */
+    private function createConfigurationStub(array|string|null $templatePathAndFilename): Configuration
     {
         $configurationStub = self::createStub(Configuration::class);
         $configurationStub
             ->method('getTypoScriptSetting')
             ->willReturnCallback(
-                static fn (string $path): ?string => $path === 'view/templatePathAndFilename' ? $templatePathAndFilename : null,
+                static fn (string $path): array|string|null => $path === 'view/templatePathAndFilename' ? $templatePathAndFilename : null,
             );
 
         return $configurationStub;

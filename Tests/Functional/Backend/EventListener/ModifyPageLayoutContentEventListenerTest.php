@@ -143,6 +143,25 @@ final class ModifyPageLayoutContentEventListenerTest extends FunctionalTestCase
         self::assertNull($this->findModuleButton($this->dispatch($request), $request));
     }
 
+    /**
+     * An "id[]=…" parameter is no page ID. Cast to int it would select
+     * page 1, so page 1 is a newsletter page here to make that visible.
+     */
+    #[Test]
+    public function addsNoButtonWhenThePageIdIsAnArray(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('pages')->insert('pages', [
+            'uid'     => 1,
+            'pid'     => 0,
+            'doktype' => 20,
+            'title'   => 'First newsletter',
+        ]);
+
+        $request = $this->createPageModuleRequest(['id' => [(string) self::NEWSLETTER_PAGE_ID]], 0);
+
+        self::assertNull($this->findModuleButton($this->dispatch($request), $request));
+    }
+
     #[Test]
     public function addsNoButtonWithoutASelectedPage(): void
     {
@@ -170,7 +189,7 @@ final class ModifyPageLayoutContentEventListenerTest extends FunctionalTestCase
     }
 
     /**
-     * @param array<string, string> $queryParams
+     * @param array<string, string|list<string>> $queryParams
      */
     private function createPageModuleRequest(array $queryParams, ?int $language): ServerRequest
     {
@@ -194,7 +213,13 @@ final class ModifyPageLayoutContentEventListenerTest extends FunctionalTestCase
     {
         $buttons = $moduleTemplate->getDocHeaderComponent()->getButtonBar()->getButtons($request);
 
-        foreach ($buttons[ButtonBar::BUTTON_POSITION_LEFT][3] ?? [] as $button) {
+        $leftButtonGroups = $buttons[ButtonBar::BUTTON_POSITION_LEFT] ?? [];
+        self::assertIsArray($leftButtonGroups);
+
+        $thirdButtonGroup = $leftButtonGroups[3] ?? [];
+        self::assertIsArray($thirdButtonGroup);
+
+        foreach ($thirdButtonGroup as $button) {
             if ($button instanceof LinkButton
                 && str_contains($button->getHref(), '/module/netresearch/universal-messenger')
             ) {

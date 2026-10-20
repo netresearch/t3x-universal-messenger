@@ -19,7 +19,7 @@ TYPO3 v14 backend extension (`universal_messenger`) for sending newsletters thro
 | Task | Command |
 |------|---------|
 | Lint (PHP syntax) | `composer ci:test:php:lint` |
-| Static analysis (PHPStan level 8 + PHPat) | `composer ci:test:php:phpstan` (or `make phpstan`) |
+| Static analysis (PHPStan level 10 + PHPat) | `composer ci:test:php:phpstan` (or `make phpstan`) |
 | Code style check | `composer ci:test:php:cgl` (or `make cgl`) |
 | Code style fix | `composer ci:cgl` (or `make cgl-fix`) |
 | Rector dry-run | `composer ci:test:php:rector` (or `make rector`) |

@@ -14,8 +14,7 @@ declare(strict_types=1);
 
 namespace Netresearch\UniversalMessenger\Controller;
 
-use function count;
-
+use LogicException;
 use Netresearch\UniversalMessenger\Configuration;
 use Netresearch\UniversalMessenger\Domain\Repository\NewsletterChannelRepository;
 use Netresearch\UniversalMessenger\Service\NewsletterRenderService;
@@ -41,6 +40,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
+use function count;
 
 /**
  * AbstractBaseController.
@@ -68,9 +69,11 @@ abstract class AbstractBaseController extends ActionController
     protected Configuration $configuration;
 
     /**
-     * @var ModuleTemplate
+     * Set by initializeAction(); read it through moduleTemplate().
+     *
+     * @var ModuleTemplate|null
      */
-    protected ModuleTemplate $moduleTemplate;
+    protected ?ModuleTemplate $moduleTemplate = null;
 
     /**
      * @var NewsletterChannelRepository
@@ -121,12 +124,12 @@ abstract class AbstractBaseController extends ActionController
     /**
      * @var array<int, string>
      */
-    protected mixed $languages;
+    protected array $languages = [];
 
     /**
      * @var int
      */
-    protected int $currentSelectedLanguage;
+    protected int $currentSelectedLanguage = 0;
 
     /**
      * AbstractBaseController constructor.
@@ -168,7 +171,34 @@ abstract class AbstractBaseController extends ActionController
         $this->moduleData              = $this->request->getAttribute('moduleData');
         $this->site                    = $this->request->getAttribute('site');
         $this->availableLanguages      = $this->getAvailableSiteLanguages();
-        $this->currentSelectedLanguage = (int) ($this->moduleData?->get('language') ?? 0);
+        $this->currentSelectedLanguage = $this->getSelectedLanguage();
+    }
+
+    /**
+     * Returns the language selected in the module data. A value that is not
+     * scalar (e.g. "language[]=1" in the request) selects the default
+     * language; casting it would have selected language 1.
+     *
+     * @return int
+     */
+    private function getSelectedLanguage(): int
+    {
+        $language = $this->moduleData?->get('language') ?? 0;
+
+        return is_scalar($language) ? (int) $language : 0;
+    }
+
+    /**
+     * Returns the module template that initializeAction() created.
+     *
+     * @return ModuleTemplate
+     *
+     * @throws LogicException if called before initializeAction()
+     */
+    protected function moduleTemplate(): ModuleTemplate
+    {
+        return $this->moduleTemplate
+            ?? throw new LogicException('The module template is created in initializeAction().');
     }
 
     /**
@@ -190,7 +220,7 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function errorAction(): ResponseInterface
     {
-        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+        return $this->moduleTemplate()->renderResponse('Backend/UniversalMessenger');
     }
 
     /**
@@ -200,7 +230,11 @@ abstract class AbstractBaseController extends ActionController
      */
     private function getPageId(): int
     {
-        return (int) ($this->request->getParsedBody()['id'] ?? $this->request->getQueryParams()['id'] ?? -1);
+        $pageId = $this->request->getParsedBody()['id'] ?? $this->request->getQueryParams()['id'] ?? -1;
+
+        // A value that is not scalar (e.g. "id[]=2") is no page ID; casting it
+        // would have selected page 1.
+        return is_scalar($pageId) ? (int) $pageId : -1;
     }
 
     /**
@@ -215,6 +249,9 @@ abstract class AbstractBaseController extends ActionController
             $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW),
         );
 
+        // A page record from the database carries its title as a string.
+        $pageTitle = $pageRecord['title'] ?? '';
+
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $moduleTemplate->setBodyTag('<body class="typo3-module-universal-messenger">');
         $moduleTemplate->setModuleId('typo3-module-universal-messenger');
@@ -224,7 +261,7 @@ abstract class AbstractBaseController extends ActionController
                 null,
                 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod_um.xlf',
             ),
-            $pageRecord['title'] ?? '',
+            is_string($pageTitle) ? $pageTitle : '',
         );
 
         if ($pageRecord !== false) {
@@ -267,8 +304,9 @@ abstract class AbstractBaseController extends ActionController
                 $this->getBackendUserAuthentication()->workspace,
             );
 
+            // Both lists are indexed by the integer language ID.
             foreach (array_keys($pageTranslations) as $languageId) {
-                if (isset($this->availableLanguages[$languageId])) {
+                if (is_int($languageId) && isset($this->availableLanguages[$languageId])) {
                     $this->languages[$languageId] = $this->availableLanguages[$languageId]->getTitle();
                 }
             }
@@ -330,7 +368,7 @@ abstract class AbstractBaseController extends ActionController
         string $key,
         ContextualFeedbackSeverity $contextualFeedbackSeverity = ContextualFeedbackSeverity::ERROR,
     ): void {
-        $this->moduleTemplate->addFlashMessage(
+        $this->moduleTemplate()->addFlashMessage(
             $this->translate($key),
             $this->translate('common.universalMessenger'),
             $contextualFeedbackSeverity,
@@ -362,7 +400,10 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
-        return $GLOBALS['BE_USER'];
+        $backendUserAuthentication = $GLOBALS['BE_USER'];
+        assert($backendUserAuthentication instanceof BackendUserAuthentication);
+
+        return $backendUserAuthentication;
     }
 
     /**
@@ -372,7 +413,10 @@ abstract class AbstractBaseController extends ActionController
      */
     protected function getLanguageService(): LanguageService
     {
-        return $GLOBALS['LANG'];
+        $languageService = $GLOBALS['LANG'];
+        assert($languageService instanceof LanguageService);
+
+        return $languageService;
     }
 
     /**

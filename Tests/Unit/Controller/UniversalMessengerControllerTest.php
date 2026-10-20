@@ -210,6 +210,29 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     }
 
     /**
+     * A crafted POST that sends the "send" argument as a list ("send[]=live")
+     * is rejected like a missing one; cast to string it was sent as "ARRAY".
+     */
+    #[Test]
+    public function createActionRejectsASendArgumentThatIsNoString(): void
+    {
+        $eventFileRepository = $this->createEventFileRepositoryThatMustNotSend();
+
+        $subject = $this->createSubject(
+            $eventFileRepository,
+            'POST',
+            ['send' => ['live']],
+        );
+
+        $subject->createAction(self::createStub(NewsletterChannel::class));
+
+        self::assertSame(
+            ['error.invalidRequest'],
+            $subject->forwardedFlashMessages,
+        );
+    }
+
+    /**
      * Proves createAction() actually calls the authorization guard and
      * collapses its result into the generic message, not just that the guard
      * itself discriminates correctly in isolation (the direct
@@ -1704,7 +1727,7 @@ final class UniversalMessengerControllerTest extends UnitTestCase
      * guard under test must reject the request before any of them is touched —
      * so only the two properties the guard and the assertion need are injected.
      *
-     * @param array<string, string> $arguments
+     * @param array<string, string|list<string>> $arguments
      */
     private function createSubject(
         EventFileRepository $eventFileRepository,
@@ -1720,7 +1743,7 @@ final class UniversalMessengerControllerTest extends UnitTestCase
     }
 
     /**
-     * @param array<string, string> $arguments
+     * @param array<string, string|list<string>> $arguments
      */
     private function createRequest(string $httpMethod, array $arguments): RequestInterface
     {
@@ -1736,7 +1759,7 @@ final class UniversalMessengerControllerTest extends UnitTestCase
         $request
             ->method('getArgument')
             ->willReturnCallback(
-                static fn (string $name): string => $arguments[$name] ?? '',
+                static fn (string $name): array|string => $arguments[$name] ?? '',
             );
 
         return $request;

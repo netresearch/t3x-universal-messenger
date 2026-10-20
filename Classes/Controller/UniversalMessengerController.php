@@ -15,9 +15,6 @@ declare(strict_types=1);
 namespace Netresearch\UniversalMessenger\Controller;
 
 use Exception;
-
-use function in_array;
-
 use Netresearch\Sdk\UniversalMessenger\Exception\ServiceException;
 use Netresearch\Sdk\UniversalMessenger\Model\NewsletterStatus;
 use Netresearch\Sdk\UniversalMessenger\RequestBuilder\EventFile\CreateRequestBuilder;
@@ -33,9 +30,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
-use function sprintf;
-
 use TYPO3\CMS\Backend\Domain\Repository\Localization\LocalizationRepository;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\PreviewUriBuilder;
@@ -52,6 +46,9 @@ use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
+
+use function in_array;
+use function sprintf;
 
 /**
  * UniversalMessengerController.
@@ -149,7 +146,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
     public function indexAction(): ResponseInterface
     {
         // Create button bar
-        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        $buttonBar = $this->moduleTemplate()->getDocHeaderComponent()->getButtonBar();
 
         // Add language dropdown
         if (($languageButton = $this->makeLanguageSwitchButton()) instanceof ButtonInterface) {
@@ -235,9 +232,9 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.missingTypoScriptConfiguration');
         }
 
-        $this->moduleTemplate->assign('content', $renderedContent);
+        $this->moduleTemplate()->assign('content', $renderedContent);
 
-        return $this->moduleTemplate->renderResponse('Backend/UniversalMessenger');
+        return $this->moduleTemplate()->renderResponse('Backend/UniversalMessenger');
     }
 
     /**
@@ -256,11 +253,12 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $this->getBackendUserAuthentication()->workspace,
         );
 
-        if ($localizedRecord instanceof RawRecord) {
-            return (string) ($localizedRecord->get('title') ?? '');
-        }
+        // The title of a page record from the database is a string.
+        $title = $localizedRecord instanceof RawRecord
+            ? $localizedRecord->get('title')
+            : $pageRecord['title'] ?? '';
 
-        return (string) ($pageRecord['title'] ?? '');
+        return is_string($title) ? $title : '';
     }
 
     /**
@@ -357,16 +355,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $backendUserAuthentication = $this->getBackendUserAuthentication();
         $newsletterChannelIds      = '';
 
-        // Newsletter channel permissions of the groups
+        // Newsletter channel permissions of the groups. The field is a text
+        // column, so the database returns a comma-separated string.
         foreach ($backendUserAuthentication->userGroups as $group) {
-            if (isset($group['universal_messenger_channels'])) {
+            if (is_array($group) && is_string($group['universal_messenger_channels'] ?? null)) {
                 $newsletterChannelIds .= ',' . $group['universal_messenger_channels'];
             }
         }
 
         // Newsletter channel permissions of the user record
-        if ($backendUserAuthentication->user['universal_messenger_channels'] ?? false) {
-            $newsletterChannelIds .= ',' . $backendUserAuthentication->user['universal_messenger_channels'];
+        $userChannelIds = $backendUserAuthentication->user['universal_messenger_channels'] ?? '';
+
+        if (is_string($userChannelIds) && ($userChannelIds !== '')) {
+            $newsletterChannelIds .= ',' . $userChannelIds;
         }
 
         // Make the IDs unique
@@ -379,6 +380,19 @@ class UniversalMessengerController extends AbstractBaseController implements Log
         $newsletterChannelIds = array_unique($newsletterChannelIds);
 
         return array_values($newsletterChannelIds);
+    }
+
+    /**
+     * Returns the value of the submit button. A value that is no string
+     * (e.g. "send[]=live") is as invalid as a missing one.
+     *
+     * @return string|null
+     */
+    private function getSendArgument(): ?string
+    {
+        $send = $this->request->hasArgument('send') ? $this->request->getArgument('send') : null;
+
+        return is_string($send) ? $send : null;
     }
 
     /**
@@ -397,9 +411,11 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             return $this->forwardFlashMessage('error.sendNotConfirmed');
         }
 
+        $send = $this->getSendArgument();
+
         // Check if the submitted request is valid
         if (!$newsletterChannel instanceof NewsletterChannel
-            || !$this->request->hasArgument('send')
+            || $send === null
         ) {
             return $this->forwardFlashMessage('error.invalidRequest');
         }
@@ -431,7 +447,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
 
             $site                = $this->siteFinder->getSiteByPageId($this->pageId);
             $newsletterContent   = $this->newsletterRenderService->renderNewsletterPage($newsletterUrl);
-            $newsletterType      = strtoupper((string) $this->request->getArgument('send'));
+            $newsletterType      = strtoupper($send);
             $newsletterChannelId = $newsletterChannel->getChannelId();
 
             if ($newsletterType === self::NEWSLETTER_SEND_TYPE_TEST) {
@@ -551,7 +567,7 @@ class UniversalMessengerController extends AbstractBaseController implements Log
             $severity = ContextualFeedbackSeverity::OK;
         }
 
-        $this->moduleTemplate->addFlashMessage(
+        $this->moduleTemplate()->addFlashMessage(
             $message,
             $this->translate('common.universalMessenger'),
             $severity,

@@ -119,6 +119,34 @@ final class PageContentPreviewRenderingEventListenerTest extends FunctionalTestC
         );
     }
 
+    /**
+     * Hand-made FlexForm XML can turn the replacement text into a list; it
+     * then counts as no text instead of being rendered as "Array".
+     */
+    #[Test]
+    public function rendersAnEmptyReplacementTextWhenTheFlexFormValueIsAList(): void
+    {
+        $event = $this->createEvent(
+            'tt_content',
+            [
+                'CType'       => 'control_structure',
+                'bodytext'    => 'Shown to subscribers of the newsletter list',
+                'pi_flexform' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>'
+                    . '<T3FlexForms><data><sheet index="sDEF"><language index="lDEF">'
+                    . '<field index="settings.replacementBodyText"><value index="vDEF" type="array">'
+                    . '<numIndex index="0">Shown to everybody else</numIndex>'
+                    . '</value></field></language></sheet></data></T3FlexForms>',
+            ],
+        );
+
+        $this->invokeListener($event);
+
+        self::assertMatchesRegularExpression(
+            '#<strong>Alternative text</strong>\s*</div>\s*<div>\s*</div>#',
+            (string) $event->getPreviewContent(),
+        );
+    }
+
     #[Test]
     public function leavesOtherContentElementTypesUntouched(): void
     {

@@ -65,7 +65,7 @@ Layer rules (enforced by PHPat, see `../docs/ARCHITECTURE.md`): nothing depends 
 |------|---------|
 | Lint | `composer ci:test:php:lint` |
 | Code style check / fix | `composer ci:test:php:cgl` / `composer ci:cgl` |
-| PHPStan (level 8 + PHPat) | `composer ci:test:php:phpstan` |
+| PHPStan (level 10 + PHPat) | `composer ci:test:php:phpstan` |
 | Rector / Fractor dry-run | `composer ci:test:php:rector` / `composer ci:test:php:fractor` |
 | Unit / Functional tests | `composer ci:test:php:unit` / `composer ci:test:php:functional` |
 | Everything except functional | `composer ci:test` |

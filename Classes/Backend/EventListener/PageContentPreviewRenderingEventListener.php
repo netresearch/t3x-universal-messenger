@@ -61,35 +61,56 @@ final readonly class PageContentPreviewRenderingEventListener
             return;
         }
 
-        $flexformData = $this->flexFormTools
-            ->convertFlexFormContentToArray($record->getRawRecord()?->get('pi_flexform') ?? '');
+        // Both are text columns, whose values the database returns as strings.
+        $flexForm = $record->getRawRecord()?->get('pi_flexform') ?? '';
+        $bodyText = $record->get('bodytext');
 
-        $bodyText            = $this->renderText((string) $record->get('bodytext'));
-        $replacementBodyText = $this->renderText((string) ($flexformData['settings']['replacementBodyText'] ?? ''));
+        $flexformData = $this->flexFormTools
+            ->convertFlexFormContentToArray(is_string($flexForm) ? $flexForm : '');
+
+        $bodyText            = $this->renderText(is_string($bodyText) ? $bodyText : '');
+        $replacementBodyText = $this->renderText($this->getReplacementBodyText($flexformData));
 
         // Create preview output
         $event->setPreviewContent(
             <<<HTML
-<div>
-    <div>
-        <div style="margin: 20px 0 10px 0;">
-            <strong>{$this->translate('content_element.control_structure.bodytext')}</strong>
-        </div>
-        <div>
-            {$bodyText}
-        </div>
-    </div>
-    <div>
-        <div style="margin: 20px 0 10px 0;">
-            <strong>{$this->translate('content_element.control_structure.flexform.replacementBodyText')}</strong>
-        </div>
-        <div>
-            {$replacementBodyText}
-        </div>
-    </div>
-</div>
-HTML
+                <div>
+                    <div>
+                        <div style="margin: 20px 0 10px 0;">
+                            <strong>{$this->translate('content_element.control_structure.bodytext')}</strong>
+                        </div>
+                        <div>
+                            {$bodyText}
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin: 20px 0 10px 0;">
+                            <strong>{$this->translate('content_element.control_structure.flexform.replacementBodyText')}</strong>
+                        </div>
+                        <div>
+                            {$replacementBodyText}
+                        </div>
+                    </div>
+                </div>
+                HTML,
         );
+    }
+
+    /**
+     * Returns the replacement text from the FlexForm settings. A value that
+     * is not scalar, e.g. a nested list in hand-made FlexForm XML, counts as
+     * no text.
+     *
+     * @param array<array-key, mixed> $flexformData
+     *
+     * @return string
+     */
+    private function getReplacementBodyText(array $flexformData): string
+    {
+        $settings            = $flexformData['settings'] ?? [];
+        $replacementBodyText = is_array($settings) ? ($settings['replacementBodyText'] ?? '') : '';
+
+        return is_scalar($replacementBodyText) ? (string) $replacementBodyText : '';
     }
 
     /**

@@ -60,7 +60,9 @@ final class ControlStructureProcessorTest extends FunctionalTestCase
             ['settings' => ['replacementBodyText' => 'Shown when no content matches']],
             $processedData['flexformConfiguration'],
         );
-        self::assertSame(7, $processedData['data']['uid']);
+        $data = $processedData['data'] ?? null;
+        self::assertIsArray($data);
+        self::assertSame(7, $data['uid'] ?? null);
     }
 
     #[Test]

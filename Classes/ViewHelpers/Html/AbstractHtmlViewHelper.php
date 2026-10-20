@@ -71,7 +71,15 @@ abstract class AbstractHtmlViewHelper extends AbstractViewHelper
         );
 
         if ($this->configuration->hasTypoScriptSetting('view/templateRootPaths')) {
-            foreach ($this->configuration->getTypoScriptSetting('view/templateRootPaths') as $templateRootPath) {
+            $configuredTemplateRootPaths = $this->configuration->getTypoScriptSetting('view/templateRootPaths');
+
+            // A setting that is no list of paths adds no path, and so does
+            // an entry that is no path (e.g. a nested list).
+            foreach (is_array($configuredTemplateRootPaths) ? $configuredTemplateRootPaths : [] as $templateRootPath) {
+                if (!is_scalar($templateRootPath)) {
+                    continue;
+                }
+
                 $templateRootPaths[] = GeneralUtility::getFileAbsFileName(rtrim((string) $templateRootPath, '/') . '/ViewHelpers/');
             }
         }
