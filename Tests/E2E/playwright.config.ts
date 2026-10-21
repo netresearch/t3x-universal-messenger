@@ -22,7 +22,7 @@ export default defineConfig({
       // logins of one user race in TYPO3's Registry::set()
       // (netresearch/t3x-rte_ckeditor_image#926).
       name: 'setup',
-      testMatch: /.*\.setup\.ts/,
+      testMatch: /\.setup\.ts$/,
       use: { ...devices['Desktop Chrome'] },
     },
     {
