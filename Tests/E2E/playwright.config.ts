@@ -18,8 +18,17 @@ export default defineConfig({
   },
   projects: [
     {
+      // One backend login before the workers start: the first concurrent
+      // logins of one user race in TYPO3's Registry::set()
+      // (netresearch/t3x-rte_ckeditor_image#926).
+      name: 'setup',
+      testMatch: /\.setup\.ts$/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
     },
   ],
 });
