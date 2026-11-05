@@ -2,6 +2,74 @@
 SPDX-FileCopyrightText: Netresearch DTT GmbH
 SPDX-License-Identifier: LicenseRef-Netresearch-Restricted-Use
 -->
+# 3.1.0
+
+## BREAKING
+
+- 78261e5 Require TYPO3 14.3 LTS (#185). The composer and TER constraints
+  no longer accept the non-LTS releases 14.0 to 14.2; installations on
+  those releases keep 3.0.5 and receive no newer version.
+
+## FEATURES
+
+- ec7c021 The backend module sits under the core "Content" group instead
+  of a top-level "Netresearch" group (#203). Identifier, path and the
+  page-tree navigation are unchanged, so backend group permissions and
+  bookmarks keep working. The module, extension and channel record icons
+  are redrawn in the flat TYPO3 v14 style; the module icon follows the
+  light and dark backend scheme.
+
+## SECURITY
+
+- bfefab0 The newsletter preview plugin renders only for the page it is
+  routed to and only with a token the backend module adds to the preview
+  URL; other requests get an empty 403 (#190).
+- 861ee63 The newsletter self-fetch re-checks the request's host against
+  `trustedHostsPattern` before it resolves a host-less page URI, fails
+  closed on any error in that check, and no longer follows HTTP redirects
+  (#176).
+
+## FIXES
+
+- aaab185 A classic site without the example newsletter template shows a
+  message instead of a Fluid exception in the preview, and the example
+  template's "PREVIEW" text no longer reaches recipients (GH-141, #172).
+- db0c567 Decoding `%7B`/`%7D` in the newsletter response handles each
+  brace on its own and leaves other percent-encoded content alone (GH-140,
+  #173).
+- 7827b00 Dispatch works on sites with a relative base (`base: /`): a
+  host-less page URI is resolved against the request (#175).
+- 68c1da5 The channel import keeps the creation date of existing channels
+  (#178).
+- bfefab0 The page module shows the texts of a control structure element
+  as plain text (#190).
+- acc56e4 A send argument that is not a string is rejected; TypoScript and
+  FlexForm values of the wrong kind are skipped; scalar extension settings
+  are returned as strings; a page ID or language given as an array is
+  ignored; a container template that is not a string counts as not
+  configured (#197).
+
+## MISC
+
+- 66ac1a5 One extension title, "Universal Messenger", in TER, the backend
+  and the documentation (#191).
+- e7a1434 The icon letters drew in the scheme colour (#186); #203 then
+  replaced these icons.
+- acc56e4 Rector, PHPStan (now level 10) and PHP-CS-Fixer configuration
+  come from netresearch/typo3-ci-workflows v2.0.4 (#197).
+- 024621d, bfefab0 Tests cover the dispatch action, the preview and the
+  backend listeners; statement coverage of `Classes/` rose from 45.8 % to
+  94.9 % (#179, #190).
+- a6a602a, ce63611, 6c8372e OpenSSF best-practice evidence (#183, #184);
+  SPDX notices and a security assurance case (#188).
+- CI template syncs, a TER `external_manual` sync workflow, Dependabot
+  removed in favour of Renovate, and dependency updates (#167 to #202).
+
+## Contributors
+
+- Rico Sonntag
+- Sebastian Mendel
+
 # 3.0.5
 
 ## SECURITY
