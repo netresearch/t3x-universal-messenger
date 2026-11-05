@@ -37,6 +37,22 @@ final class BackendIconRenderingTest extends FunctionalTestCase
         'netresearch/universal-messenger',
     ];
 
+    /**
+     * The module menu renders the module icon with the "inline" markup, so
+     * the envelope follows the scheme and the flap keeps the accent.
+     */
+    #[Test]
+    public function moduleIconInlineMarkupDrawsTheGlyphInCurrentColorAndTheAccent(): void
+    {
+        $icon = $this->get(IconFactory::class)->getIcon('extension-netresearch-universal-messenger', IconSize::MEDIUM);
+
+        $markup = $icon->getAlternativeMarkup('inline');
+
+        self::assertStringContainsString('<svg', $markup);
+        self::assertStringContainsString('fill="currentColor"', $markup);
+        self::assertStringContainsString('fill="var(--nr-icon-accent, #2F99A4)"', $markup);
+    }
+
     #[Test]
     public function channelRecordIconRendersAsSpriteUseInBothMarkups(): void
     {

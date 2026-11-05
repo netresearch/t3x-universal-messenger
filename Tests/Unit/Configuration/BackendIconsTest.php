@@ -18,6 +18,7 @@ use DOMDocument;
 use DOMElement;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -27,25 +28,37 @@ use function is_array;
 
 /**
  * Pins the backend icons that must follow, or survive, the backend colour
- * scheme: the channel record icon and the Extension Manager logo.
+ * scheme: the module icon, the channel record icon and the Extension Manager
+ * tile. They follow the flat TYPO3 v14 style the Netresearch extensions
+ * share.
  */
 #[CoversNothing]
 final class BackendIconsTest extends UnitTestCase
 {
-    /**
-     * Extension.svg is the Netresearch [n] logo as the netresearch-branding
-     * skill specifies it: frame #2F99A4, letter #585961. The Extension
-     * Manager shows it as <img>, where currentColor cannot reach the SVG, so
-     * it carries fixed brand colours.
-     */
-    private const EXTENSION_SVG_SHA256 = '43f476aca5ae5e62c9cc59fd178fd84c006de541893b7f7335909587d892504f';
+    private const ICON_ACCENT = 'var(--nr-icon-accent, #2F99A4)';
 
     /**
-     * The channel record icon is a sprite: the [n] logo with the frame in the
-     * brand teal and the letter in currentColor inside <symbol>, so core's
-     * <svg><use> markup lets the letter take the surrounding text colour.
+     * Extension.svg is the extension tile: a rounded #2F99A4 tile, the
+     * envelope in white and one #FF4D00 accent dot. The Extension Manager
+     * shows it as <img>, where currentColor cannot reach the SVG, so it
+     * carries fixed colours. It replaces the [n] logo, as in nr_textdb.
      */
-    private const RECORD_SVG_SHA256 = 'ce34f918158de1b9d155523ba67d1ddd67d94fb0169c144fafcb3f744394ca7c';
+    private const EXTENSION_SVG_SHA256 = '5fa628be142cfe50298c6c93de6a913684292377e6dd928e106aa5b575ba0220';
+
+    /**
+     * Module.svg is the envelope in currentColor with its flap in the shared
+     * accent, so the module menu can draw it in both colour schemes.
+     */
+    private const MODULE_SVG_SHA256 = 'd27d55817c96f164763a85d89a6540b201be6803fc270fa7422c36ab0fe113de';
+
+    /**
+     * The channel record icon is a sprite: a broadcast glyph inside <symbol>,
+     * both arcs in currentColor and the source dot in the accent, so core's
+     * <svg><use> markup lets it take the surrounding text colour. The arcs
+     * stay at full opacity: at 16 px in the record list a faded outer arc
+     * was hard to see.
+     */
+    private const RECORD_SVG_SHA256 = '3ec463118bd28f4ddb77e2a24209a7a804b4443d87326650a62c3b67f66ea802';
 
     private const RECORD_TABLE = 'tx_universalmessenger_domain_model_newsletterchannel';
 
@@ -63,6 +76,13 @@ final class BackendIconsTest extends UnitTestCase
 
         self::assertTrue(is_array($icons));
         self::assertArrayNotHasKey('extension-netresearch-module', $icons);
+        self::assertSame(
+            [
+                'provider' => SvgIconProvider::class,
+                'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg',
+            ],
+            $icons['extension-netresearch-universal-messenger'] ?? null,
+        );
         self::assertSame(
             [
                 'provider' => SvgSpriteIconProvider::class,
@@ -89,18 +109,29 @@ final class BackendIconsTest extends UnitTestCase
     }
 
     #[Test]
-    public function extensionLogoIsTheBrandLogoInFixedBrandColours(): void
+    public function extensionIconIsTheWhiteEnvelopeOnTheBrandTile(): void
     {
         $file = self::ICON_DIR . 'Extension.svg';
         $svg  = $this->load($file);
 
-        self::assertSame(['#2F99A4', '#585961'], $this->pathFills($svg));
+        self::assertSame(['#2F99A4', '#FFFFFF', '#FFFFFF'], $this->pathFills($svg));
         self::assertSame(0, $svg->getElementsByTagName('style')->length);
         self::assertSame(self::EXTENSION_SVG_SHA256, hash_file('sha256', $file));
     }
 
     #[Test]
-    public function recordIconIsASpriteWithACurrentColorLetter(): void
+    public function moduleIconIsTheEnvelopeInCurrentColorAndTheAccent(): void
+    {
+        $file = self::ICON_DIR . 'Module.svg';
+        $svg  = $this->load($file);
+
+        self::assertSame(['currentColor', self::ICON_ACCENT], $this->pathFills($svg));
+        self::assertSame(0, $svg->getElementsByTagName('style')->length);
+        self::assertSame(self::MODULE_SVG_SHA256, hash_file('sha256', $file));
+    }
+
+    #[Test]
+    public function recordIconIsASpriteInCurrentColorAndTheAccent(): void
     {
         $file = self::ICON_DIR . self::RECORD_TABLE . '.svg';
         $svg  = $this->load($file);
@@ -111,7 +142,7 @@ final class BackendIconsTest extends UnitTestCase
         self::assertInstanceOf(DOMElement::class, $symbol);
         self::assertSame(self::RECORD_TABLE, $symbol->getAttribute('id'));
 
-        self::assertSame(['#2F99A4', 'currentColor'], $this->pathFills($svg));
+        self::assertSame(['currentColor', 'currentColor', self::ICON_ACCENT], $this->pathFills($svg));
         self::assertSame(0, $svg->getElementsByTagName('style')->length);
         self::assertSame(self::RECORD_SVG_SHA256, hash_file('sha256', $file));
     }

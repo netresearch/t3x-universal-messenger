@@ -12,14 +12,16 @@
 
 declare(strict_types=1);
 
-use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 
 return [
+    // The module menu renders the module icon inline, so its currentColor
+    // glyph and its var(--nr-icon-accent) accent follow the backend colour
+    // scheme.
     'extension-netresearch-universal-messenger' => [
-        'provider' => BitmapIconProvider::class,
-        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.png',
+        'provider' => SvgIconProvider::class,
+        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg',
     ],
     // Record icons are sprite icons, the way core registers its own: their
     // markup is <svg><use>, which inherits currentColor. An SvgIconProvider
