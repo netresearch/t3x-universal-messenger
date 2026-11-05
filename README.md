@@ -314,7 +314,7 @@ This results in an URL like `https://newsletter.example.org/unsubscribe?identifi
 
 
 ### Backend module
-To open the backend module, click on the new entry `Universal Messenger` below the `Netresearch` group on the left side navigation.
+To open the backend module, click on the new entry `Universal Messenger` below the `Content` group on the left side navigation.
 
 ![Backend module](Documentation/Module-Step1.png)
 

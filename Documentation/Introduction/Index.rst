@@ -60,8 +60,8 @@ Requirements
 
     ..  card:: Backend module access
 
-        A backend user with access to the :guilabel:`Netresearch` module
-        group and rights on the relevant newsletter channels, see
+        A backend user with access to the :guilabel:`Universal Messenger`
+        module and rights on the relevant newsletter channels, see
         :ref:`configuration-backend-user`.
 
 ..  _introduction-version-matrix:

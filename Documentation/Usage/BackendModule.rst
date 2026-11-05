@@ -10,11 +10,11 @@ Backend module
 ==============
 
 Open the backend module by clicking :guilabel:`Universal Messenger` under
-the :guilabel:`Netresearch` group in the left-hand navigation.
+the :guilabel:`Content` group in the left-hand navigation.
 
 ..  figure:: /Module-Step1.png
     :alt: Backend module navigation entry "Universal Messenger" under the
-        Netresearch group
+        Content group
     :class: with-border with-shadow
     :zoom: lightbox
 

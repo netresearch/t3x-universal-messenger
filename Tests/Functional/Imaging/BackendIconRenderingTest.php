@@ -38,20 +38,19 @@ final class BackendIconRenderingTest extends FunctionalTestCase
     ];
 
     /**
-     * The module menu renders the group icon with the "inline" markup, so
-     * the letter of the [n] logo follows the scheme while the frame keeps
-     * the brand teal.
+     * The module menu renders the module icon with the "inline" markup, so
+     * the envelope follows the scheme and the flap keeps the accent.
      */
     #[Test]
-    public function moduleGroupIconInlineMarkupDrawsTheLetterInCurrentColor(): void
+    public function moduleIconInlineMarkupDrawsTheGlyphInCurrentColorAndTheAccent(): void
     {
-        $icon = $this->get(IconFactory::class)->getIcon('extension-netresearch-module', IconSize::MEDIUM);
+        $icon = $this->get(IconFactory::class)->getIcon('extension-netresearch-universal-messenger', IconSize::MEDIUM);
 
         $markup = $icon->getAlternativeMarkup('inline');
 
         self::assertStringContainsString('<svg', $markup);
         self::assertStringContainsString('fill="currentColor"', $markup);
-        self::assertStringContainsString('fill="#2F99A4"', $markup);
+        self::assertStringContainsString('fill="var(--nr-icon-accent, #2F99A4)"', $markup);
     }
 
     #[Test]
