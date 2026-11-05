@@ -17,8 +17,9 @@ use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 
 return [
     // The module menu renders the module icon inline, so its currentColor
-    // glyph and its var(--nr-icon-accent) accent follow the backend colour
-    // scheme.
+    // glyph follows the backend colour scheme. The accent is
+    // var(--nr-icon-accent) with the brand teal as fallback; no stylesheet
+    // sets that property yet.
     'extension-netresearch-universal-messenger' => [
         'provider' => SvgIconProvider::class,
         'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg',
