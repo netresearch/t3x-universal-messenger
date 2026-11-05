@@ -37,23 +37,6 @@ final class BackendIconRenderingTest extends FunctionalTestCase
         'netresearch/universal-messenger',
     ];
 
-    /**
-     * The module menu renders the group icon with the "inline" markup, so
-     * the letter of the [n] logo follows the scheme while the frame keeps
-     * the brand teal.
-     */
-    #[Test]
-    public function moduleGroupIconInlineMarkupDrawsTheLetterInCurrentColor(): void
-    {
-        $icon = $this->get(IconFactory::class)->getIcon('extension-netresearch-module', IconSize::MEDIUM);
-
-        $markup = $icon->getAlternativeMarkup('inline');
-
-        self::assertStringContainsString('<svg', $markup);
-        self::assertStringContainsString('fill="currentColor"', $markup);
-        self::assertStringContainsString('fill="#2F99A4"', $markup);
-    }
-
     #[Test]
     public function channelRecordIconRendersAsSpriteUseInBothMarkups(): void
     {

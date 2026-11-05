@@ -16,15 +16,11 @@ use Netresearch\UniversalMessenger\Controller\UniversalMessengerController;
 
 // Caution, variable name must not exist within \TYPO3\CMS\Core\Package\AbstractServiceProvider::configureBackendModules
 return [
-    'netresearch_module' => [
-        'labels'         => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang_mod.xlf',
-        'iconIdentifier' => 'extension-netresearch-module',
-        'position'       => [
-            'after' => 'web',
-        ],
-    ],
+    // Editors send newsletter pages from here, so the module sits in the core
+    // "Content" group next to the other page-tree modules. The identifier and
+    // path stay unchanged: group permissions and bookmarks refer to them.
     'netresearch_universal_messenger' => [
-        'parent'                                   => 'netresearch_module',
+        'parent'                                   => 'content',
         'position'                                 => [],
         'access'                                   => 'user',
         'iconIdentifier'                           => 'extension-netresearch-universal-messenger',
