@@ -16,17 +16,18 @@ use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 
 return [
-    // The module menu renders the module icon inline, so its currentColor
-    // glyph follows the backend colour scheme. The accent is
+    // The module icon and the record icons are sprite icons, the way core
+    // registers its own module and record icons: both their default and
+    // their inline markup are <svg><use>, which inherits currentColor, so the
+    // glyph follows the backend colour scheme in the module menu and in the
+    // About module alike. An SvgIconProvider icon is rendered as <img> by
+    // default, where currentColor cannot reach the SVG. The accent is
     // var(--nr-icon-accent) with the brand teal as fallback; no stylesheet
     // sets that property yet.
     'extension-netresearch-universal-messenger' => [
-        'provider' => SvgIconProvider::class,
-        'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg',
+        'provider' => SvgSpriteIconProvider::class,
+        'sprite'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg#extension-netresearch-universal-messenger',
     ],
-    // Record icons are sprite icons, the way core registers its own: their
-    // markup is <svg><use>, which inherits currentColor. An SvgIconProvider
-    // icon is rendered as <img>, where currentColor cannot reach the SVG.
     'universal-messenger-record-newsletterchannel' => [
         'provider' => SvgSpriteIconProvider::class,
         'sprite'   => 'EXT:universal_messenger/Resources/Public/Icons/tx_universalmessenger_domain_model_newsletterchannel.svg#tx_universalmessenger_domain_model_newsletterchannel',

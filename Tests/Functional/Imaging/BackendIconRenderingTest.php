@@ -16,6 +16,7 @@ namespace Netresearch\UniversalMessenger\Tests\Functional\Imaging;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -28,6 +29,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 #[CoversNothing]
 final class BackendIconRenderingTest extends FunctionalTestCase
 {
+    private const MODULE_ICON = 'extension-netresearch-universal-messenger';
+
     private const RECORD_TABLE = 'tx_universalmessenger_domain_model_newsletterchannel';
 
     /**
@@ -38,19 +41,16 @@ final class BackendIconRenderingTest extends FunctionalTestCase
     ];
 
     /**
-     * The module menu renders the module icon with the "inline" markup, so
-     * the envelope follows the scheme and the flap keeps the accent.
+     * The module menu renders the module icon with the "inline" markup, the
+     * About module with the default markup. Both must be <svg><use>, so the
+     * envelope follows the scheme and the flap keeps the accent.
      */
     #[Test]
-    public function moduleIconInlineMarkupDrawsTheGlyphInCurrentColorAndTheAccent(): void
+    public function moduleIconRendersAsSpriteUseInBothMarkups(): void
     {
-        $icon = $this->get(IconFactory::class)->getIcon('extension-netresearch-universal-messenger', IconSize::MEDIUM);
+        $icon = $this->get(IconFactory::class)->getIcon(self::MODULE_ICON, IconSize::MEDIUM);
 
-        $markup = $icon->getAlternativeMarkup('inline');
-
-        self::assertStringContainsString('<svg', $markup);
-        self::assertStringContainsString('fill="currentColor"', $markup);
-        self::assertStringContainsString('fill="var(--nr-icon-accent, #2F99A4)"', $markup);
+        $this->assertSpriteUseInBothMarkups($icon, 'Module', self::MODULE_ICON);
     }
 
     #[Test]
@@ -60,11 +60,16 @@ final class BackendIconRenderingTest extends FunctionalTestCase
 
         self::assertSame('universal-messenger-record-newsletterchannel', $icon->getIdentifier());
 
+        $this->assertSpriteUseInBothMarkups($icon, self::RECORD_TABLE, self::RECORD_TABLE);
+    }
+
+    private function assertSpriteUseInBothMarkups(Icon $icon, string $file, string $symbol): void
+    {
         foreach (['default' => $icon->render(), 'inline' => $icon->render('inline')] as $variant => $markup) {
             self::assertStringNotContainsString('<img', $markup, $variant . ' markup');
             self::assertMatchesRegularExpression(
                 // TYPO3 inserts a cache-busting query string before the fragment.
-                '/<use [^>]*href="[^"]*' . self::RECORD_TABLE . '\.svg(\?[^"#]*)?#' . self::RECORD_TABLE . '"/',
+                '/<use [^>]*href="[^"]*\/' . $file . '\.svg(\?[^"#]*)?#' . $symbol . '"/',
                 $markup,
                 $variant . ' markup',
             );
