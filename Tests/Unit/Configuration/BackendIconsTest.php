@@ -18,7 +18,6 @@ use DOMDocument;
 use DOMElement;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgSpriteIconProvider;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -46,10 +45,13 @@ final class BackendIconsTest extends UnitTestCase
     private const EXTENSION_SVG_SHA256 = '5fa628be142cfe50298c6c93de6a913684292377e6dd928e106aa5b575ba0220';
 
     /**
-     * Module.svg is the envelope in currentColor with its flap in the shared
-     * accent, so the module menu can draw it in both colour schemes.
+     * Module.svg is a sprite: the envelope in currentColor with its flap in
+     * the shared accent, inside <symbol>, so core's <svg><use> markup draws
+     * it in both colour schemes, in the module menu and in the About module.
      */
-    private const MODULE_SVG_SHA256 = 'd27d55817c96f164763a85d89a6540b201be6803fc270fa7422c36ab0fe113de';
+    private const MODULE_SVG_SHA256 = '2ace82582e8909e75f22d396023338785dda29038713f72c9afda821eb59081d';
+
+    private const MODULE_ICON = 'extension-netresearch-universal-messenger';
 
     /**
      * The channel record icon is a sprite: a broadcast glyph inside <symbol>,
@@ -78,10 +80,10 @@ final class BackendIconsTest extends UnitTestCase
         self::assertArrayNotHasKey('extension-netresearch-module', $icons);
         self::assertSame(
             [
-                'provider' => SvgIconProvider::class,
-                'source'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg',
+                'provider' => SvgSpriteIconProvider::class,
+                'sprite'   => 'EXT:universal_messenger/Resources/Public/Icons/Module.svg#' . self::MODULE_ICON,
             ],
-            $icons['extension-netresearch-universal-messenger'] ?? null,
+            $icons[self::MODULE_ICON] ?? null,
         );
         self::assertSame(
             [
@@ -120,12 +122,18 @@ final class BackendIconsTest extends UnitTestCase
     }
 
     #[Test]
-    public function moduleIconIsTheEnvelopeInCurrentColorAndTheAccent(): void
+    public function moduleIconIsASpriteInCurrentColorAndTheAccent(): void
     {
         $file = self::ICON_DIR . 'Module.svg';
         $svg  = $this->load($file);
 
-        self::assertSame(['currentColor', self::ICON_ACCENT], $this->pathFills($svg));
+        $symbols = $svg->getElementsByTagName('symbol');
+        self::assertSame(1, $symbols->length);
+        $symbol = $symbols->item(0);
+        self::assertInstanceOf(DOMElement::class, $symbol);
+        self::assertSame(self::MODULE_ICON, $symbol->getAttribute('id'));
+
+        self::assertSame(['currentColor', self::ICON_ACCENT], $this->pathFills($symbol));
         self::assertSame(0, $svg->getElementsByTagName('style')->length);
         self::assertSame(self::MODULE_SVG_SHA256, hash_file('sha256', $file));
     }
