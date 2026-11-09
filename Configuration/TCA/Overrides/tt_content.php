@@ -12,6 +12,7 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Schema\Struct\SelectItem;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
@@ -46,12 +47,13 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::addTcaSelectItem(
         'tt_content',
         'CType',
-        [
-            'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure',
-            'value' => 'control_structure',
-            'icon'  => 'content-universalmessenger-controlstructure',
-            'group' => 'universal_messenger',
-        ],
+        new SelectItem(
+            type: 'select',
+            label: 'LLL:EXT:universal_messenger/Resources/Private/Language/Backend.xlf:content_element.control_structure',
+            value: 'control_structure',
+            icon: 'content-universalmessenger-controlstructure',
+            group: 'universal_messenger',
+        ),
     );
 
     ArrayUtility::mergeRecursiveWithOverrule(

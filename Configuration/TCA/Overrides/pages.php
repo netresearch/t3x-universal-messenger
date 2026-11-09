@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 use Netresearch\UniversalMessenger\Configuration;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Schema\Struct\SelectItem;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,12 +34,13 @@ call_user_func(static function (): void {
     ExtensionManagementUtility::addTcaSelectItem(
         'pages',
         'doktype',
-        [
-            'label' => 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.page_type_newsletter',
-            'value' => $newsletterPageDokType,
-            'icon'  => 'universal-messenger-dok-type-newsletter',
-            'group' => 'default',
-        ],
+        new SelectItem(
+            type: 'select',
+            label: 'LLL:EXT:universal_messenger/Resources/Private/Language/locallang.xlf:pages.page_type_newsletter',
+            value: $newsletterPageDokType,
+            icon: 'universal-messenger-dok-type-newsletter',
+            group: 'default',
+        ),
     );
 
     // The pages TCA of the core: one "types" entry per doktype, each with
