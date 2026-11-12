@@ -26,7 +26,7 @@ GitHub Actions CI for the extension. Every workflow here is a **thin caller** of
 
 <!-- AGENTS-GENERATED:START golden-samples -->
 ## Workflow files
-- 9 workflows, all `uses:`-callers — no locally implemented job steps except the `gate` job in `checks.yml`
+- 9 workflows, all `uses:`-callers — no locally implemented job steps except the `gate` and `supersede` jobs in `checks.yml` (`supersede` cancels the Checks runs of earlier head commits of a pull request and is intentionally not in `gate.needs`)
 - The extension-specific part is exactly `ci.yml`'s `with:` block; everything else should match the org template (`check-template-drift.yml` enforces this)
 <!-- AGENTS-GENERATED:END setup -->
 
@@ -47,7 +47,7 @@ No local composite actions, no repo-level PR template (the org-level template fr
 - **Thin callers only**: change shared behavior upstream in `netresearch/typo3-ci-workflows` / `netresearch/.github`, not here
 - **Explicit permissions** on every job; top-level `permissions: {}` or `contents: read` — never rely on defaults
 - **Every job added to `checks.yml` MUST also be added to `gate.needs`** — the ruleset requires only `All security checks`, so a job missing from the gate cannot block a merge (see the comment block in `checks.yml`)
-- Local `run:` steps (only the gate) pin third-party actions to full commit SHA
+- Local `run:` steps (only the gate and `supersede`) pin third-party actions to full commit SHA
 - `ci.yml` carries the `# Per-extension test matrix (intentional-drift)` marker — keep it, the drift check reads it
 <!-- AGENTS-GENERATED:END code-style -->
 
