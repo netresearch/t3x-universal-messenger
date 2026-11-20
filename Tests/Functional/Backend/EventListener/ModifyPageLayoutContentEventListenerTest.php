@@ -18,7 +18,9 @@ use Netresearch\UniversalMessenger\Backend\EventListener\ModifyPageLayoutContent
 use Netresearch\UniversalMessenger\Configuration;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Backend\Context\PageContext;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
+use TYPO3\CMS\Backend\Domain\Model\Language\PageLanguageInformation;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -32,6 +34,8 @@ use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Site\Entity\NullSite;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -183,9 +187,28 @@ final class ModifyPageLayoutContentEventListenerTest extends FunctionalTestCase
             $this->get(ComponentFactory::class),
         );
 
-        $listener(new ModifyPageLayoutContentEvent($request, $moduleTemplate));
+        $listener(new ModifyPageLayoutContentEvent($request, $moduleTemplate, $this->createPageContext()));
 
         return $moduleTemplate;
+    }
+
+    /**
+     * TYPO3 14.3.12 passes the page module's PageContext as the third
+     * constructor argument of the event. The listener does not read it, so a
+     * context without a page record is enough here.
+     */
+    private function createPageContext(): PageContext
+    {
+        return new PageContext(
+            pageId: 0,
+            pageRecord: null,
+            site: new NullSite(),
+            rootLine: [],
+            pageTsConfig: [],
+            selectedLanguageIds: [0],
+            languageInformation: new PageLanguageInformation(0, [], [], [], [], false, []),
+            pagePermissions: new Permission(),
+        );
     }
 
     /**
