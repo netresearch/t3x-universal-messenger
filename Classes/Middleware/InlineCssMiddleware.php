@@ -127,7 +127,7 @@ class InlineCssMiddleware implements MiddlewareInterface
             }
         }
 
-        $content = HtmlNormalizer::fromHtml($content)->render();
+        $content = HtmlNormalizer::fromHtml($this->wrapFragmentInHtmlElement($content))->render();
 
         // Ensure content is not empty after normalization
         if ($content === '') {
@@ -144,6 +144,31 @@ class InlineCssMiddleware implements MiddlewareInterface
         return CssToAttributeConverter::fromDomDocument($domDocument)
             ->convertCssToVisualAttributes()
             ->render();
+    }
+
+    /**
+     * Wraps markup that has no <html> element into one, keeping a leading DOCTYPE, and any comments
+     * in front of it, outside the wrapper.
+     *
+     * Emogrifier puts its Content-Type meta tag in front of markup without an <html> element, so
+     * it lands before the DOCTYPE. libxml2 2.15 then drops that DOCTYPE and writes an HTML 4.0
+     * Transitional one instead. With an <html> element the meta tag goes inside it.
+     *
+     * @param non-empty-string $content
+     *
+     * @return non-empty-string
+     */
+    private function wrapFragmentInHtmlElement(string $content): string
+    {
+        if (preg_match('/<html[\s>]/i', $content) === 1) {
+            return $content;
+        }
+
+        if (preg_match('/^(?:\s|<!--.*?-->)*<!DOCTYPE[^>]*>/is', $content, $matches) === 1) {
+            return $matches[0] . '<html>' . substr($content, strlen($matches[0])) . '</html>';
+        }
+
+        return '<html>' . $content . '</html>';
     }
 
     /**
