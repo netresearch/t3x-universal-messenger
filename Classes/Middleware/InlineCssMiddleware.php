@@ -147,7 +147,8 @@ class InlineCssMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Wraps markup that has no <html> element into one, keeping a leading DOCTYPE in front of it.
+     * Wraps markup that has no <html> element into one, keeping a leading DOCTYPE, and any comments
+     * in front of it, outside the wrapper.
      *
      * Emogrifier puts its Content-Type meta tag in front of markup without an <html> element, so
      * it lands before the DOCTYPE. libxml2 2.15 then drops that DOCTYPE and writes an HTML 4.0
@@ -163,7 +164,7 @@ class InlineCssMiddleware implements MiddlewareInterface
             return $content;
         }
 
-        if (preg_match('/^\s*<!DOCTYPE[^>]*>/i', $content, $matches) === 1) {
+        if (preg_match('/^(?:\s|<!--.*?-->)*<!DOCTYPE[^>]*>/is', $content, $matches) === 1) {
             return $matches[0] . '<html>' . substr($content, strlen($matches[0])) . '</html>';
         }
 

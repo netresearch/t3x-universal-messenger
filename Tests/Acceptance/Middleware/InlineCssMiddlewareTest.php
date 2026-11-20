@@ -175,6 +175,25 @@ final class InlineCssMiddlewareTest extends AbstractMiddlewareAcceptanceTestCase
         );
     }
 
+    /** Comments in front of the DOCTYPE stay in front of it, so the DOCTYPE still leads the document instead of landing inside the <html> wrapper. */
+    #[Test]
+    public function keepsCommentsBeforeTheDoctypeOutsideTheWrapper(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([$this->fixturePath()]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('<!-- Newsletter template -->' . "\n" . '<!DOCTYPE html><p>Hello</p>'),
+        );
+
+        self::assertSame(
+            '<!DOCTYPE html>' . "\n"
+            . '<!-- Newsletter template --><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>'
+            . '<body><p style="color: red;">Hello</p></body></html>' . "\n",
+            (string) $response->getBody(),
+        );
+    }
+
     /** A complete document is inlined as it is: its own <html> element and attributes stay, no second <html> element is wrapped around it. */
     #[Test]
     public function inlinesACompleteDocumentWithoutWrappingItAgain(): void
