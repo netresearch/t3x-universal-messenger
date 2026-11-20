@@ -156,7 +156,7 @@ final class InlineCssMiddlewareTest extends AbstractMiddlewareAcceptanceTestCase
         );
     }
 
-    /** A fragment that declares its own HTML5 DOCTYPE keeps it. Emogrifier would put its Content-Type meta tag in front of that DOCTYPE, and libxml2 2.14+ would then replace it with an HTML 4.0 Transitional one. */
+    /** A fragment that declares its own HTML5 DOCTYPE keeps it. Emogrifier would put its Content-Type meta tag in front of that DOCTYPE, and libxml2 2.15 would then replace it with an HTML 4.0 Transitional one. */
     #[Test]
     public function keepsTheHtml5DoctypeOfAFragmentThatDeclaresOne(): void
     {
