@@ -51,7 +51,7 @@ Requirements
 
     ..  card:: PHP
 
-        PHP 8.2 to 8.5.
+        PHP 8.2 to 8.6.
 
     ..  card:: Universal Messenger server
 
