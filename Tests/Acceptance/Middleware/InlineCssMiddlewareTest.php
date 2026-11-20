@@ -156,6 +156,44 @@ final class InlineCssMiddlewareTest extends AbstractMiddlewareAcceptanceTestCase
         );
     }
 
+    /** A fragment that declares its own HTML5 DOCTYPE keeps it. Emogrifier would put its Content-Type meta tag in front of that DOCTYPE, and libxml2 2.14+ would then replace it with an HTML 4.0 Transitional one. */
+    #[Test]
+    public function keepsTheHtml5DoctypeOfAFragmentThatDeclaresOne(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([$this->fixturePath()]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('<!DOCTYPE html><p>Hello</p>'),
+        );
+
+        self::assertSame(
+            '<!DOCTYPE html>' . "\n"
+            . '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>'
+            . '<body><p style="color: red;">Hello</p></body></html>' . "\n",
+            (string) $response->getBody(),
+        );
+    }
+
+    /** A complete document is inlined as it is: its own <html> element and attributes stay, no second <html> element is wrapped around it. */
+    #[Test]
+    public function inlinesACompleteDocumentWithoutWrappingItAgain(): void
+    {
+        $subject = new InlineCssMiddleware($this->createConfigurationStub([$this->fixturePath()]));
+
+        $response = $subject->process(
+            $this->createPreviewRequest(),
+            $this->createRequestHandlerReturning('<!DOCTYPE html>' . "\n" . '<html lang="en"><head><title>Newsletter</title></head><body><p>Hello</p></body></html>'),
+        );
+
+        self::assertSame(
+            '<!DOCTYPE html>' . "\n"
+            . '<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Newsletter</title></head>'
+            . '<body><p style="color: red;">Hello</p></body></html>' . "\n",
+            (string) $response->getBody(),
+        );
+    }
+
     /** Only the newsletter preview page type may be rewritten; every other page type's response must pass through untouched, even with CSS files configured. */
     #[Test]
     public function leavesContentUnchangedForAnyOtherPageType(): void
