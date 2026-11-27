@@ -27,6 +27,7 @@ TYPO3 v14 backend extension (`universal_messenger`) for sending newsletters thro
 | Unit tests | `composer ci:test:php:unit` |
 | Functional tests (needs DB; CI uses SQLite) | `composer ci:test:php:functional` |
 | All checks except functional | `composer ci:test` |
+| Changelog fragments | `composer ci:test:changelog` |
 <!-- AGENTS-GENERATED:END commands -->
 
 ## Response Style
@@ -122,6 +123,12 @@ Architecture: component map and dependency rules in `docs/ARCHITECTURE.md` — t
 - **Comprehension**: Understand the problem before submitting code. Read the linked issue, understand *why* the change is needed, not just *what* to change.
 - **Context**: Every PR must explain the trade-offs considered and link to the issue it addresses. Disclose AI assistance if the project requires it.
 - **Continuity**: Respond to review feedback. Drive-by PRs without follow-up will be closed.
+
+## Changelog
+
+- Changes are recorded in [`CHANGELOG.md`](CHANGELOG.md), [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) from the release after 3.1.0 on: `## [X.Y.Z] - YYYY-MM-DD` with `### Added`, `### Changed`, `### Deprecated`, `### Removed`, `### Fixed`, `### Security` as needed, newest first, below `## [Unreleased]`. Releases up to 3.1.0 keep their original format (`# X.Y.Z` with `## BREAKING`, `## FEATURES`, `## SECURITY` and the like) below.
+- A feature or fix PR writes its entry as a fragment `changelog.d/<branch-slug>.<section>.md` ([format](changelog.d/README.md)) instead of editing `CHANGELOG.md`; `composer ci:test:changelog` checks it, and CI runs it through `composer ci:test:php:cgl`.
+- The release PR `chore(release): X.Y.Z` runs `composer changelog:collect`, which moves the fragments into `## [Unreleased]`, and then renames that section to `## [X.Y.Z] - YYYY-MM-DD`.
 
 ## Scoped AGENTS.md (MUST read when working in these directories)
 <!-- AGENTS-GENERATED:START scope-index -->

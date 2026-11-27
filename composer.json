@@ -26,7 +26,7 @@
         "netresearch/sdk-api-universal-messenger": "^3.1"
     },
     "require-dev": {
-        "netresearch/typo3-ci-workflows": "^2.0.4"
+        "netresearch/typo3-ci-workflows": "^2.3.2"
     },
     "suggest": {
         "typo3/cms-scheduler": "Allows you to run CLI scripts as a task within TYPO3"
@@ -84,6 +84,7 @@
             "fractor process --config Build/fractor.php"
         ],
         "ci:test:php:cgl": [
+            "@ci:test:changelog",
             "@ci:cgl --dry-run"
         ],
         "ci:test:php:lint": [
@@ -118,6 +119,8 @@
             "@ci:test:php:unit",
             "@ci:test:php:acceptance",
             "@ci:test:php:cgl"
-        ]
+        ],
+        "changelog:collect": "changelog-fragments collect",
+        "ci:test:changelog": "changelog-fragments check @no_additional_args"
     }
 }
